@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Final, override
 
 import torch
+from deep_learning_loss import MAELoss
 from torch import Tensor, nn
 
-from .....losses import MAELoss
 from ....interfaces import SequenceShape
 from ....interfaces.masked_reconstruction import MaskedReconstruction
 from ....interfaces.masked_reconstruction_network import MaskedReconstructionNetwork

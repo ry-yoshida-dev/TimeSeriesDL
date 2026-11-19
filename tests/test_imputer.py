@@ -3,8 +3,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 import torch
+from deep_learning_loss import HuberLoss, MAELoss, MSELoss
 
-from time_series_dl import Device, HuberLoss, MAELoss, MSELoss, TrainingSettings
+from time_series_dl import Device, TrainingSettings
 from time_series_dl.models import DLinearParameters, SequenceShape, TCNParameters
 from time_series_dl.models.architectures.recurrent.brits import BRITSParameters
 from time_series_dl.models.architectures.recurrent.gru_d import GRUDParameters

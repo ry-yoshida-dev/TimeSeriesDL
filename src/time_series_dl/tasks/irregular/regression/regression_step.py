@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
+from deep_learning_loss import PointLoss
 from torch import Tensor
 
-from ....losses import PointLoss
 from ....models.interfaces.irregular_summary_network import IrregularSummaryNetwork
 from ....models.interfaces.irregular_tensors import IrregularTensors
 

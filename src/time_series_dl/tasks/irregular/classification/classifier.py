@@ -25,15 +25,12 @@ from ....models.interfaces.shapes.irregular_summary import IrregularSummaryShape
 from ....persistence import Checkpoint, EncodedValue, SettingsCodec, TaskKind
 from ....runtime import BatchedInference, Device
 from ....training import Trainer, TrainingHistory
-from ...classification import CrossEntropyLoss, FocalLoss
 from .classification_step import IrregularClassificationStep
 from .settings import IrregularClassifierSettings
 
 # The irregular models are listed until ModelArchitecture names them, which adds them to every codec.
 _CODEC: Final[SettingsCodec] = SettingsCodec.including(
     IrregularClassifierSettings,
-    CrossEntropyLoss,
-    FocalLoss,
     MTANParameters,
     NeuralCDEParameters,
     ODERNNParameters,

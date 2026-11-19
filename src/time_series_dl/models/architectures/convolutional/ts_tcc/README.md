@@ -24,5 +24,4 @@ head normalizes the contexts of both views in one batch-normalization pass, so a
 | [augmentation.py](./augmentation.py) | `TSTCCAugmentation`: weak scaling and strong permutation-and-jitter augmentations. |
 | [sequence_encoder.py](./sequence_encoder.py) | `TSTCCSequenceEncoder`: convolution, batch normalization, ReLU and pooling blocks. |
 | [temporal_contrasting.py](./temporal_contrasting.py) | `TSTCCTemporalContrasting`: context Transformer and cross-view prediction loss. |
-| [contextual_contrastive_loss.py](./contextual_contrastive_loss.py) | `ContextualContrastiveLoss`: NT-Xent loss of the projected contexts. |
 | [pretraining_network.py](./pretraining_network.py) | `TSTCCPretrainingNetwork`: augmentations, both contrasting losses and the projection head. |

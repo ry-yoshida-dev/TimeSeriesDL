@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
+from deep_learning_loss import ClassificationLoss
 from torch import Tensor
 
 from ....models.interfaces.irregular_summary_network import IrregularSummaryNetwork
 from ....models.interfaces.irregular_tensors import IrregularTensors
-from ...classification import ClassificationLoss
 
 
 @dataclass(frozen=True, eq=False)

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
+from deep_learning_loss import PointLoss
 from torch import Tensor
 
-from ...losses import PointLoss
 from ...models import SummaryNetwork
 
 

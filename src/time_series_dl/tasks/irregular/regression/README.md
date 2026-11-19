@@ -3,7 +3,8 @@
 ## Overview
 
 Regression of one or more values from irregularly sampled sequences with any model that builds an irregular summary
-network. Losses are the point losses of [losses](../../../losses/README.md), and metrics are the types of
+network. Losses are the point losses of
+[DeepLearningLoss](https://github.com/ry-yoshida-dev/DeepLearningLoss), and metrics are the types of
 `classreg.regression`, one per output.
 
 ## Components

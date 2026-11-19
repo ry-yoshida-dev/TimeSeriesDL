@@ -6,9 +6,10 @@ import numpy as np
 import pytest
 import torch
 from data_scaler import MinMaxScalingParameters, RobustScalingParameters
+from deep_learning_loss import FocalLoss, HuberLoss
 from sklearn.exceptions import NotFittedError
 
-from time_series_dl import Device, HuberLoss, TrainingSettings
+from time_series_dl import Device, TrainingSettings
 from time_series_dl.data import CovariateMismatchError, SeriesCovariates
 from time_series_dl.models import (
     ForecastingModel,
@@ -26,7 +27,7 @@ from time_series_dl.models import (
 from time_series_dl.models.components.covariates import CovariateAdapterParameters
 from time_series_dl.persistence import Checkpoint, EncodedValue, SettingsCodec, TaskKind
 from time_series_dl.tasks.anomaly_detection import AnomalyDetector, AnomalyDetectorSettings
-from time_series_dl.tasks.classification import ClassifierSettings, FocalLoss, SequenceClassifier
+from time_series_dl.tasks.classification import ClassifierSettings, SequenceClassifier
 from time_series_dl.tasks.forecasting import (
     Forecaster,
     ForecasterSettings,

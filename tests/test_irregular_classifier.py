@@ -2,6 +2,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from deep_learning_loss import FocalLoss
 from irregular_datasets import make_timing_records
 from sklearn.exceptions import NotFittedError
 
@@ -15,7 +16,6 @@ from time_series_dl.models.architectures.continuous_time import (
 )
 from time_series_dl.models.components.irregular_heads import IrregularEncoderHead
 from time_series_dl.models.interfaces.protocols.irregular_summary import IrregularSummaryModel
-from time_series_dl.tasks.classification import FocalLoss
 from time_series_dl.tasks.irregular.classification import IrregularClassifierSettings, IrregularSequenceClassifier
 
 SMALL_HEAD: IrregularEncoderHead = IrregularEncoderHead(hidden_sizes=(16,))

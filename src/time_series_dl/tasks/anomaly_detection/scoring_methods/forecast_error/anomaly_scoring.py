@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import override
 
-from .....losses import PointLoss
+from deep_learning_loss import PointLoss
+
 from .....models import ForecastingModel, ForecastShape, ReconstructionModel, SequenceShape
 from .....models.interfaces.protocols.anomaly_scoring import AnomalyScoringModel
 from ...scoring_step import AnomalyScoringStep

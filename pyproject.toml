@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "classreg @ git+https://github.com/ry-yoshida-dev/ClassReg.git@398b681cbffd29adc6cde0249e5e16b11acfc1f3",
     "data-scaler @ git+https://github.com/ry-yoshida-dev/DataScaler.git@13edc913fa2ea4da434455b62cf448c9af66a741",
+    "deep-learning-loss @ git+https://github.com/ry-yoshida-dev/DeepLearningLoss.git@946e5aee637be0ab7b15bbd75b9182ef9b36c1ef",
     "numpy>=2.2",
     "scikit-learn>=1.8",
     "scipy>=1.15",

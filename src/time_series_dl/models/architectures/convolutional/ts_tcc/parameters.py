@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field
 
+from deep_learning_loss import NTXentLoss
+
 from ....components.heads import EncoderHead
 from ....components.layers import TemporalPooling
 from ....interfaces import ForecastNetwork, ForecastShape, SequenceShape, SummaryNetwork, SummaryShape
 from .augmentation import TSTCCAugmentation
-from .contextual_contrastive_loss import ContextualContrastiveLoss
 from .pretraining_network import TSTCCPretrainingNetwork
 from .sequence_encoder import TSTCCSequenceEncoder
 from .temporal_contrasting import TSTCCTemporalContrasting
@@ -156,7 +157,7 @@ class TSTCCParameters:
                 self.prediction_steps,
             ),
             self.augmentation,
-            ContextualContrastiveLoss(temperature=self.temperature),
+            NTXentLoss(temperature=self.temperature),
             self.context_size,
             self.temporal_weight,
             self.contextual_weight,

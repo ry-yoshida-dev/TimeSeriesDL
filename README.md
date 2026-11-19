@@ -5,9 +5,10 @@
 TimeSeriesDL (`time_series_dl`) puts 84 deep learning models for time series behind one PyTorch interface per task.
 Each task is built from a settings dataclass that takes a model's parameters, so models are swapped by changing one
 argument; the type checker rejects a model that does not support the task. Training (optimizer, schedule, early
-stopping, device) and saving to files that load without pickle are shared by every task, and so are the point
-losses (MSE, MAE, Huber, log-cosh, pinball) of the tasks that predict values; classification trains with
-cross-entropy or focal loss.
+stopping, device) and saving to files that load without pickle are shared by every task. Losses come from
+[DeepLearningLoss](https://github.com/ry-yoshida-dev/DeepLearningLoss): any `PointLoss` (MSE, MAE, Huber, log-cosh,
+Charbonnier, pinball, MAPE, sMAPE, MSLE) trains the tasks that predict values, and any `ClassificationLoss`
+(cross-entropy, focal, generalized cross-entropy, hinge, Poly-1) trains classification.
 
 | Task | Interface | Input → output | Models |
 | ---- | --------- | -------------- | ------ |
@@ -145,7 +146,7 @@ prediction = restored.forecast(recent_series)
 Classify sequences, or regress values from them, with the same models:
 
 ```python
-from time_series_dl import HuberLoss
+from deep_learning_loss import HuberLoss
 from time_series_dl.models import InceptionTimeParameters
 from time_series_dl.tasks.classification import ClassifierSettings
 from time_series_dl.tasks.regression import RegressorSettings
@@ -179,7 +180,7 @@ classifier = ClassifierSettings(model=model.build_summary_model()).build()
 Impute missing values and detect anomalies:
 
 ```python
-from time_series_dl import MAELoss
+from deep_learning_loss import MAELoss
 from time_series_dl.models import RNNParameters, SAITSParameters
 from time_series_dl.tasks.anomaly_detection import AnomalyDetectorSettings
 from time_series_dl.tasks.imputation import ImputerSettings

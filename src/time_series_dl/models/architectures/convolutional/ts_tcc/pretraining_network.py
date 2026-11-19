@@ -2,12 +2,12 @@ from typing import override
 
 import torch
 import torch.nn.functional as functional
+from deep_learning_loss import NTXentLoss
 from torch import Tensor, nn
 
 from ....components.layers import TemporalPooling
 from ....interfaces.pretraining_network import PretrainingNetwork
 from .augmentation import TSTCCAugmentation
-from .contextual_contrastive_loss import ContextualContrastiveLoss
 from .sequence_encoder import TSTCCSequenceEncoder
 from .temporal_contrasting import TSTCCTemporalContrasting
 
@@ -26,7 +26,7 @@ class TSTCCPretrainingNetwork(PretrainingNetwork):
         The context Transformer and the predictors of future features.
     augmentation : TSTCCAugmentation
         The weak and strong augmentations.
-    contextual_loss : ContextualContrastiveLoss
+    contextual_loss : NTXentLoss
         The contrastive loss of the projected contexts.
     context_size : int
         Size of the context vectors.
@@ -46,7 +46,7 @@ class TSTCCPretrainingNetwork(PretrainingNetwork):
         encoder: TSTCCSequenceEncoder,
         temporal_contrasting: TSTCCTemporalContrasting,
         augmentation: TSTCCAugmentation,
-        contextual_loss: ContextualContrastiveLoss,
+        contextual_loss: NTXentLoss,
         context_size: int,
         temporal_weight: float,
         contextual_weight: float,
@@ -68,7 +68,7 @@ class TSTCCPretrainingNetwork(PretrainingNetwork):
             nn.Linear(encoder.output_size // 2, encoder.output_size // 4),
         )
         self.augmentation: TSTCCAugmentation = augmentation
-        self.contextual_loss: ContextualContrastiveLoss = contextual_loss
+        self.contextual_loss: NTXentLoss = contextual_loss
         self.temporal_weight: float = temporal_weight
         self.contextual_weight: float = contextual_weight
 
@@ -96,6 +96,10 @@ class TSTCCPretrainingNetwork(PretrainingNetwork):
         projected: Tensor = self.projection(torch.cat([weak_context, strong_context], dim=0))
         weak_projected: Tensor = projected[: values.shape[0]]
         strong_projected: Tensor = projected[values.shape[0] :]
-        return self.temporal_weight * (weak_loss + strong_loss) + self.contextual_weight * self.contextual_loss.compute(
-            weak_projected, strong_projected
+        # A single sequence has no negatives, so its NT-Xent loss is zero; the product keeps the graph connected.
+        contextual_loss: Tensor = (
+            self.contextual_loss.compute(weak_projected, strong_projected)
+            if values.shape[0] > 1
+            else projected.sum() * 0.0
         )
+        return self.temporal_weight * (weak_loss + strong_loss) + self.contextual_weight * contextual_loss

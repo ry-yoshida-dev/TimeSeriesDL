@@ -2,12 +2,13 @@ from typing import cast
 
 import numpy as np
 import pytest
+from deep_learning_loss import CrossEntropyLoss, FocalLoss
 from sklearn.exceptions import NotFittedError
 
 from time_series_dl import Device, TrainingSettings
 from time_series_dl.array_types import LabelArray
 from time_series_dl.models import MLPParameters, TCNParameters
-from time_series_dl.tasks.classification import ClassifierSettings, CrossEntropyLoss, FocalLoss
+from time_series_dl.tasks.classification import ClassifierSettings
 
 
 def make_classes(size: int, seed: int) -> tuple[np.ndarray, np.ndarray]:

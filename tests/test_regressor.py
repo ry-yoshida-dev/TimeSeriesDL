@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
+from deep_learning_loss import HuberLoss
 
-from time_series_dl import Device, HuberLoss, TrainingSettings
+from time_series_dl import Device, TrainingSettings
 from time_series_dl.models import RNNParameters
 from time_series_dl.tasks.regression import RegressorSettings
 

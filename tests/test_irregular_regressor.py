@@ -1,9 +1,10 @@
 from pathlib import Path
 
 import numpy as np
+from deep_learning_loss import HuberLoss
 from irregular_datasets import make_timing_records
 
-from time_series_dl import Device, HuberLoss, TrainingSettings
+from time_series_dl import Device, TrainingSettings
 from time_series_dl.models.architectures.continuous_time import LatentODEParameters, ODERNNParameters
 from time_series_dl.models.components.irregular_heads import IrregularEncoderHead
 from time_series_dl.tasks.irregular.regression import IrregularRegressorSettings, IrregularSequenceRegressor

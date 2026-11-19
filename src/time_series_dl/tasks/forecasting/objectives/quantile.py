@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+from functools import cached_property
 from typing import override
 
 import torch
+from deep_learning_loss import QuantileLoss
 from torch import Tensor
 
 from ..objective import ForecastObjective
@@ -10,7 +12,7 @@ from ..objective import ForecastObjective
 @dataclass(frozen=True)
 class QuantileObjective(ForecastObjective):
     """
-    Predicted quantiles of each forecast value, trained with the pinball loss.
+    Predicted quantiles of each forecast value, trained with the pinball loss averaged over the levels.
 
     Predicted quantiles are sorted, so they never cross. The point forecast is the quantile closest to the median.
 
@@ -34,6 +36,18 @@ class QuantileObjective(ForecastObjective):
             raise ValueError(f"quantiles must be in (0, 1), got {self.quantiles}")
         if any(lower >= upper for lower, upper in zip(self.quantiles, self.quantiles[1:], strict=False)):
             raise ValueError(f"quantiles must be strictly increasing, got {self.quantiles}")
+
+    @cached_property
+    def loss(self) -> QuantileLoss:
+        """
+        Get the training loss.
+
+        Returns
+        -------
+        QuantileLoss
+            The pinball loss of the levels, averaged over them.
+        """
+        return QuantileLoss(self.quantiles)
 
     @property
     @override
@@ -67,9 +81,7 @@ class QuantileObjective(ForecastObjective):
 
     @override
     def compute_loss(self, parameters: Tensor, targets: Tensor) -> Tensor:
-        levels: Tensor = torch.tensor(self.quantiles, device=parameters.device, dtype=parameters.dtype)
-        errors: Tensor = targets.unsqueeze(-1) - parameters
-        return torch.maximum(levels * errors, (levels - 1.0) * errors).mean()
+        return self.loss.compute(parameters, targets)
 
     @override
     def compute_point(self, parameters: Tensor) -> Tensor:

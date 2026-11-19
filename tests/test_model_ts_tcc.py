@@ -1,12 +1,12 @@
 import pytest
 import torch
+from deep_learning_loss import NTXentLoss
 from forecast_shape_cases import FORECAST_SHAPE_CASES
 from network_checks import check_forecast_network, check_summary_network
 from torch import Tensor
 
 from time_series_dl.models import ForecastShape, SequenceShape, SummaryShape
 from time_series_dl.models.architectures.convolutional.ts_tcc import (
-    ContextualContrastiveLoss,
     TSTCCAugmentation,
     TSTCCParameters,
     TSTCCTemporalContrasting,
@@ -79,7 +79,7 @@ def test_contextual_loss_matches_explicit_nt_xent() -> None:
         scores: Tensor = torch.stack([items[anchor] @ items[other] for other in range(6) if other != anchor])
         losses.append(torch.logsumexp(scores / temperature, dim=0) - items[anchor] @ items[partner] / temperature)
     expected: Tensor = torch.stack(losses).mean()
-    actual: Tensor = ContextualContrastiveLoss(temperature=temperature).compute(first, second)
+    actual: Tensor = NTXentLoss(temperature=temperature).compute(first, second)
     assert torch.allclose(actual, expected, atol=1e-5)
 
 

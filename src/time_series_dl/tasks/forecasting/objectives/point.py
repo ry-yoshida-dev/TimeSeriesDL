@@ -2,9 +2,9 @@ from dataclasses import dataclass, field
 from typing import override
 
 import torch
+from deep_learning_loss import MSELoss, PointLoss
 from torch import Tensor
 
-from ....losses import MSELoss, PointLoss
 from ..objective import ForecastObjective
 
 

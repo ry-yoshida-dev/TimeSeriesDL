@@ -4,10 +4,11 @@ import numpy as np
 import pytest
 import torch
 from data_scaler import MinMaxScalingParameters, NoScalingParameters, ScalingParameters, StandardScalingParameters
+from deep_learning_loss import MAELoss
 from torch import Tensor, nn
 from torch.utils.data import TensorDataset
 
-from time_series_dl import Device, MAELoss, TrainingSettings
+from time_series_dl import Device, TrainingSettings
 from time_series_dl.models import (
     DLinearParameters,
     ForecastingModel,

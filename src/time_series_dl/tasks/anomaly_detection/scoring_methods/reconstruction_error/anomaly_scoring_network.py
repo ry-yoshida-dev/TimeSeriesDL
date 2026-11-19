@@ -1,8 +1,8 @@
 from typing import override
 
+from deep_learning_loss import PointLoss
 from torch import Tensor
 
-from .....losses import PointLoss
 from .....models import ReconstructionNetwork
 from .....models.interfaces.anomaly_scoring_network import AnomalyScoringNetwork
 

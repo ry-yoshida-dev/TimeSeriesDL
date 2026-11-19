@@ -39,7 +39,6 @@ synthetic series.
 | [test_missing_value_components.py](./test_missing_value_components.py) | Time gaps, temporal decay and last observation against their recursions. |
 | [test_anomaly_detector.py](./test_anomaly_detector.py) | Anomaly scores, detection and metrics. |
 | [test_objectives.py](./test_objectives.py) | Forecast objectives and metrics. |
-| [test_losses.py](./test_losses.py) | Point and classification losses. |
 | [test_training.py](./test_training.py) | Trainer, optimizers, schedules and early stopping. |
 | [test_persistence.py](./test_persistence.py) | Saving and loading every task and model, and rejecting invalid checkpoints. |
 | [test_data.py](./test_data.py) | Windows, series validation and channel scaling. |

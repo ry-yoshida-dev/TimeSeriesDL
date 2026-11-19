@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
+from deep_learning_loss import ClassificationLoss
 from torch import Tensor
 
 from ...models import SummaryNetwork
-from .classification_loss import ClassificationLoss
 
 
 @dataclass(frozen=True, eq=False)

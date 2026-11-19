@@ -4,11 +4,10 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from data_scaler import ScalingParameters, StandardScalingParameters
+from deep_learning_loss import ClassificationLoss, CrossEntropyLoss
 
 from ...models import SummaryModel
 from ...training import TrainingSettings
-from .classification_loss import ClassificationLoss
-from .classification_losses import CrossEntropyLoss
 
 if TYPE_CHECKING:
     from .classifier import SequenceClassifier

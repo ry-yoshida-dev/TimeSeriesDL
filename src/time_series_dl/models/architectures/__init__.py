@@ -17,7 +17,6 @@ from .continuous_time import (
     ODERNNSequenceEncoder,
 )
 from .convolutional import (
-    ContextualContrastiveLoss,
     FCNParameters,
     FCNSequenceEncoder,
     HierarchicalContrastiveLoss,
@@ -405,7 +404,6 @@ __all__ = [
     "ChronosBoltSize",
     "ChronosParameters",
     "ChronosSize",
-    "ContextualContrastiveLoss",
     "ConvTranAttention",
     "ConvTranConvolutionalEmbedding",
     "ConvTranParameters",

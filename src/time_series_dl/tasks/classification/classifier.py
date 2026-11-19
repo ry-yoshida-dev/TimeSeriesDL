@@ -17,11 +17,10 @@ from ...models import SummaryNetwork, SummaryShape
 from ...persistence import Checkpoint, EncodedValue, SettingsCodec, TaskKind
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
-from .classification_losses import CrossEntropyLoss, FocalLoss
 from .classification_step import ClassificationStep
 from .settings import ClassifierSettings
 
-_CODEC: Final[SettingsCodec] = SettingsCodec.including(ClassifierSettings, CrossEntropyLoss, FocalLoss)
+_CODEC: Final[SettingsCodec] = SettingsCodec.including(ClassifierSettings)
 _LABEL_KINDS: Final[str] = "iubU"
 
 

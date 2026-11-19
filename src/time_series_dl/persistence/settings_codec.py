@@ -16,8 +16,25 @@ from data_scaler import (
     StandardScalingParameters,
     UnitNormScalingParameters,
 )
+from deep_learning_loss import (
+    CharbonnierLoss,
+    CrossEntropyLoss,
+    FocalLoss,
+    GeneralizedCrossEntropyLoss,
+    HuberLoss,
+    LogCoshLoss,
+    MAELoss,
+    MAPELoss,
+    MSELoss,
+    MSLELoss,
+    MulticlassHingeLoss,
+    NTXentLoss,
+    PinballLoss,
+    Poly1Loss,
+    QuantileLoss,
+    SMAPELoss,
+)
 
-from ..losses import HuberLoss, LogCoshLoss, MAELoss, MSELoss, PinballLoss
 from ..models import ModelArchitecture
 from ..models.settings.parameters_reader import ParametersReader
 from ..training import TrainingHistory
@@ -26,15 +43,27 @@ from .encoded_value import EncodedValue
 _TYPE_KEY: Final[str] = "type"
 _FIELDS_KEY: Final[str] = "fields"
 
-# Types every task can hold: the parameters of every model, the point losses, the scaling strategies and the
-# history. Each task adds its settings class and the implementations of its own abstract fields.
+# Types every task can hold: the parameters of every model, the losses of DeepLearningLoss that a task or model
+# accepts, the scaling strategies and the history. Each task adds its settings class and the implementations of its
+# own abstract fields.
 _COMMON_TYPES: Final[tuple[type[object], ...]] = (
     *(architecture.parameters_type for architecture in ModelArchitecture),
+    CharbonnierLoss,
     HuberLoss,
     LogCoshLoss,
     MAELoss,
+    MAPELoss,
     MSELoss,
+    MSLELoss,
     PinballLoss,
+    SMAPELoss,
+    QuantileLoss,
+    CrossEntropyLoss,
+    FocalLoss,
+    GeneralizedCrossEntropyLoss,
+    MulticlassHingeLoss,
+    Poly1Loss,
+    NTXentLoss,
     MaxAbsScalingParameters,
     MinMaxScalingParameters,
     NoScalingParameters,

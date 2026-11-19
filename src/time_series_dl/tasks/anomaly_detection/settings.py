@@ -4,8 +4,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from data_scaler import ScalingParameters, StandardScalingParameters
+from deep_learning_loss import MSELoss, PointLoss
 
-from ...losses import MSELoss, PointLoss
 from ...models import ForecastingModel, ReconstructionModel
 from ...models.interfaces.protocols.anomaly_scoring import AnomalyScoringModel
 from ...training import TrainingSettings

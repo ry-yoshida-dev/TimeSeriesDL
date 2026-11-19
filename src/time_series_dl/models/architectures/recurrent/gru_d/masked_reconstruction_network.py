@@ -1,9 +1,9 @@
 from typing import Final, override
 
 import torch
+from deep_learning_loss import MSELoss
 from torch import Tensor, nn
 
-from .....losses import MSELoss
 from ....components.missing_values import LastObservation, TemporalDecay, TimeGap
 from ....interfaces import SequenceShape
 from ....interfaces.masked_reconstruction import MaskedReconstruction

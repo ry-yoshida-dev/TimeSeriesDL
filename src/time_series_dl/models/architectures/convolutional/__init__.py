@@ -49,7 +49,6 @@ from .ts2vec import (
     TS2VecSequenceEncoder,
 )
 from .ts_tcc import (
-    ContextualContrastiveLoss,
     TSTCCAugmentation,
     TSTCCParameters,
     TSTCCPretrainingNetwork,
@@ -58,7 +57,6 @@ from .ts_tcc import (
 )
 
 __all__ = [
-    "ContextualContrastiveLoss",
     "FCNParameters",
     "FCNSequenceEncoder",
     "HierarchicalContrastiveLoss",

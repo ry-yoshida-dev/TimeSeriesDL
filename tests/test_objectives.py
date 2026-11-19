@@ -4,9 +4,9 @@ from typing import cast
 import numpy as np
 import pytest
 import torch
+from deep_learning_loss import HuberLoss, LogCoshLoss, MAELoss, MSELoss, PinballLoss, PointLoss
 from torch.distributions import LowRankMultivariateNormal
 
-from time_series_dl import HuberLoss, LogCoshLoss, MAELoss, MSELoss, PinballLoss, PointLoss
 from time_series_dl.tasks.forecasting import (
     ForecastMetrics,
     ForecastObjective,

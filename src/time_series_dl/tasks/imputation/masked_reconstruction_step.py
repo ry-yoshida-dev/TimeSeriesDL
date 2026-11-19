@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
 import torch
+from deep_learning_loss import PointLoss
 from torch import Tensor
 
-from ...losses import PointLoss
 from ...models.interfaces.masked_reconstruction import MaskedReconstruction
 from ...models.interfaces.masked_reconstruction_network import MaskedReconstructionNetwork
 
