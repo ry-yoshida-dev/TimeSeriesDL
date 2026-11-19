@@ -22,11 +22,13 @@ from .protocols import (
     PretrainingModel,
     PublishedWeightsModel,
     ReconstructionModel,
+    SequenceGenerationModel,
     SummaryModel,
     ZeroShotForecastingModel,
 )
 from .reconstruction_network import ReconstructionNetwork
 from .sequence_encoder import SequenceEncoder
+from .sequence_generation_network import SequenceGenerationNetwork
 from .shapes import (
     CovariateForecastShape,
     ForecastShape,
@@ -67,6 +69,8 @@ __all__ = [
     "ReconstructionModel",
     "ReconstructionNetwork",
     "SequenceEncoder",
+    "SequenceGenerationModel",
+    "SequenceGenerationNetwork",
     "SequenceShape",
     "SummaryModel",
     "SummaryNetwork",

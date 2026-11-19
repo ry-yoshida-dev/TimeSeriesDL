@@ -27,4 +27,5 @@ Models built from attention or its replacements.
 | [DCdetector (Yang et al., 2023)](./dcdetector/README.md) | `DCdetectorParameters` | | | | ✓ |
 | [TranAD (Tuli et al., 2022)](./tranad/README.md) | `TranADParameters` | | | | ✓ |
 | [CSDI (Tashiro et al., 2021)](./csdi/README.md) | `CSDIParameters` | ✓ (generative) | | ✓ | |
+| [Diffusion-TS (Yuan and Qiao, 2024)](./diffusion_ts/README.md), generation only | `DiffusionTSParameters` | | | | |
 | [Decomposition Transformer](./decomposition/README.md) | Built by `AutoformerParameters` and `FEDformerParameters` | ✓ | ✓ | ✓ | ✓ |

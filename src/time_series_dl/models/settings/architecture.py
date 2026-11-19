@@ -52,6 +52,7 @@ from ..architectures.recurrent.gru_d import GRUDParameters
 from ..architectures.recurrent.lstnet import LSTNetParameters
 from ..architectures.recurrent.min_rnn import MinRNNParameters
 from ..architectures.recurrent.seg_rnn import SegRNNParameters
+from ..architectures.recurrent.time_gan import TimeGANParameters
 from ..architectures.recurrent.time_grad import TimeGradParameters
 from ..architectures.recurrent.vanilla import RNNParameters
 from ..architectures.recurrent.xlstm import XLSTMParameters
@@ -72,6 +73,7 @@ from ..architectures.transformer.conv_tran import ConvTranParameters
 from ..architectures.transformer.crossformer import CrossformerParameters
 from ..architectures.transformer.csdi import CSDIParameters
 from ..architectures.transformer.dcdetector import DCdetectorParameters
+from ..architectures.transformer.diffusion_ts import DiffusionTSParameters
 from ..architectures.transformer.etsformer import ETSformerParameters
 from ..architectures.transformer.fedformer import FEDformerParameters
 from ..architectures.transformer.informer import InformerParameters
@@ -172,6 +174,8 @@ type ModelParameters = (
     | TimerParameters
     | TTMParameters
     | CycleNetParameters
+    | TimeGANParameters
+    | DiffusionTSParameters
 )
 
 
@@ -267,6 +271,8 @@ class ModelArchitecture(StrEnum):
     TIMER = "timer"
     TTM = "ttm"
     CYCLE_NET = "cycle_net"
+    TIME_GAN = "time_gan"
+    DIFFUSION_TS = "diffusion_ts"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -449,3 +455,7 @@ class ModelArchitecture(StrEnum):
                 return TTMParameters
             case ModelArchitecture.CYCLE_NET:
                 return CycleNetParameters
+            case ModelArchitecture.TIME_GAN:
+                return TimeGANParameters
+            case ModelArchitecture.DIFFUSION_TS:
+                return DiffusionTSParameters

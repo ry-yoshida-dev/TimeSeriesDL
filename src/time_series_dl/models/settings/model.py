@@ -9,6 +9,7 @@ from ..interfaces import (
     MaskedReconstructionModel,
     PretrainingModel,
     ReconstructionModel,
+    SequenceGenerationModel,
     SummaryModel,
 )
 from .architecture import ModelArchitecture, ModelParameters
@@ -215,4 +216,23 @@ class ModelSettings:
         parameters: ModelParameters = self.build()
         if not isinstance(parameters, IrregularInterpolationModel):
             raise ValueError(f"{self.architecture} does not support irregular interpolation.")
+        return parameters
+
+    def build_sequence_generation_model(self) -> SequenceGenerationModel:
+        """
+        Build the parameters for ``GeneratorSettings``.
+
+        Returns
+        -------
+        SequenceGenerationModel
+            The parameters.
+
+        Raises
+        ------
+        ValueError
+            If ``architecture`` does not generate sequences.
+        """
+        parameters: ModelParameters = self.build()
+        if not isinstance(parameters, SequenceGenerationModel):
+            raise ValueError(f"{self.architecture} does not support generation.")
         return parameters

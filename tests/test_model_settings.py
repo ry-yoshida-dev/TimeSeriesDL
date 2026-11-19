@@ -22,6 +22,7 @@ from time_series_dl.models import (
     SAITSParameters,
     TCNParameters,
     TemporalPooling,
+    TimeGANParameters,
     TS2VecParameters,
     USADParameters,
 )
@@ -123,6 +124,10 @@ def test_task_models_follow_supported_tasks() -> None:
         ModelSettings(architecture=ModelArchitecture.NEURAL_CDE).build_irregular_interpolation_model()
     with pytest.raises(ValueError, match="irregular classification"):
         patch_tst.build_irregular_summary_model()
+    time_gan = ModelSettings(architecture=ModelArchitecture.TIME_GAN).build_sequence_generation_model()
+    assert isinstance(time_gan, TimeGANParameters)
+    with pytest.raises(ValueError, match="generation"):
+        patch_tst.build_sequence_generation_model()
     assert isinstance(patch_tst.build_imputation_model(), PatchTSTParameters)
 
 

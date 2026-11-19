@@ -20,6 +20,7 @@ synthetic series.
 | [t5_published_names.py](./t5_published_names.py) | T5 state dicts under the published parameter names, for weight-loading tests. |
 | [published_mtan.py](./published_mtan.py) | mTAN parameters that name published weights, for restoring tests of the irregular tasks. |
 | [published_ts2vec.py](./published_ts2vec.py) | TS2Vec parameters that name published weights, for restoring tests of representation learning. |
+| [generation_network_checks.py](./generation_network_checks.py) | Loss, sampling and gradient checks of sequence generation networks. |
 | [masked_network_checks.py](./masked_network_checks.py) | Shape, gradient and mask-semantics checks of mask-aware imputation networks. |
 | `test_model_*.py` | Network checks and model-specific behavior of each model. |
 | [test_state_space_components.py](./test_state_space_components.py) | HiPPO memories, kernels, scans and convolutions of the state space models against their recurrences. |
@@ -50,5 +51,6 @@ synthetic series.
 | [test_irregular_classifier.py](./test_irregular_classifier.py) | Classification of irregularly sampled sequences. |
 | [test_irregular_regressor.py](./test_irregular_regressor.py) | Regression of irregularly sampled sequences. |
 | [test_irregular_interpolator.py](./test_irregular_interpolator.py) | Interpolation and forecasting of irregularly sampled sequences at query times. |
+| [test_sequence_generator.py](./test_sequence_generator.py) | Generation of synthetic sequences, its metrics, and saving and loading. |
 | [test_representation_learning.py](./test_representation_learning.py) | Self-supervised pretraining, representations and transfer of pretrained encoders. |
 | [test_masked_modeling.py](./test_masked_modeling.py) | Random masks and the decoder of masked-modeling pretraining. |

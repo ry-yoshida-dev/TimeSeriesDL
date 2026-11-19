@@ -25,6 +25,8 @@ class TaskKind(Enum):
         ``IrregularSequenceRegressor``.
     IRREGULAR_INTERPOLATION
         ``IrregularInterpolator``.
+    GENERATION
+        ``SequenceGenerator``.
     """
 
     FORECASTING = "forecasting"
@@ -36,3 +38,4 @@ class TaskKind(Enum):
     IRREGULAR_CLASSIFICATION = "irregular_classification"
     IRREGULAR_REGRESSION = "irregular_regression"
     IRREGULAR_INTERPOLATION = "irregular_interpolation"
+    GENERATION = "generation"

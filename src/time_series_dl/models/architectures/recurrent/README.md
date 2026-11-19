@@ -18,3 +18,4 @@ Models built from recurrent layers.
 | [BRITS (Cao et al., 2018)](./brits/README.md) | `BRITSParameters` | | | ✓ | |
 | [GRU-D (Che et al., 2018)](./gru_d/README.md) | `GRUDParameters` | | | ✓ | |
 | [TimeGrad (Rasul et al., 2021)](./time_grad/README.md) | `TimeGradParameters` | ✓ (generative) | | | |
+| [TimeGAN (Yoon et al., 2019)](./time_gan/README.md), generation only | `TimeGANParameters` | | | | |

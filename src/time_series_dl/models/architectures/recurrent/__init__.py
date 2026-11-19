@@ -4,6 +4,7 @@ from .gru_d import GRUDMaskedReconstructionNetwork, GRUDParameters
 from .lstnet import LSTNetForecastNetwork, LSTNetParameters, LSTNetSequenceEncoder
 from .min_rnn import MinimalRecurrentCell, MinRNNParameters, MinRNNSequenceEncoder
 from .seg_rnn import SegRNNForecastNetwork, SegRNNParameters
+from .time_gan import TimeGANParameters, TimeGANPhase, TimeGANPhaseSchedule
 from .time_grad import TimeGradDenoiser, TimeGradForecastNetwork, TimeGradParameters, TimeGradResidualBlock
 from .vanilla import RecurrentCell, RNNParameters, RNNSequenceEncoder
 from .xlstm import XLSTMParameters, XLSTMSequenceEncoder, XLSTMStackParameters
@@ -31,6 +32,9 @@ __all__ = [
     "RecurrentCell",
     "SegRNNForecastNetwork",
     "SegRNNParameters",
+    "TimeGANParameters",
+    "TimeGANPhase",
+    "TimeGANPhaseSchedule",
     "TimeGradDenoiser",
     "TimeGradForecastNetwork",
     "TimeGradParameters",

@@ -9,6 +9,7 @@ from .masked_reconstruction import MaskedReconstructionModel
 from .pretraining import PretrainingModel
 from .published_weights import PublishedWeightsModel
 from .reconstruction import ReconstructionModel
+from .sequence_generation import SequenceGenerationModel
 from .summary import SummaryModel
 from .zero_shot_forecasting import ZeroShotForecastingModel
 
@@ -24,6 +25,7 @@ __all__ = [
     "PretrainingModel",
     "PublishedWeightsModel",
     "ReconstructionModel",
+    "SequenceGenerationModel",
     "SummaryModel",
     "ZeroShotForecastingModel",
 ]

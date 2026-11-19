@@ -2,7 +2,7 @@
 
 ## Overview
 
-TimeSeriesDL (`time_series_dl`) puts 85 deep learning models for time series behind one PyTorch interface per task.
+TimeSeriesDL (`time_series_dl`) puts 87 deep learning models for time series behind one PyTorch interface per task.
 Each task is built from a settings dataclass that takes a model's parameters, so models are swapped by changing one
 argument; the type checker rejects a model that does not support the task. Training (optimizer, schedule, early
 stopping, device) and saving to files that load without pickle are shared by every task. Losses come from
@@ -20,6 +20,7 @@ Charbonnier, pinball, MAPE, sMAPE, MSLE) trains the tasks that predict values, a
 | Irregular classification | `IrregularSequenceClassifier` | irregularly sampled sequences → class | 4 |
 | Irregular regression | `IrregularSequenceRegressor` | irregularly sampled sequences → one or more values | 4 |
 | Irregular interpolation | `IrregularInterpolator` | irregularly sampled sequences → values at query times | 2 |
+| Generation | `SequenceGenerator` | sequences → synthetic sequences, with fidelity and usefulness metrics | 2 |
 | Representation learning | `RepresentationLearner` | unlabeled sequences → pretrained encoder and representations | 4 |
 
 The models span linear and MLP forecasters (DLinear, RLinear, FITS, SparseTSF, CycleNet, TSMixer, TiDE, TimeMixer,
@@ -31,8 +32,8 @@ Temporal Fusion Transformer), state space models (HiPPO-RNN, LMU, S4, S4D, S5, L
 graph neural networks over the channels (MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN), imputation models that read the
 missing-value mask (SAITS, BRITS, GRU-D), anomaly detectors with their own objectives (Anomaly Transformer,
 DCdetector, TranAD, USAD), self-supervised pretraining (TS2Vec, TS-TCC, SimMTM, masked
-reconstruction) whose encoders transfer to the other tasks, and continuous-time models of irregularly sampled
-sequences (mTAN, Neural CDE, ODE-RNN, Latent ODE). Foundation models (Chronos,
+reconstruction) whose encoders transfer to the other tasks, continuous-time models of irregularly sampled
+sequences (mTAN, Neural CDE, ODE-RNN, Latent ODE), and generators of synthetic sequences (TimeGAN, Diffusion-TS). Foundation models (Chronos,
 Chronos-Bolt, TimesFM, Moirai, MOMENT, Timer, TTM) load their published weights to forecast zero-shot or to be
 fine-tuned. Generative forecasters (TimeGrad, CSDI, Chronos, Moirai) draw sample paths, and conformal prediction calibrates the intervals of any forecaster. Forecasts
 accept known-future and static covariates with every forecasting model. Which model supports which task is listed in
@@ -250,4 +251,16 @@ classifier.fit(records, mortality)
 interpolator = IrregularInterpolatorSettings(model=LatentODEParameters()).build()
 interpolator.fit(records)
 hourly = interpolator.predict(records, QueryTimes.from_arrays([np.arange(48.0)] * records.num_sequences))
+```
+
+Generate synthetic sequences that resemble a series, and measure how well they do:
+
+```python
+from time_series_dl.models import TimeGANParameters
+from time_series_dl.tasks.generation import GeneratorSettings
+
+generator = GeneratorSettings(model=TimeGANParameters(), window_length=24).build()
+generator.fit_series(series)
+synthetic = generator.generate(1000, random_seed=0)  # (1000, 24, channels) in the original scale
+metrics = generator.evaluate(real_windows)  # discriminative and predictive scores, distribution distances
 ```

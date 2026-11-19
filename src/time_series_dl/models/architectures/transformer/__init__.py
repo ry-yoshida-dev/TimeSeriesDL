@@ -44,6 +44,7 @@ from .decomposition import (
     DecompositionTransformerSequenceEncoder,
     SeasonalLayerNorm,
 )
+from .diffusion_ts import CosineNoiseSchedule, DiffusionTSLossKind, DiffusionTSParameters
 from .etsformer import (
     ETSformerDampingLayer,
     ETSformerEncoder,
@@ -171,6 +172,7 @@ __all__ = [
     "ConvTranParameters",
     "ConvTranPositionEncoding",
     "ConvTranSequenceEncoder",
+    "CosineNoiseSchedule",
     "CrossformerDecoderLayer",
     "CrossformerEncoder",
     "CrossformerForecastNetwork",
@@ -190,6 +192,8 @@ __all__ = [
     "DecompositionTransformerConfiguration",
     "DecompositionTransformerForecastNetwork",
     "DecompositionTransformerSequenceEncoder",
+    "DiffusionTSLossKind",
+    "DiffusionTSParameters",
     "DualAttention",
     "ETSformerDampingLayer",
     "ETSformerEncoder",

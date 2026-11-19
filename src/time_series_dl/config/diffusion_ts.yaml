@@ -1,0 +1,17 @@
+model:
+  architecture: diffusion_ts
+  parameters:
+    model_size: 64
+    num_heads: 4
+    encoder_layers: 2
+    decoder_layers: 2
+    feedforward_factor: 4
+    dropout: 0.0
+    trend_degree: 3
+    seasonality_factor: 1.0
+    noise_schedule:
+      num_steps: 500
+      offset: 0.008
+      max_variance: 0.999
+    loss_kind: absolute
+    fourier_weight: null

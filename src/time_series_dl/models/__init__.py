@@ -57,6 +57,7 @@ from .architectures.recurrent.gru_d import GRUDParameters
 from .architectures.recurrent.lstnet import LSTNetParameters
 from .architectures.recurrent.min_rnn import MinimalRecurrentCell, MinRNNParameters
 from .architectures.recurrent.seg_rnn import SegRNNParameters
+from .architectures.recurrent.time_gan import TimeGANParameters, TimeGANPhaseSchedule
 from .architectures.recurrent.time_grad import TimeGradParameters
 from .architectures.recurrent.vanilla import RecurrentCell, RNNParameters
 from .architectures.recurrent.xlstm import XLSTMParameters, XLSTMStackParameters
@@ -77,6 +78,7 @@ from .architectures.transformer.conv_tran import AbsolutePositionEncoding, ConvT
 from .architectures.transformer.crossformer import CrossformerParameters
 from .architectures.transformer.csdi import CSDIParameters
 from .architectures.transformer.dcdetector import DCdetectorParameters
+from .architectures.transformer.diffusion_ts import DiffusionTSLossKind, DiffusionTSParameters
 from .architectures.transformer.etsformer import ETSformerParameters
 from .architectures.transformer.fedformer import FEDformerParameters
 from .architectures.transformer.informer import InformerParameters
@@ -126,6 +128,8 @@ from .interfaces import (
     ReconstructionModel,
     ReconstructionNetwork,
     SequenceEncoder,
+    SequenceGenerationModel,
+    SequenceGenerationNetwork,
     SequenceShape,
     SummaryModel,
     SummaryNetwork,
@@ -163,6 +167,8 @@ __all__ = [
     "DLinearParameters",
     "DeepARParameters",
     "DiagonalInitialization",
+    "DiffusionTSLossKind",
+    "DiffusionTSParameters",
     "Discretization",
     "ETSformerParameters",
     "EncoderHead",
@@ -254,6 +260,8 @@ __all__ = [
     "SMambaParameters",
     "SegRNNParameters",
     "SequenceEncoder",
+    "SequenceGenerationModel",
+    "SequenceGenerationNetwork",
     "SequenceShape",
     "SimMTMParameters",
     "SparseTSFParameters",
@@ -273,6 +281,8 @@ __all__ = [
     "TemporalFusionTransformerParameters",
     "TemporalPooling",
     "TiDEParameters",
+    "TimeGANParameters",
+    "TimeGANPhaseSchedule",
     "TimeGradParameters",
     "TimeMixerParameters",
     "TimeMixerPlusPlusParameters",

@@ -10,6 +10,7 @@ Parameters and networks of every model. A parameters class builds the networks o
 - imputation from the values and their missing-value mask: `build_masked_reconstruction_network`
 - anomaly detection with a model's own objective and score: `build_anomaly_scoring_network`
 - self-supervised pretraining: `build_pretraining_network`
+- generation of synthetic sequences: `build_sequence_generation_network`
 - irregularly sampled sequences: `build_irregular_summary_network` and `build_irregular_interpolation_network`
 
 Every public class is imported from `time_series_dl.models`.
@@ -18,9 +19,9 @@ Every public class is imported from `time_series_dl.models`.
 | ------ | ------ |
 | [Linear](./architectures/linear/README.md) | DLinear, NLinear, RLinear, FITS, SparseTSF, CycleNet |
 | [MLP](./architectures/mlp/README.md) | MLP, N-BEATS, N-HiTS, TSMixer, TiDE, TimeMixer, TimeMixer++, FreTS, Koopa, USAD |
-| [Recurrent](./architectures/recurrent/README.md) | LSTM / GRU / Elman RNN, SegRNN, DeepAR, xLSTM, xLSTMTime, minGRU / minLSTM, LSTNet, BRITS, GRU-D, TimeGrad |
+| [Recurrent](./architectures/recurrent/README.md) | LSTM / GRU / Elman RNN, SegRNN, DeepAR, xLSTM, xLSTMTime, minGRU / minLSTM, LSTNet, BRITS, GRU-D, TimeGrad, TimeGAN |
 | [Convolutional](./architectures/convolutional/README.md) | FCN, ResNet, InceptionTime, TCN, TimesNet, MICN, ModernTCN, LITE, ROCKET, MiniRocket, MultiRocket, TS2Vec, TS-TCC |
-| [Transformer](./architectures/transformer/README.md) | Transformer, Informer, Autoformer, FEDformer, PatchTST, iTransformer, Temporal Fusion Transformer, Non-stationary Transformer, Pyraformer, ETSformer, Crossformer, TimeXer, TST, ConvTran, SAITS, Anomaly Transformer, DCdetector, TranAD, CSDI |
+| [Transformer](./architectures/transformer/README.md) | Transformer, Informer, Autoformer, FEDformer, PatchTST, iTransformer, Temporal Fusion Transformer, Non-stationary Transformer, Pyraformer, ETSformer, Crossformer, TimeXer, TST, ConvTran, SAITS, Anomaly Transformer, DCdetector, TranAD, CSDI, Diffusion-TS |
 | [State space](./architectures/state_space/README.md) | HiPPO-RNN, LMU, S4, S4D, S5, LRU, Mamba, Mamba-2, S-Mamba, FiLM |
 | [Graph](./architectures/graph/README.md) | MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN |
 | [Continuous time](./architectures/continuous_time/README.md) | mTAN, Neural CDE, ODE-RNN, Latent ODE (irregularly sampled sequences) |

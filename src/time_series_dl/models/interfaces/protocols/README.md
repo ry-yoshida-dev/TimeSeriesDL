@@ -21,4 +21,5 @@ task exactly when it has the builder, so the type checker rejects unsupported co
 | [generative_forecasting.py](./generative_forecasting.py) | `GenerativeForecastingModel`: builds a `GenerativeForecastNetwork`. |
 | [published_weights.py](./published_weights.py) | `PublishedWeightsModel`: names published pretrained weights and can drop them before a checkpoint is restored. |
 | [zero_shot_forecasting.py](./zero_shot_forecasting.py) | `ZeroShotForecastingModel`: forecasts with its published weights without training. |
+| [sequence_generation.py](./sequence_generation.py) | `SequenceGenerationModel`: builds a `SequenceGenerationNetwork`, for generation. |
 | [summary.py](./summary.py) | `SummaryModel`: builds a `SummaryNetwork`. |

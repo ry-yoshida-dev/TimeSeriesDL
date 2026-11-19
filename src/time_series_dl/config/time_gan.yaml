@@ -1,0 +1,12 @@
+model:
+  architecture: time_gan
+  parameters:
+    cell: gru
+    hidden_size: 24
+    num_layers: 3
+    noise_size: null
+    schedule:
+      autoencoder_epochs: 33
+      supervised_epochs: 33
+    embedding_adversarial_weight: 1.0
+    discriminator_loss_threshold: 0.15
