@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-from ....interfaces import ForecastNetwork, ForecastShape
+from ....interfaces import CovariateForecastNetwork, CovariateForecastShape, ForecastNetwork, ForecastShape
+from .covariate_forecast_network import TemporalFusionTransformerCovariateForecastNetwork
 from .forecast_network import TemporalFusionTransformerForecastNetwork
 
 
@@ -10,9 +11,11 @@ class TemporalFusionTransformerParameters:
     Temporal Fusion Transformer (Lim et al., 2021): variable selection, an LSTM sequence-to-sequence layer and
     interpretable multi-head attention, joined by gated skip connections.
 
-    This package has no static covariates and no known future inputs, so static covariate encoders and static
-    enrichment are omitted, and the decoder reads learned embeddings of the horizon positions. The defaults are those
-    of the reference implementation in neuralforecast (hidden size 128, 4 heads, dropout 0.1, one LSTM layer).
+    With covariates, static features feed the static covariate encoders and static enrichment, past known covariates
+    join the past inputs and future known covariates are the decoder's inputs, as in the paper. Without static
+    features the encoders and enrichment are omitted, and without known covariates the decoder reads learned
+    embeddings of the horizon positions. The defaults are those of the reference implementation in neuralforecast
+    (hidden size 128, 4 heads, dropout 0.1, one LSTM layer).
 
     Attributes
     ----------
@@ -64,3 +67,19 @@ class TemporalFusionTransformerParameters:
             The network.
         """
         return TemporalFusionTransformerForecastNetwork(self, shape)
+
+    def build_covariate_forecast_network(self, shape: CovariateForecastShape) -> CovariateForecastNetwork:
+        """
+        Build an untrained forecast network that reads known and static covariates.
+
+        Parameters
+        ----------
+        shape : CovariateForecastShape
+            The input, covariate and output dimensions.
+
+        Returns
+        -------
+        CovariateForecastNetwork
+            The network.
+        """
+        return TemporalFusionTransformerCovariateForecastNetwork(self, shape)

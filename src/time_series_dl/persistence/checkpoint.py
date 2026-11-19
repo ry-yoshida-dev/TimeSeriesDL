@@ -267,6 +267,47 @@ class Checkpoint:
             raise ValueError(f"checkpoint value {name!r} must be a list, got {value!r}")
         return value
 
+    def read_int_tuple(self, name: str) -> tuple[int, ...]:
+        """
+        Get a list of integers of ``values``.
+
+        Parameters
+        ----------
+        name : str
+            The name of the value.
+
+        Returns
+        -------
+        tuple[int, ...]
+            The integers.
+
+        Raises
+        ------
+        ValueError
+            If the value is missing or not a list of integers.
+        """
+        items: list[EncodedValue] = self.read_list(name)
+        integers: list[int] = [item for item in items if isinstance(item, int) and not isinstance(item, bool)]
+        if len(integers) != len(items):
+            raise ValueError(f"checkpoint value {name!r} must be a list of integers, got {items!r}")
+        return tuple(integers)
+
+    def contains(self, name: str) -> bool:
+        """
+        Check whether ``values`` has a value, for values that only some checkpoints hold.
+
+        Parameters
+        ----------
+        name : str
+            The name of the value.
+
+        Returns
+        -------
+        bool
+            True if the value is present.
+        """
+        return name in self.values
+
     def read_scaler(self, name: str) -> ScalerState:
         """
         Get a fitted scaler.

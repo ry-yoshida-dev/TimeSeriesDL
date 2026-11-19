@@ -10,5 +10,6 @@ task exactly when it has the builder, so the type checker rejects unsupported co
 | Component | Description |
 | --------- | ----------- |
 | [forecasting.py](./forecasting.py) | `ForecastingModel`: builds a `ForecastNetwork`. |
+| [covariate_forecasting.py](./covariate_forecasting.py) | `CovariateForecastingModel`: also builds a `CovariateForecastNetwork` that reads covariates natively. |
 | [reconstruction.py](./reconstruction.py) | `ReconstructionModel`: builds a `ReconstructionNetwork`. |
 | [summary.py](./summary.py) | `SummaryModel`: builds a `SummaryNetwork`. |

@@ -3,8 +3,8 @@
 ## Overview
 
 The file format behind the `save` and `load` methods of every task. A checkpoint holds the settings, the fitted
-scalers, the network weights and the training history in one file that `torch.load` reads with `weights_only=True`,
-so loading an untrusted file cannot run code.
+scalers of the series and of any covariates, the network weights and the training history in one file that
+`torch.load` reads with `weights_only=True`, so loading an untrusted file cannot run code.
 
 ## Components
 

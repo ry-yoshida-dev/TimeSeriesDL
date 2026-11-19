@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
-from ....interfaces import ForecastNetwork, ForecastShape
+from ....interfaces import CovariateForecastNetwork, CovariateForecastShape, ForecastNetwork, ForecastShape
 from ..vanilla import RecurrentCell
+from .covariate_forecast_network import DeepARCovariateForecastNetwork
 from .forecast_network import DeepARForecastNetwork
 
 
@@ -15,9 +16,14 @@ class DeepARParameters:
     estimates otherwise. The defaults are those of the authors' GluonTS implementation (two LSTM layers of 40 units,
     dropout 0.1).
 
-    Differences from the paper: there are no covariates or series embeddings; the task normalizes each window, so
-    there is no mean scaling; the loss covers the horizon only, not the conditioning range; and predictions use the
-    analytic quantiles of the objective instead of sampled trajectories, so the point estimate is fed back.
+    With covariates, every step's input also holds that step's known covariates and the static features of the series,
+    whose categorical codes (such as an item id) are embedded with ``min(50, (cardinality + 1) // 2)`` dimensions as in
+    GluonTS.
+
+    Differences from the paper: the task normalizes each window instead of mean scaling (with covariates, the window's
+    location and log scale are static features, much like GluonTS's log scale feature); the loss covers the horizon
+    only, not the conditioning range; and predictions use the analytic quantiles of the objective instead of sampled
+    trajectories, so the point estimate is fed back.
 
     Attributes
     ----------
@@ -64,3 +70,19 @@ class DeepARParameters:
             The network.
         """
         return DeepARForecastNetwork(self, shape)
+
+    def build_covariate_forecast_network(self, shape: CovariateForecastShape) -> CovariateForecastNetwork:
+        """
+        Build an untrained forecast network that reads known and static covariates at every step.
+
+        Parameters
+        ----------
+        shape : CovariateForecastShape
+            The input, covariate and output dimensions.
+
+        Returns
+        -------
+        CovariateForecastNetwork
+            The network.
+        """
+        return DeepARCovariateForecastNetwork(self, shape)

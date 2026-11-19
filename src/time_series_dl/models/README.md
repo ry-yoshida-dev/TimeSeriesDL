@@ -19,7 +19,9 @@ anomaly detection (`build_reconstruction_network`). Every public class is import
 can describe it; the YAML presets of every model are in [config/](../config/README.md).
 
 Implementations follow the papers, with details taken from Time-Series-Library, neuralforecast and the authors' code;
-each model's README states where it differs. Time-stamp, static and known-future covariates are not supported.
+each model's README states where it differs. Forecasts accept known-future, static numeric and static categorical covariates: TiDE, Temporal Fusion
+Transformer and DeepAR read them as in their papers (`CovariateForecastingModel`), and every other model through
+the generic covariate adapter in [components/covariates/](./components/covariates/README.md).
 
 ## Components
 

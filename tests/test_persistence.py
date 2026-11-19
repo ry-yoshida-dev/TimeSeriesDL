@@ -9,7 +9,9 @@ from data_scaler import MinMaxScalingParameters, RobustScalingParameters
 from sklearn.exceptions import NotFittedError
 
 from time_series_dl import Device, HuberLoss, TrainingSettings
+from time_series_dl.data import CovariateMismatchError, SeriesCovariates
 from time_series_dl.models import (
+    ForecastingModel,
     MLPParameters,
     ModelArchitecture,
     NBEATSBlockKind,
@@ -17,7 +19,9 @@ from time_series_dl.models import (
     NBEATSStack,
     RNNParameters,
     TCNParameters,
+    TemporalFusionTransformerParameters,
 )
+from time_series_dl.models.components.covariates import CovariateAdapterParameters
 from time_series_dl.persistence import Checkpoint, EncodedValue, SettingsCodec, TaskKind
 from time_series_dl.tasks.anomaly_detection import AnomalyDetector, AnomalyDetectorSettings
 from time_series_dl.tasks.classification import ClassifierSettings, FocalLoss, SequenceClassifier
@@ -232,3 +236,46 @@ def test_settings_codec_rejects_unknown_classes() -> None:
     window: EncodedValue = codec.encode(ForecastWindow(4, 2))
     with pytest.raises(TypeError, match="expected TrainingSettings"):
         _ = codec.decode(TrainingSettings, window)
+
+
+@pytest.mark.parametrize(
+    "model",
+    [TemporalFusionTransformerParameters(hidden_size=8, num_heads=2), MLPParameters(hidden_sizes=(8,))],
+    ids=["native", "adapter"],
+)
+def test_forecaster_round_trip_with_covariates(
+    tmp_path: Path, fast_training: TrainingSettings, sine_series: np.ndarray, model: ForecastingModel
+) -> None:
+    rng = np.random.default_rng(0)
+    covariates = [
+        SeriesCovariates(known=rng.normal(size=(200, 2)), static=np.array([1.0]), static_categories=np.array([0, 4])),
+        SeriesCovariates(known=rng.normal(size=(200, 2)), static=np.array([3.0]), static_categories=np.array([1, 2])),
+    ]
+    forecaster = ForecasterSettings(
+        model=model,
+        window=ForecastWindow(input_length=16, horizon=4, stride=4),
+        target_channels=(0,),
+        covariate_scaling=MinMaxScalingParameters(),
+        covariate_adapter=CovariateAdapterParameters(hidden_size=4),
+        training=fast_training,
+    ).build()
+    series = [sine_series[:200], sine_series[200:]]
+    _ = forecaster.fit(series, covariates=covariates)
+    path = tmp_path / "forecaster.pt"
+    forecaster.save(path)
+    loaded = Forecaster.load(path)
+    assert loaded.settings == forecaster.settings
+    known = covariates[1].known
+    assert known is not None
+    future = SeriesCovariates(
+        known=np.concatenate([known, rng.normal(size=(4, 2))]),
+        static=np.array([3.0]),
+        static_categories=np.array([1, 2]),
+    )
+    np.testing.assert_allclose(loaded.forecast(series[1], future).point, forecaster.forecast(series[1], future).point)
+    assert loaded.evaluate(series, covariates).mae == pytest.approx(forecaster.evaluate(series, covariates).mae)
+    with pytest.raises(CovariateMismatchError, match="fitted with covariates"):
+        _ = loaded.forecast(series[1])
+    checkpoint = Checkpoint.load(path, TaskKind.FORECASTING)
+    assert checkpoint.read_int_tuple("static_cardinalities") == (2, 5)
+    assert set(checkpoint.scalers) == {"input", "target", "covariate_known", "covariate_static"}

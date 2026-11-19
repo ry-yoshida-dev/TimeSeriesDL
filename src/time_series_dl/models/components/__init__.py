@@ -9,6 +9,7 @@ from .attention import (
     ProbSparseAttentionMechanism,
     ValueEmbedding,
 )
+from .covariates import CovariateAdapterNetwork, CovariateAdapterParameters, StaticCovariateEmbedding
 from .heads import EncodedForecastNetwork, EncodedReconstructionNetwork, EncodedSummaryNetwork, EncoderHead
 from .layers import (
     Activation,
@@ -42,6 +43,9 @@ from .state_space import (
 )
 
 __all__ = [
+    "CovariateAdapterNetwork",
+    "CovariateAdapterParameters",
+    "StaticCovariateEmbedding",
     "Activation",
     "AttentionMechanism",
     "AutoCorrelationAttentionMechanism",

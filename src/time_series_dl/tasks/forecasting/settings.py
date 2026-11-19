@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from data_scaler import ScalingParameters, StandardScalingParameters
 
 from ...models import ForecastingModel
+from ...models.components.covariates import CovariateAdapterParameters
 from ...training import TrainingSettings
 from .objective import ForecastObjective
 from .objectives import PointObjective
@@ -35,7 +36,16 @@ class ForecasterSettings:
     scaling : ScalingParameters
         Per-channel scaling fitted on the training series; it must be invertible, so forecasts can be mapped back.
     is_instance_normalized : bool
-        Whether each window is also normalized by its own mean and standard deviation (RevIN).
+        Whether each window is also normalized by its own mean and standard deviation (RevIN). Known and static
+        covariates are never normalized by the window; networks that read covariates also receive the mean and the
+        log standard deviation of each target channel of the window as static features, so covariate effects in the
+        original scale stay expressible.
+    covariate_scaling : ScalingParameters
+        Per-channel scaling of the known covariates and the numeric static features, fitted on the training
+        covariates.
+    covariate_adapter : CovariateAdapterParameters
+        Generic covariate support of models that do not read covariates natively; unused without covariates and by
+        models that build covariate networks themselves (TiDE, Temporal Fusion Transformer, DeepAR).
 
     Raises
     ------
@@ -50,6 +60,8 @@ class ForecasterSettings:
     target_channels: tuple[int, ...] | None = None
     scaling: ScalingParameters = field(default_factory=StandardScalingParameters)
     is_instance_normalized: bool = True
+    covariate_scaling: ScalingParameters = field(default_factory=StandardScalingParameters)
+    covariate_adapter: CovariateAdapterParameters = field(default_factory=CovariateAdapterParameters)
 
     def __post_init__(self) -> None:
         if self.target_channels is not None:
@@ -70,7 +82,7 @@ class ForecasterSettings:
         Raises
         ------
         ValueError
-            If the scaling strategy is not invertible or mixes channels.
+            If the scaling of the series is not invertible, or a scaling strategy mixes channels.
         """
         from .forecaster import Forecaster
 

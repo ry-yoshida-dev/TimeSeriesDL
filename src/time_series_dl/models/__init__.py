@@ -34,10 +34,15 @@ from .architectures.transformer.temporal_fusion_transformer import (
 )
 from .architectures.transformer.vanilla import TransformerParameters
 from .components.attention import FourierModeSelection
+from .components.covariates import CovariateAdapterParameters
 from .components.heads import EncoderHead
 from .components.layers import Activation, TemporalPooling
 from .components.state_space import DiagonalInitialization, Discretization, HiPPOMeasure
 from .interfaces import (
+    CovariateForecastingModel,
+    CovariateForecastNetwork,
+    CovariateForecastShape,
+    CovariateTensors,
     ForecastingModel,
     ForecastNetwork,
     ForecastShape,
@@ -53,6 +58,11 @@ from .settings.architecture import ModelArchitecture, ModelParameters
 from .settings.model import ModelSettings
 
 __all__ = [
+    "CovariateAdapterParameters",
+    "CovariateForecastNetwork",
+    "CovariateForecastShape",
+    "CovariateForecastingModel",
+    "CovariateTensors",
     "Activation",
     "AutoformerParameters",
     "DLinearParameters",

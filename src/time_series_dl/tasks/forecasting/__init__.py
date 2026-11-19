@@ -1,3 +1,5 @@
+from ...data import CalendarFeature, CalendarFeatures, CovariateMismatchError, SeriesCovariates, WindowCovariates
+from ...models.components.covariates import CovariateAdapterParameters
 from .forecaster import Forecaster
 from .instance_normalization import InstanceNormalization
 from .metrics import ForecastMetrics
@@ -8,6 +10,10 @@ from .settings import ForecasterSettings
 from .window import ForecastWindow
 
 __all__ = [
+    "CalendarFeature",
+    "CalendarFeatures",
+    "CovariateAdapterParameters",
+    "CovariateMismatchError",
     "ForecastMetrics",
     "ForecastObjective",
     "ForecastPrediction",
@@ -19,5 +25,7 @@ __all__ = [
     "LaplaceObjective",
     "PointObjective",
     "QuantileObjective",
+    "SeriesCovariates",
     "StudentTObjective",
+    "WindowCovariates",
 ]

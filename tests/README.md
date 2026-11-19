@@ -11,11 +11,14 @@ synthetic series.
 | --------- | ----------- |
 | [conftest.py](./conftest.py) | Fixtures: fast training settings and a synthetic multivariate series. |
 | [network_checks.py](./network_checks.py) | Shape and gradient checks of the networks of every model. |
+| [covariate_network_checks.py](./covariate_network_checks.py) | Shape, gradient and covariate-sensitivity checks of covariate forecast networks. |
 | `test_model_*.py` | Network checks and model-specific behavior of each model. |
 | [test_state_space_components.py](./test_state_space_components.py) | HiPPO memories, kernels, scans and convolutions of the state space models against their recurrences. |
 | [test_reference_models.py](./test_reference_models.py) | Network checks of MLP, RNN, TCN, DLinear and NLinear. |
 | [test_model_settings.py](./test_model_settings.py) | `ModelSettings` and the YAML presets of every model. |
 | [test_forecaster.py](./test_forecaster.py) | Forecasting: objectives, target channels, scaling and validation. |
+| [test_forecaster_covariates.py](./test_forecaster_covariates.py) | Forecasting with known-future and static covariates, end to end. |
+| [test_covariate_adapter.py](./test_covariate_adapter.py) | The generic covariate adapter of forecast networks. |
 | [test_classifier.py](./test_classifier.py) | Classification of sequences. |
 | [test_regressor.py](./test_regressor.py) | Regression of one or several outputs. |
 | [test_imputer.py](./test_imputer.py) | Imputation of missing values. |

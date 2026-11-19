@@ -54,6 +54,22 @@ print(prediction.point, prediction.get_quantile(0.9))
 print(forecaster.evaluate(test_series).mae)
 ```
 
+Add known-future covariates (calendar features, planned promotions) and static features of each series; the known
+covariates passed to `forecast` extend `horizon` steps past the series. TiDE, DeepAR and the Temporal Fusion
+Transformer read them natively, and every other forecasting model through a generic adapter:
+
+```python
+import numpy as np
+
+from time_series_dl.models import TiDEParameters
+from time_series_dl.tasks.forecasting import CalendarFeatures, ForecasterSettings, ForecastWindow, SeriesCovariates
+
+known = np.concatenate([CalendarFeatures().compute(timestamps), promotions], axis=1)  # (length + 24, 5)
+forecaster = ForecasterSettings(model=TiDEParameters(), window=ForecastWindow(input_length=96, horizon=24)).build()
+forecaster.fit(sales, covariates=SeriesCovariates(known=known[:-24], static_categories=np.array([store_id])))
+prediction = forecaster.forecast(sales, SeriesCovariates(known=known, static_categories=np.array([store_id])))
+```
+
 Save the fitted forecaster and load it back, on another device if needed; every task has the same `save` and `load`:
 
 ```python

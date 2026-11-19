@@ -2,7 +2,8 @@ from dataclasses import dataclass
 
 from torch import nn
 
-from ....interfaces import ForecastNetwork, ForecastShape
+from ....interfaces import CovariateForecastNetwork, CovariateForecastShape, ForecastNetwork, ForecastShape
+from .covariate_forecast_network import TiDECovariateForecastNetwork
 from .forecast_network import TiDEForecastNetwork
 from .residual_block import TiDEResidualBlock
 
@@ -10,10 +11,13 @@ from .residual_block import TiDEResidualBlock
 @dataclass(frozen=True, kw_only=True)
 class TiDEParameters:
     """
-    TiDE (Das et al., 2023) without covariates: dense residual encoder and decoder of each target series, a per-step
-    temporal decoder, and a linear residual from the window to the horizon.
+    TiDE (Das et al., 2023): dense residual encoder and decoder of each target series, a per-step temporal decoder,
+    and a linear residual from the window to the horizon. With covariates, the known covariates of every step are
+    projected by a residual block and read by the encoder and the temporal decoder, and the static attributes by the
+    encoder, as in the paper.
 
-    The defaults are the paper's hyperparameters for ETTh1.
+    The defaults are the paper's hyperparameters for ETTh1; ``covariate_projection_size`` is the paper's temporal
+    width.
 
     Attributes
     ----------
@@ -30,7 +34,9 @@ class TiDEParameters:
     dropout : float
         Dropout probability on the output of every residual block.
     is_layer_normalized : bool
-        Whether every block of the dense encoder and decoder is layer-normalized.
+        Whether every block of the dense encoder and decoder, and the feature projection, is layer-normalized.
+    covariate_projection_size : int
+        Number of features each step's known covariates are projected to.
 
     Raises
     ------
@@ -45,6 +51,7 @@ class TiDEParameters:
     temporal_decoder_hidden_size: int = 128
     dropout: float = 0.3
     is_layer_normalized: bool = True
+    covariate_projection_size: int = 4
 
     def __post_init__(self) -> None:
         for name, value in (
@@ -53,6 +60,7 @@ class TiDEParameters:
             ("num_decoder_layers", self.num_decoder_layers),
             ("decoder_output_size", self.decoder_output_size),
             ("temporal_decoder_hidden_size", self.temporal_decoder_hidden_size),
+            ("covariate_projection_size", self.covariate_projection_size),
         ):
             if value <= 0:
                 raise ValueError(f"{name} must be positive, got {value}")
@@ -102,3 +110,19 @@ class TiDEParameters:
             The network.
         """
         return TiDEForecastNetwork(self, shape)
+
+    def build_covariate_forecast_network(self, shape: CovariateForecastShape) -> CovariateForecastNetwork:
+        """
+        Build an untrained forecast network that reads known covariates and static attributes.
+
+        Parameters
+        ----------
+        shape : CovariateForecastShape
+            The input, covariate and output dimensions.
+
+        Returns
+        -------
+        CovariateForecastNetwork
+            The network.
+        """
+        return TiDECovariateForecastNetwork(self, shape)

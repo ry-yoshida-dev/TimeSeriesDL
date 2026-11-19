@@ -8,61 +8,62 @@ from .gated_residual_network import GatedResidualNetwork
 
 class VariableSelectionNetwork(nn.Module):
     """
-    Variable selection network of TFT over the channels of a sequence.
+    Variable selection network of TFT over embedded variables.
 
-    Each scalar channel is embedded linearly and transformed by its own gated residual network; softmax weights
-    computed from every embedding at once combine the transformed channels into one vector per step.
+    Each variable's embedding is transformed by its own gated residual network; softmax weights computed from every
+    embedding at once, and from a static context if any, combine the transformed variables into one vector.
 
     Parameters
     ----------
-    channels : int
-        Number of input channels.
+    num_variables : int
+        Number of variables.
     model_size : int
         Size of the embeddings and of the selected vectors.
     dropout : float
         Dropout probability of the gated residual networks.
+    context_size : int
+        Size of the static context that conditions the weights; zero for none.
 
     Raises
     ------
     ValueError
-        If a size is not positive.
+        If a size is not positive or context_size is negative.
     """
 
-    def __init__(self, channels: int, model_size: int, dropout: float) -> None:
-        if channels <= 0 or model_size <= 0:
-            raise ValueError(f"channels and model_size must be positive, got {channels} and {model_size}")
+    def __init__(self, num_variables: int, model_size: int, dropout: float, context_size: int = 0) -> None:
+        if num_variables <= 0 or model_size <= 0:
+            raise ValueError(f"num_variables and model_size must be positive, got {num_variables} and {model_size}")
         super().__init__()
-        self.embedding_weight: nn.Parameter = nn.Parameter(torch.randn(channels, model_size))
-        self.embedding_bias: nn.Parameter = nn.Parameter(torch.zeros(channels, model_size))
         self.transforms: nn.ModuleList = nn.ModuleList(
-            GatedResidualNetwork(model_size, model_size, model_size, dropout) for _ in range(channels)
+            GatedResidualNetwork(model_size, model_size, model_size, dropout) for _ in range(num_variables)
         )
         self.selection: GatedResidualNetwork = GatedResidualNetwork(
-            channels * model_size, model_size, channels, dropout
+            num_variables * model_size, model_size, num_variables, dropout, context_size
         )
 
-    def forward(self, values: Tensor) -> tuple[Tensor, Tensor]:
+    def forward(self, embeddings: Tensor, context: Tensor | None = None) -> tuple[Tensor, Tensor]:
         """
-        Select the channels of a batch of sequences.
+        Select the variables of a batch.
 
         Parameters
         ----------
-        values : Tensor
-            Values with shape (batch, length, channels).
+        embeddings : Tensor
+            Embedded variables with shape (batch, ..., num_variables, model_size).
+        context : Tensor | None
+            Static context with shape (batch, context_size); required exactly when ``context_size`` is positive.
 
         Returns
         -------
         tuple[Tensor, Tensor]
-            The selected vectors with shape (batch, length, model_size) and the channel weights with shape
-            (batch, length, channels), which sum to one over the channels.
+            The selected vectors with shape (batch, ..., model_size) and the variable weights with shape
+            (batch, ..., num_variables), which sum to one over the variables.
         """
-        embeddings: Tensor = values.unsqueeze(-1) * self.embedding_weight + self.embedding_bias
-        weights: Tensor = torch.softmax(self.selection(embeddings.flatten(start_dim=2)), dim=-1)
+        weights: Tensor = torch.softmax(self.selection(embeddings.flatten(start_dim=-2), context), dim=-1)
         transformed: Tensor = torch.stack(
-            [transform(embeddings[:, :, channel]) for channel, transform in enumerate(self.transforms)], dim=2
+            [transform(embeddings[..., variable, :]) for variable, transform in enumerate(self.transforms)], dim=-2
         )
-        selected: Tensor = (weights.unsqueeze(-1) * transformed).sum(dim=2)
+        selected: Tensor = (weights.unsqueeze(-1) * transformed).sum(dim=-2)
         return selected, weights
 
-    def __call__(self, values: Tensor) -> tuple[Tensor, Tensor]:
-        return cast(tuple[Tensor, Tensor], super().__call__(values))
+    def __call__(self, embeddings: Tensor, context: Tensor | None = None) -> tuple[Tensor, Tensor]:
+        return cast(tuple[Tensor, Tensor], super().__call__(embeddings, context))
