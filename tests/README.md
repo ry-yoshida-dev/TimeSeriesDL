@@ -12,6 +12,7 @@ synthetic series.
 | [conftest.py](./conftest.py) | Fixtures: fast training settings and a synthetic multivariate series. |
 | [network_checks.py](./network_checks.py) | Shape and gradient checks of the networks of every model. |
 | `test_model_*.py` | Network checks and model-specific behavior of each model. |
+| [test_state_space_components.py](./test_state_space_components.py) | HiPPO memories, kernels, scans and convolutions of the state space models against their recurrences. |
 | [test_reference_models.py](./test_reference_models.py) | Network checks of MLP, RNN, TCN, DLinear and NLinear. |
 | [test_model_settings.py](./test_model_settings.py) | `ModelSettings` and the YAML presets of every model. |
 | [test_forecaster.py](./test_forecaster.py) | Forecasting: objectives, target channels, scaling and validation. |

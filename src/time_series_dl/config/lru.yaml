@@ -1,0 +1,14 @@
+model:
+  architecture: lru
+  parameters:
+    model_size: 128
+    state_size: 64
+    min_radius: 0.9
+    max_radius: 0.999
+    max_phase: 6.283185307179586
+    num_layers: 4
+    dropout: 0.1
+    is_bidirectional: false
+    head:
+      pooling: mean
+      dropout: 0.0

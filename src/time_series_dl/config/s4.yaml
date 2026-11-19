@@ -1,0 +1,13 @@
+model:
+  architecture: s4
+  parameters:
+    model_size: 128
+    state_size: 64
+    min_step: 0.001
+    max_step: 0.1
+    num_layers: 4
+    dropout: 0.1
+    is_bidirectional: false
+    head:
+      pooling: mean
+      dropout: 0.0

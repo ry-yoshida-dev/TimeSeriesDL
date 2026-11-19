@@ -1,0 +1,9 @@
+model:
+  architecture: s_mamba
+  parameters:
+    model_size: 512
+    state_size: 16
+    num_layers: 2
+    feedforward_size: 512
+    dropout: 0.1
+    activation: gelu

@@ -13,6 +13,16 @@ from .architectures.mlp.vanilla import MLPParameters
 from .architectures.recurrent.deep_ar import DeepARParameters
 from .architectures.recurrent.seg_rnn import SegRNNParameters
 from .architectures.recurrent.vanilla import RecurrentCell, RNNParameters
+from .architectures.state_space.film import FiLMParameters
+from .architectures.state_space.hippo_rnn import HiPPORNNParameters
+from .architectures.state_space.lmu import LMUParameters
+from .architectures.state_space.lru import LRUParameters
+from .architectures.state_space.mamba import MambaParameters
+from .architectures.state_space.mamba2 import Mamba2Parameters
+from .architectures.state_space.s4 import S4Parameters
+from .architectures.state_space.s4d import S4DParameters
+from .architectures.state_space.s5 import S5Parameters
+from .architectures.state_space.s_mamba import SMambaParameters
 from .architectures.transformer.autoformer import AutoformerParameters
 from .architectures.transformer.fedformer import FEDformerParameters
 from .architectures.transformer.informer import InformerParameters
@@ -26,6 +36,7 @@ from .architectures.transformer.vanilla import TransformerParameters
 from .components.attention import FourierModeSelection
 from .components.heads import EncoderHead
 from .components.layers import Activation, TemporalPooling
+from .components.state_space import DiagonalInitialization, Discretization, HiPPOMeasure
 from .interfaces import (
     ForecastingModel,
     ForecastNetwork,
@@ -46,17 +57,26 @@ __all__ = [
     "AutoformerParameters",
     "DLinearParameters",
     "DeepARParameters",
+    "DiagonalInitialization",
+    "Discretization",
     "EncoderHead",
     "FCNParameters",
     "FEDformerParameters",
+    "FiLMParameters",
     "ForecastNetwork",
     "ForecastShape",
     "ForecastingModel",
     "FourierModeSelection",
+    "HiPPOMeasure",
+    "HiPPORNNParameters",
     "ITransformerParameters",
     "InceptionTimeParameters",
     "InformerParameters",
+    "LMUParameters",
+    "LRUParameters",
     "MLPParameters",
+    "Mamba2Parameters",
+    "MambaParameters",
     "ModelArchitecture",
     "ModelParameters",
     "ModelSettings",
@@ -74,6 +94,10 @@ __all__ = [
     "ReconstructionNetwork",
     "RecurrentCell",
     "ResNetParameters",
+    "S4DParameters",
+    "S4Parameters",
+    "S5Parameters",
+    "SMambaParameters",
     "SegRNNParameters",
     "SequenceEncoder",
     "SequenceShape",
@@ -85,9 +109,9 @@ __all__ = [
     "TSMixerParameters",
     "TemporalFusionInterpretation",
     "TemporalFusionTransformerParameters",
+    "TemporalPooling",
     "TiDEParameters",
     "TimesNetParameters",
     "TokenNormalization",
     "TransformerParameters",
-    "TemporalPooling",
 ]

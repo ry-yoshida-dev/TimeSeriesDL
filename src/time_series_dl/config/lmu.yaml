@@ -1,0 +1,10 @@
+model:
+  architecture: lmu
+  parameters:
+    hidden_size: 128
+    state_size: 64
+    window_ratio: 1.0
+    discretization: zero_order_hold
+    head:
+      pooling: last
+      dropout: 0.0

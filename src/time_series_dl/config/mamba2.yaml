@@ -1,0 +1,15 @@
+model:
+  architecture: mamba2
+  parameters:
+    model_size: 128
+    state_size: 64
+    expansion: 2
+    head_size: 32
+    convolution_size: 4
+    chunk_length: 64
+    num_layers: 2
+    dropout: 0.1
+    is_bidirectional: false
+    head:
+      pooling: mean
+      dropout: 0.0

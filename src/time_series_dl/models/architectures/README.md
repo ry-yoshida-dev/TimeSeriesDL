@@ -14,3 +14,4 @@ the networks it builds.
 | [recurrent/](./recurrent/README.md) | Recurrent neural networks. |
 | [convolutional/](./convolutional/README.md) | Convolutional networks. |
 | [transformer/](./transformer/README.md) | Attention-based models. |
+| [state_space/](./state_space/README.md) | State space models, from HiPPO memories to Mamba. |

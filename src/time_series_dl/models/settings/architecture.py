@@ -15,6 +15,16 @@ from ..architectures.mlp.vanilla import MLPParameters
 from ..architectures.recurrent.deep_ar import DeepARParameters
 from ..architectures.recurrent.seg_rnn import SegRNNParameters
 from ..architectures.recurrent.vanilla import RNNParameters
+from ..architectures.state_space.film import FiLMParameters
+from ..architectures.state_space.hippo_rnn import HiPPORNNParameters
+from ..architectures.state_space.lmu import LMUParameters
+from ..architectures.state_space.lru import LRUParameters
+from ..architectures.state_space.mamba import MambaParameters
+from ..architectures.state_space.mamba2 import Mamba2Parameters
+from ..architectures.state_space.s4 import S4Parameters
+from ..architectures.state_space.s4d import S4DParameters
+from ..architectures.state_space.s5 import S5Parameters
+from ..architectures.state_space.s_mamba import SMambaParameters
 from ..architectures.transformer.autoformer import AutoformerParameters
 from ..architectures.transformer.fedformer import FEDformerParameters
 from ..architectures.transformer.informer import InformerParameters
@@ -46,6 +56,16 @@ type ModelParameters = (
     | NHITSParameters
     | DeepARParameters
     | TemporalFusionTransformerParameters
+    | HiPPORNNParameters
+    | LMUParameters
+    | S4Parameters
+    | S4DParameters
+    | S5Parameters
+    | LRUParameters
+    | MambaParameters
+    | Mamba2Parameters
+    | SMambaParameters
+    | FiLMParameters
 )
 
 
@@ -78,6 +98,16 @@ class ModelArchitecture(StrEnum):
     N_HITS = "n_hits"
     DEEP_AR = "deep_ar"
     TEMPORAL_FUSION_TRANSFORMER = "temporal_fusion_transformer"
+    HIPPO_RNN = "hippo_rnn"
+    LMU = "lmu"
+    S4 = "s4"
+    S4D = "s4d"
+    S5 = "s5"
+    LRU = "lru"
+    MAMBA = "mamba"
+    MAMBA2 = "mamba2"
+    S_MAMBA = "s_mamba"
+    FILM = "film"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -134,3 +164,23 @@ class ModelArchitecture(StrEnum):
                 return DeepARParameters
             case ModelArchitecture.TEMPORAL_FUSION_TRANSFORMER:
                 return TemporalFusionTransformerParameters
+            case ModelArchitecture.HIPPO_RNN:
+                return HiPPORNNParameters
+            case ModelArchitecture.LMU:
+                return LMUParameters
+            case ModelArchitecture.S4:
+                return S4Parameters
+            case ModelArchitecture.S4D:
+                return S4DParameters
+            case ModelArchitecture.S5:
+                return S5Parameters
+            case ModelArchitecture.LRU:
+                return LRUParameters
+            case ModelArchitecture.MAMBA:
+                return MambaParameters
+            case ModelArchitecture.MAMBA2:
+                return Mamba2Parameters
+            case ModelArchitecture.S_MAMBA:
+                return SMambaParameters
+            case ModelArchitecture.FILM:
+                return FiLMParameters

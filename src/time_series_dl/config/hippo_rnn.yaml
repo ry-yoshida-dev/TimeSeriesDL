@@ -1,0 +1,11 @@
+model:
+  architecture: hippo_rnn
+  parameters:
+    measure: legs
+    hidden_size: 128
+    state_size: 64
+    window_ratio: 1.0
+    discretization: bilinear
+    head:
+      pooling: last
+      dropout: 0.0

@@ -1,0 +1,15 @@
+model:
+  architecture: s4d
+  parameters:
+    model_size: 128
+    state_size: 64
+    initialization: legs
+    discretization: zero_order_hold
+    min_step: 0.001
+    max_step: 0.1
+    num_layers: 4
+    dropout: 0.1
+    is_bidirectional: false
+    head:
+      pooling: mean
+      dropout: 0.0

@@ -1,0 +1,6 @@
+model:
+  architecture: film
+  parameters:
+    state_size: 256
+    scales: [1, 2, 4]
+    num_modes: 32
