@@ -1,0 +1,5 @@
+model:
+  architecture: mini_rocket
+  parameters:
+    num_features: 10000
+    max_dilations_per_kernel: 32

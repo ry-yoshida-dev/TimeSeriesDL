@@ -1,0 +1,6 @@
+model:
+  architecture: fits
+  parameters:
+    base_period: 24
+    harmonic_order: 2
+    is_individual: false

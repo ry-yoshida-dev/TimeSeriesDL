@@ -1,0 +1,10 @@
+model:
+  architecture: lstnet
+  parameters:
+    convolution_channels: 100
+    convolution_size: 6
+    recurrent_size: 100
+    skip_recurrent_size: 5
+    skip_period: 24
+    highway_window: 24
+    dropout: 0.2

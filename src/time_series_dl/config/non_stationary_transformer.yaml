@@ -1,0 +1,12 @@
+model:
+  architecture: non_stationary_transformer
+  parameters:
+    model_size: 512
+    num_heads: 8
+    num_encoder_layers: 2
+    num_decoder_layers: 1
+    feedforward_size: 2048
+    dropout: 0.05
+    activation: gelu
+    projector_hidden_sizes: [128, 128]
+    label_length: 48

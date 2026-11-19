@@ -1,6 +1,35 @@
 from .fcn import FCNParameters, FCNSequenceEncoder
 from .inception_time import InceptionTimeModule, InceptionTimeParameters, InceptionTimeSequenceEncoder
+from .lite import (
+    LITECustomFilters,
+    LITEInceptionModule,
+    LITEParameters,
+    LITESeparableConvolutionBlock,
+    LITESequenceEncoder,
+)
+from .micn import (
+    MICNForecastNetwork,
+    MICNIsometricLayer,
+    MICNMultiScaleDecomposition,
+    MICNParameters,
+    MICNReconstructionNetwork,
+    MICNSeasonalPrediction,
+    MICNSummaryNetwork,
+)
+from .mini_rocket import MiniRocketKernelTransform, MiniRocketParameters
+from .modern_tcn import (
+    ModernTCNBlock,
+    ModernTCNEncoder,
+    ModernTCNForecastNetwork,
+    ModernTCNLargeKernelConvolution,
+    ModernTCNParameters,
+    ModernTCNReconstructionNetwork,
+    ModernTCNStage,
+    ModernTCNSummaryNetwork,
+)
+from .multi_rocket import MultiRocketKernelTransform, MultiRocketParameters
 from .resnet import ResNetParameters, ResNetResidualBlock, ResNetSequenceEncoder
+from .rocket import RocketKernelTransform, RocketParameters
 from .tcn import TCNParameters, TCNSequenceEncoder, TemporalResidualBlock
 from .times_net import (
     InceptionBlock,
@@ -20,10 +49,36 @@ __all__ = [
     "InceptionTimeModule",
     "InceptionTimeParameters",
     "InceptionTimeSequenceEncoder",
+    "LITECustomFilters",
+    "LITEInceptionModule",
+    "LITEParameters",
+    "LITESeparableConvolutionBlock",
+    "LITESequenceEncoder",
+    "MICNForecastNetwork",
+    "MICNIsometricLayer",
+    "MICNMultiScaleDecomposition",
+    "MICNParameters",
+    "MICNReconstructionNetwork",
+    "MICNSeasonalPrediction",
+    "MICNSummaryNetwork",
+    "MiniRocketKernelTransform",
+    "MiniRocketParameters",
+    "ModernTCNBlock",
+    "ModernTCNEncoder",
+    "ModernTCNForecastNetwork",
+    "ModernTCNLargeKernelConvolution",
+    "ModernTCNParameters",
+    "ModernTCNReconstructionNetwork",
+    "ModernTCNStage",
+    "ModernTCNSummaryNetwork",
+    "MultiRocketKernelTransform",
+    "MultiRocketParameters",
     "PeriodDetector",
     "ResNetParameters",
     "ResNetResidualBlock",
     "ResNetSequenceEncoder",
+    "RocketKernelTransform",
+    "RocketParameters",
     "TCNParameters",
     "TCNSequenceEncoder",
     "TemporalResidualBlock",

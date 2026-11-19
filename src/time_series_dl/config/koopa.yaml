@@ -1,0 +1,9 @@
+model:
+  architecture: koopa
+  parameters:
+    num_blocks: 3
+    dynamic_size: 128
+    hidden_size: 64
+    num_layers: 2
+    invariant_fraction: 0.2
+    dropout: 0.05

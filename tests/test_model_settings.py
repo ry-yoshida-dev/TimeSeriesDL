@@ -9,6 +9,7 @@ import time_series_dl
 from time_series_dl.models import (
     Activation,
     EncoderHead,
+    MiniRocketParameters,
     ModelArchitecture,
     ModelSettings,
     NBEATSBlockKind,
@@ -83,6 +84,10 @@ def test_task_models_follow_supported_tasks() -> None:
         n_beats.build_summary_model()
     with pytest.raises(ValueError, match="imputation"):
         n_beats.build_reconstruction_model()
+    mini_rocket = ModelSettings(architecture=ModelArchitecture.MINI_ROCKET)
+    assert isinstance(mini_rocket.build_summary_model(), MiniRocketParameters)
+    with pytest.raises(ValueError, match="forecasting"):
+        mini_rocket.build_forecasting_model()
 
 
 def test_invalid_parameters_raise() -> None:

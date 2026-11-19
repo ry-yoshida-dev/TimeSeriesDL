@@ -1,0 +1,9 @@
+model:
+  architecture: time_mixer_plus_plus
+  parameters:
+    model_size: 32
+    num_heads: 4
+    num_layers: 2
+    num_down_samplings: 3
+    top_k: 3
+    dropout: 0.1

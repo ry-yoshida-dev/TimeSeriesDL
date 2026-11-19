@@ -1,0 +1,9 @@
+model:
+  architecture: stem_gnn
+  parameters:
+    num_blocks: 2
+    expansion_factor: 5
+    num_chebyshev_terms: 4
+    latent_size: 64
+    attention_negative_slope: 0.2
+    dropout: 0.5

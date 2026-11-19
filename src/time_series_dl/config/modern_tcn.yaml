@@ -1,0 +1,14 @@
+model:
+  architecture: modern_tcn
+  parameters:
+    stages:
+    - num_blocks: 1
+      large_kernel_size: 51
+      small_kernel_size: 5
+      model_size: 64
+    patch_size: 8
+    patch_stride: 4
+    downsample_ratio: 2
+    feedforward_ratio: 8
+    dropout: 0.3
+    head_dropout: 0.0

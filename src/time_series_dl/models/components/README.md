@@ -13,4 +13,7 @@ from the generic heads.
 | [attention/](./attention/README.md) | Multi-head attention with full, ProbSparse, auto-correlation and Fourier mechanisms. |
 | [state_space/](./state_space/README.md) | HiPPO memories, kernels, scans and layers of the state space models. |
 | [heads/](./heads/README.md) | Generic heads that turn an encoder into a network of every task. |
+| [normalization/](./normalization/README.md) | Reversible instance normalization that is part of a model's architecture. |
+| [random_convolution/](./random_convolution/README.md) | Fixed-kernel transforms, PPV/max/MPV/MIPV/LSPV pooling and the linear head of the ROCKET family. |
+| [graph/](./graph/README.md) | Graph learning layers and graph convolutions of the graph neural networks. |
 | [covariates/](./covariates/README.md) | Static covariate embedding and the generic covariate adapter of forecast networks. |

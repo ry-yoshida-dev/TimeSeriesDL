@@ -1,0 +1,7 @@
+model:
+  architecture: micn
+  parameters:
+    model_size: 512
+    num_layers: 1
+    kernel_sizes: [12, 16]
+    dropout: 0.05

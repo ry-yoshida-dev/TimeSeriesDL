@@ -1,0 +1,11 @@
+model:
+  architecture: pyraformer
+  parameters:
+    window_sizes: [4, 4]
+    inner_size: 5
+    model_size: 512
+    num_heads: 8
+    num_layers: 2
+    feedforward_size: 2048
+    bottleneck_size: 128
+    dropout: 0.1

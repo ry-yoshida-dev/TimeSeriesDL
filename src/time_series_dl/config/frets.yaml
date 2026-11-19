@@ -1,0 +1,8 @@
+model:
+  architecture: frets
+  parameters:
+    embed_size: 128
+    hidden_size: 256
+    sparsity_threshold: 0.01
+    weight_scale: 0.02
+    is_channel_mixing: true

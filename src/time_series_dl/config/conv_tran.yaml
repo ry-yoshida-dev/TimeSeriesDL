@@ -1,0 +1,13 @@
+model:
+  architecture: conv_tran
+  parameters:
+    model_size: 16
+    num_heads: 8
+    feedforward_size: 256
+    kernel_size: 8
+    dropout: 0.01
+    absolute_position_encoding: tape
+    relative_position_encoding: erpe
+    head:
+      pooling: mean
+      dropout: 0.0

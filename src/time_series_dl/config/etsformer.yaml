@@ -1,0 +1,9 @@
+model:
+  architecture: etsformer
+  parameters:
+    model_size: 512
+    num_heads: 8
+    num_layers: 2
+    feedforward_size: 2048
+    top_k: 1
+    dropout: 0.2

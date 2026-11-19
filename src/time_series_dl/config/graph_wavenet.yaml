@@ -1,0 +1,13 @@
+model:
+  architecture: graph_wavenet
+  parameters:
+    residual_channels: 32
+    dilation_channels: 32
+    skip_channels: 256
+    end_channels: 512
+    kernel_size: 2
+    num_blocks: 4
+    num_layers: 2
+    embedding_size: 10
+    diffusion_order: 2
+    dropout: 0.3

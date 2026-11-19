@@ -2,19 +2,41 @@ from enum import StrEnum
 
 from ..architectures.convolutional.fcn import FCNParameters
 from ..architectures.convolutional.inception_time import InceptionTimeParameters
+from ..architectures.convolutional.lite import LITEParameters
+from ..architectures.convolutional.micn import MICNParameters
+from ..architectures.convolutional.mini_rocket import MiniRocketParameters
+from ..architectures.convolutional.modern_tcn import ModernTCNParameters
+from ..architectures.convolutional.multi_rocket import MultiRocketParameters
 from ..architectures.convolutional.resnet import ResNetParameters
+from ..architectures.convolutional.rocket import RocketParameters
 from ..architectures.convolutional.tcn import TCNParameters
 from ..architectures.convolutional.times_net import TimesNetParameters
+from ..architectures.graph.agcrn import AGCRNParameters
+from ..architectures.graph.fourier_gnn import FourierGNNParameters
+from ..architectures.graph.graph_wavenet import GraphWaveNetParameters
+from ..architectures.graph.mtgnn import MTGNNParameters
+from ..architectures.graph.stem_gnn import StemGNNParameters
 from ..architectures.linear.dlinear import DLinearParameters
+from ..architectures.linear.fits import FITSParameters
 from ..architectures.linear.nlinear import NLinearParameters
+from ..architectures.linear.rlinear import RLinearParameters
+from ..architectures.linear.sparse_tsf import SparseTSFParameters
+from ..architectures.mlp.frets import FreTSParameters
+from ..architectures.mlp.koopa import KoopaParameters
 from ..architectures.mlp.n_beats import NBEATSParameters
 from ..architectures.mlp.n_hits import NHITSParameters
 from ..architectures.mlp.tide import TiDEParameters
+from ..architectures.mlp.time_mixer import TimeMixerParameters
+from ..architectures.mlp.time_mixer_plus_plus import TimeMixerPlusPlusParameters
 from ..architectures.mlp.ts_mixer import TSMixerParameters
 from ..architectures.mlp.vanilla import MLPParameters
 from ..architectures.recurrent.deep_ar import DeepARParameters
+from ..architectures.recurrent.lstnet import LSTNetParameters
+from ..architectures.recurrent.min_rnn import MinRNNParameters
 from ..architectures.recurrent.seg_rnn import SegRNNParameters
 from ..architectures.recurrent.vanilla import RNNParameters
+from ..architectures.recurrent.xlstm import XLSTMParameters
+from ..architectures.recurrent.xlstm_time import XLSTMTimeParameters
 from ..architectures.state_space.film import FiLMParameters
 from ..architectures.state_space.hippo_rnn import HiPPORNNParameters
 from ..architectures.state_space.lmu import LMUParameters
@@ -26,11 +48,18 @@ from ..architectures.state_space.s4d import S4DParameters
 from ..architectures.state_space.s5 import S5Parameters
 from ..architectures.state_space.s_mamba import SMambaParameters
 from ..architectures.transformer.autoformer import AutoformerParameters
+from ..architectures.transformer.conv_tran import ConvTranParameters
+from ..architectures.transformer.crossformer import CrossformerParameters
+from ..architectures.transformer.etsformer import ETSformerParameters
 from ..architectures.transformer.fedformer import FEDformerParameters
 from ..architectures.transformer.informer import InformerParameters
 from ..architectures.transformer.itransformer import ITransformerParameters
+from ..architectures.transformer.non_stationary_transformer import NonStationaryTransformerParameters
 from ..architectures.transformer.patch_tst import PatchTSTParameters
+from ..architectures.transformer.pyraformer import PyraformerParameters
 from ..architectures.transformer.temporal_fusion_transformer import TemporalFusionTransformerParameters
+from ..architectures.transformer.time_xer import TimeXerParameters
+from ..architectures.transformer.tst import TSTParameters
 from ..architectures.transformer.vanilla import TransformerParameters
 
 type ModelParameters = (
@@ -66,6 +95,35 @@ type ModelParameters = (
     | Mamba2Parameters
     | SMambaParameters
     | FiLMParameters
+    | RLinearParameters
+    | FITSParameters
+    | SparseTSFParameters
+    | TimeMixerParameters
+    | TimeMixerPlusPlusParameters
+    | FreTSParameters
+    | KoopaParameters
+    | XLSTMParameters
+    | XLSTMTimeParameters
+    | MinRNNParameters
+    | LSTNetParameters
+    | MICNParameters
+    | ModernTCNParameters
+    | LITEParameters
+    | RocketParameters
+    | MiniRocketParameters
+    | MultiRocketParameters
+    | NonStationaryTransformerParameters
+    | PyraformerParameters
+    | ETSformerParameters
+    | CrossformerParameters
+    | TimeXerParameters
+    | TSTParameters
+    | ConvTranParameters
+    | MTGNNParameters
+    | GraphWaveNetParameters
+    | AGCRNParameters
+    | StemGNNParameters
+    | FourierGNNParameters
 )
 
 
@@ -108,6 +166,35 @@ class ModelArchitecture(StrEnum):
     MAMBA2 = "mamba2"
     S_MAMBA = "s_mamba"
     FILM = "film"
+    RLINEAR = "rlinear"
+    FITS = "fits"
+    SPARSE_TSF = "sparse_tsf"
+    TIME_MIXER = "time_mixer"
+    TIME_MIXER_PLUS_PLUS = "time_mixer_plus_plus"
+    FRETS = "frets"
+    KOOPA = "koopa"
+    XLSTM = "xlstm"
+    XLSTM_TIME = "xlstm_time"
+    MIN_RNN = "min_rnn"
+    LSTNET = "lstnet"
+    MICN = "micn"
+    MODERN_TCN = "modern_tcn"
+    LITE = "lite"
+    ROCKET = "rocket"
+    MINI_ROCKET = "mini_rocket"
+    MULTI_ROCKET = "multi_rocket"
+    NON_STATIONARY_TRANSFORMER = "non_stationary_transformer"
+    PYRAFORMER = "pyraformer"
+    ETSFORMER = "etsformer"
+    CROSSFORMER = "crossformer"
+    TIME_XER = "time_xer"
+    TST = "tst"
+    CONV_TRAN = "conv_tran"
+    MTGNN = "mtgnn"
+    GRAPH_WAVENET = "graph_wavenet"
+    AGCRN = "agcrn"
+    STEM_GNN = "stem_gnn"
+    FOURIER_GNN = "fourier_gnn"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -184,3 +271,61 @@ class ModelArchitecture(StrEnum):
                 return SMambaParameters
             case ModelArchitecture.FILM:
                 return FiLMParameters
+            case ModelArchitecture.RLINEAR:
+                return RLinearParameters
+            case ModelArchitecture.FITS:
+                return FITSParameters
+            case ModelArchitecture.SPARSE_TSF:
+                return SparseTSFParameters
+            case ModelArchitecture.TIME_MIXER:
+                return TimeMixerParameters
+            case ModelArchitecture.TIME_MIXER_PLUS_PLUS:
+                return TimeMixerPlusPlusParameters
+            case ModelArchitecture.FRETS:
+                return FreTSParameters
+            case ModelArchitecture.KOOPA:
+                return KoopaParameters
+            case ModelArchitecture.XLSTM:
+                return XLSTMParameters
+            case ModelArchitecture.XLSTM_TIME:
+                return XLSTMTimeParameters
+            case ModelArchitecture.MIN_RNN:
+                return MinRNNParameters
+            case ModelArchitecture.LSTNET:
+                return LSTNetParameters
+            case ModelArchitecture.MICN:
+                return MICNParameters
+            case ModelArchitecture.MODERN_TCN:
+                return ModernTCNParameters
+            case ModelArchitecture.LITE:
+                return LITEParameters
+            case ModelArchitecture.ROCKET:
+                return RocketParameters
+            case ModelArchitecture.MINI_ROCKET:
+                return MiniRocketParameters
+            case ModelArchitecture.MULTI_ROCKET:
+                return MultiRocketParameters
+            case ModelArchitecture.NON_STATIONARY_TRANSFORMER:
+                return NonStationaryTransformerParameters
+            case ModelArchitecture.PYRAFORMER:
+                return PyraformerParameters
+            case ModelArchitecture.ETSFORMER:
+                return ETSformerParameters
+            case ModelArchitecture.CROSSFORMER:
+                return CrossformerParameters
+            case ModelArchitecture.TIME_XER:
+                return TimeXerParameters
+            case ModelArchitecture.TST:
+                return TSTParameters
+            case ModelArchitecture.CONV_TRAN:
+                return ConvTranParameters
+            case ModelArchitecture.MTGNN:
+                return MTGNNParameters
+            case ModelArchitecture.GRAPH_WAVENET:
+                return GraphWaveNetParameters
+            case ModelArchitecture.AGCRN:
+                return AGCRNParameters
+            case ModelArchitecture.STEM_GNN:
+                return StemGNNParameters
+            case ModelArchitecture.FOURIER_GNN:
+                return FourierGNNParameters

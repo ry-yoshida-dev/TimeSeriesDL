@@ -9,8 +9,25 @@ from .attention import (
     ProbSparseAttentionMechanism,
     ValueEmbedding,
 )
-from .covariates import CovariateAdapterNetwork, CovariateAdapterParameters, StaticCovariateEmbedding
-from .heads import EncodedForecastNetwork, EncodedReconstructionNetwork, EncodedSummaryNetwork, EncoderHead
+from .covariates import (
+    CovariateAdapterNetwork,
+    CovariateAdapterParameters,
+    StaticCovariateEmbedding,
+)
+from .graph import (
+    AdaptiveAdjacency,
+    ChebyshevPolynomials,
+    DiffusionConvolution,
+    DirectedGraphLearner,
+    MixHopPropagation,
+    NodeAdaptiveGraphConvolution,
+)
+from .heads import (
+    EncodedForecastNetwork,
+    EncodedReconstructionNetwork,
+    EncodedSummaryNetwork,
+    EncoderHead,
+)
 from .layers import (
     Activation,
     ConvolutionBlock,
@@ -20,6 +37,15 @@ from .layers import (
     SinusoidalPositionalEncoding,
     TemporalLinear,
     TemporalPooling,
+)
+from .normalization import (
+    InstanceStatistics,
+    ReversibleInstanceNormalization,
+)
+from .random_convolution import (
+    KernelPooling,
+    KernelTransform,
+    KernelTransformSummaryNetwork,
 )
 from .state_space import (
     CausalDepthwiseConvolution,
@@ -43,18 +69,21 @@ from .state_space import (
 )
 
 __all__ = [
-    "CovariateAdapterNetwork",
-    "CovariateAdapterParameters",
-    "StaticCovariateEmbedding",
     "Activation",
+    "AdaptiveAdjacency",
     "AttentionMechanism",
     "AutoCorrelationAttentionMechanism",
     "CausalDepthwiseConvolution",
+    "ChebyshevPolynomials",
     "ConvolutionBlock",
     "ConvolutionalStateSpaceLayer",
+    "CovariateAdapterNetwork",
+    "CovariateAdapterParameters",
     "DPLRSSMKernel",
     "DiagonalInitialization",
     "DiagonalSSMKernel",
+    "DiffusionConvolution",
+    "DirectedGraphLearner",
     "Discretization",
     "EncodedForecastNetwork",
     "EncodedReconstructionNetwork",
@@ -68,20 +97,28 @@ __all__ = [
     "GatedLinearOutput",
     "HiPPOMeasure",
     "HiPPOMemory",
+    "InstanceStatistics",
+    "KernelPooling",
+    "KernelTransform",
+    "KernelTransformSummaryNetwork",
     "LRUStateSpaceLayer",
     "LinearRecurrence",
     "Mamba2StateSpaceLayer",
     "MambaStateSpaceLayer",
+    "MixHopPropagation",
     "MultiHeadAttention",
     "MultilayerPerceptron",
+    "NodeAdaptiveGraphConvolution",
     "NormalPlusLowRank",
     "ProbSparseAttentionMechanism",
+    "ReversibleInstanceNormalization",
     "S5StateSpaceLayer",
     "SSMKernel",
     "SameLengthConvolution",
     "SeriesDecomposition",
     "SinusoidalPositionalEncoding",
     "StateSpaceLayer",
+    "StaticCovariateEmbedding",
     "TemporalLinear",
     "TemporalPooling",
     "ValueEmbedding",

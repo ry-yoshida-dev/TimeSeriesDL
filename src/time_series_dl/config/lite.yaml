@@ -1,0 +1,11 @@
+model:
+  architecture: lite
+  parameters:
+    num_filters: 32
+    kernel_size: 41
+    is_custom_filtered: true
+    is_dilated: true
+    is_multiplexed: true
+    head:
+      pooling: mean
+      dropout: 0.0

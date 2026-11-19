@@ -1,0 +1,4 @@
+model:
+  architecture: sparse_tsf
+  parameters:
+    period: 24

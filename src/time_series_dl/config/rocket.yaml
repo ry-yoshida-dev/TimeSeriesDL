@@ -1,0 +1,6 @@
+model:
+  architecture: rocket
+  parameters:
+    num_kernels: 10000
+    kernel_lengths: [7, 9, 11]
+    is_normalized: true

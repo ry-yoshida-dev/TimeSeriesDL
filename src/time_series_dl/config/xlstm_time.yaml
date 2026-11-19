@@ -1,0 +1,16 @@
+model:
+  architecture: xlstm_time
+  parameters:
+    moving_average_size: 25
+    model_size: 256
+    stack:
+      num_blocks: 1
+      slstm_block_indices:
+      - 0
+      mlstm_num_heads: 4
+      slstm_num_heads: 4
+      mlstm_expansion: 2
+      projection_block_size: 4
+      convolution_size: 4
+      feedforward_factor: 1.3
+      dropout: 0.0

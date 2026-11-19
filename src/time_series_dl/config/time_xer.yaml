@@ -1,0 +1,10 @@
+model:
+  architecture: time_xer
+  parameters:
+    patch_length: 16
+    model_size: 512
+    num_heads: 8
+    num_layers: 2
+    feedforward_size: 2048
+    dropout: 0.1
+    activation: gelu

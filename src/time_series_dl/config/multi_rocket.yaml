@@ -1,0 +1,5 @@
+model:
+  architecture: multi_rocket
+  parameters:
+    num_features: 50000
+    max_dilations_per_kernel: 32

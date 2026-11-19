@@ -57,8 +57,16 @@ class ModelSettings:
         -------
         ForecastingModel
             The parameters.
+
+        Raises
+        ------
+        ValueError
+            If ``architecture`` does not support forecasting.
         """
-        return self.build()
+        parameters: ModelParameters = self.build()
+        if not isinstance(parameters, ForecastingModel):
+            raise ValueError(f"{self.architecture} does not support forecasting.")
+        return parameters
 
     def build_summary_model(self) -> SummaryModel:
         """

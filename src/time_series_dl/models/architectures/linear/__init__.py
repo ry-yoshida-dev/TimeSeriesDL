@@ -5,7 +5,10 @@ from .dlinear import (
     DLinearReconstructionNetwork,
     DLinearSummaryNetwork,
 )
+from .fits import FITSForecastNetwork, FITSFrequencyInterpolation, FITSParameters, FITSReconstructionNetwork
 from .nlinear import NLinearForecastNetwork, NLinearParameters
+from .rlinear import RLinearForecastNetwork, RLinearParameters, RLinearReconstructionNetwork
+from .sparse_tsf import SparseTSFForecastNetwork, SparseTSFParameters
 
 __all__ = [
     "DLinearForecastNetwork",
@@ -13,6 +16,15 @@ __all__ = [
     "DLinearReconstructionNetwork",
     "DLinearSummaryNetwork",
     "DecompositionLinear",
+    "FITSForecastNetwork",
+    "FITSFrequencyInterpolation",
+    "FITSParameters",
+    "FITSReconstructionNetwork",
     "NLinearForecastNetwork",
     "NLinearParameters",
+    "RLinearForecastNetwork",
+    "RLinearParameters",
+    "RLinearReconstructionNetwork",
+    "SparseTSFForecastNetwork",
+    "SparseTSFParameters",
 ]

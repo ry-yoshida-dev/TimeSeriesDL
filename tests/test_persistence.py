@@ -14,6 +14,7 @@ from time_series_dl.models import (
     ForecastingModel,
     MLPParameters,
     ModelArchitecture,
+    ModelSettings,
     NBEATSBlockKind,
     NBEATSParameters,
     NBEATSStack,
@@ -61,12 +62,17 @@ def test_forecaster_round_trip(tmp_path: Path, fast_training: TrainingSettings, 
     assert loaded.evaluate(sine_series).mae == pytest.approx(forecaster.evaluate(sine_series).mae)
 
 
-@pytest.mark.parametrize("architecture", list(ModelArchitecture))
+FORECASTING_ARCHITECTURES: list[ModelArchitecture] = [
+    architecture for architecture in ModelArchitecture if isinstance(architecture.parameters_type(), ForecastingModel)
+]
+
+
+@pytest.mark.parametrize("architecture", FORECASTING_ARCHITECTURES, ids=str)
 def test_forecaster_round_trip_of_every_model(
     tmp_path: Path, fast_training: TrainingSettings, sine_series: np.ndarray, architecture: ModelArchitecture
 ) -> None:
     forecaster = ForecasterSettings(
-        model=architecture.parameters_type(),
+        model=ModelSettings(architecture=architecture).build_forecasting_model(),
         window=ForecastWindow(input_length=48, horizon=8, stride=8),
         objective=PointObjective(loss=HuberLoss(delta=0.5)),
         training=replace(fast_training, max_epochs=1),

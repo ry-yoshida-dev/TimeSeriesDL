@@ -2,7 +2,7 @@
 
 ## Overview
 
-TimeSeriesDL (`time_series_dl`) puts 32 deep learning models for time series behind one PyTorch interface per task.
+TimeSeriesDL (`time_series_dl`) puts 61 deep learning models for time series behind one PyTorch interface per task.
 Each task is built from a settings dataclass that takes a model's parameters, so models are swapped by changing one
 argument; the type checker rejects a model that does not support the task. Training (optimizer, schedule, early
 stopping, device) and saving to files that load without pickle are shared by every task, and so are the point
@@ -11,17 +11,20 @@ cross-entropy or focal loss.
 
 | Task | Interface | Input → output | Models |
 | ---- | --------- | -------------- | ------ |
-| Forecasting | `Forecaster` | series → point, quantile, Gaussian, Student's t or Laplace forecasts of the next horizon | all 32 |
-| Classification | `SequenceClassifier` | (N, L, C) sequences → class | 24 |
-| Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 24 |
-| Imputation | `Imputer` | sequences with NaN → filled sequences | 24 |
-| Anomaly detection | `AnomalyDetector` | series → anomaly score of every time step | 24 |
+| Forecasting | `Forecaster` | series → point, quantile, Gaussian, Student's t or Laplace forecasts of the next horizon | 58 |
+| Classification | `SequenceClassifier` | (N, L, C) sequences → class | 42 |
+| Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 42 |
+| Imputation | `Imputer` | sequences with NaN → filled sequences | 39 |
+| Anomaly detection | `AnomalyDetector` | series → anomaly score of every time step | 39 |
 
-The models range from MLP, RNN, TCN and convolutional classifiers (FCN, ResNet, InceptionTime) through linear and
-MLP forecasters (DLinear, NLinear, TSMixer, TiDE, SegRNN) and Transformers (Transformer, Informer, Autoformer,
-FEDformer, PatchTST, iTransformer, TimesNet) to forecasting-specific models (N-BEATS, N-HiTS, DeepAR, Temporal
-Fusion Transformer), and state space models from HiPPO memories (HiPPO-RNN, LMU) through deep state space models (S4,
-S4D, S5, LRU) to Mamba, Mamba-2, S-Mamba and FiLM. Which model supports which task is listed in
+The models span linear and MLP forecasters (DLinear, RLinear, FITS, SparseTSF, TSMixer, TiDE, TimeMixer,
+TimeMixer++, FreTS, Koopa, N-BEATS, N-HiTS), recurrent networks (LSTM/GRU, SegRNN, DeepAR, xLSTM, xLSTMTime,
+minGRU/minLSTM, LSTNet), convolutional networks and classifiers (FCN, ResNet, InceptionTime, LITE, TCN, TimesNet,
+MICN, ModernTCN, ROCKET, MiniRocket, MultiRocket), Transformers (Transformer, Informer, Autoformer, FEDformer,
+Pyraformer, ETSformer, Non-stationary Transformer, Crossformer, PatchTST, iTransformer, TimeXer, TST, ConvTran,
+Temporal Fusion Transformer), state space models (HiPPO-RNN, LMU, S4, S4D, S5, LRU, Mamba, Mamba-2, S-Mamba, FiLM)
+and graph neural networks over the channels (MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN). Forecasts accept
+known-future and static covariates with every forecasting model. Which model supports which task is listed in
 [src/time_series_dl/models/](src/time_series_dl/models/README.md). Classification and regression metrics are the
 types of [ClassReg](https://github.com/ry-yoshida-dev/ClassReg), and scaling comes from
 [DataScaler](https://github.com/ry-yoshida-dev/DataScaler).

@@ -1,0 +1,15 @@
+model:
+  architecture: mtgnn
+  parameters:
+    num_layers: 3
+    convolution_channels: 32
+    residual_channels: 32
+    skip_channels: 64
+    end_channels: 128
+    embedding_size: 40
+    num_neighbors: 20
+    saturation: 3.0
+    propagation_depth: 2
+    retain_ratio: 0.05
+    dilation_base: 1
+    dropout: 0.3

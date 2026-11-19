@@ -1,0 +1,6 @@
+model:
+  architecture: rlinear
+  parameters:
+    is_individual: false
+    dropout: 0.1
+    is_affine: true

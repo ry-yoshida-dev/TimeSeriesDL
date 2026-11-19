@@ -1,0 +1,8 @@
+model:
+  architecture: fourier_gnn
+  parameters:
+    embedding_size: 128
+    num_operators: 3
+    sparsity_threshold: 0.01
+    time_projection_size: 8
+    hidden_size: 256
