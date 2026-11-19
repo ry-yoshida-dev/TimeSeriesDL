@@ -191,3 +191,11 @@ def test_calendar_features() -> None:
         _ = CalendarFeatures().compute(cast(NDArray[np.datetime64], np.arange(3)))
     with pytest.raises(ValueError, match="repeat"):
         _ = CalendarFeatures((CalendarFeature.HOUR_OF_DAY, CalendarFeature.HOUR_OF_DAY))
+
+
+@pytest.mark.parametrize("length", [5, 7])
+def test_windows_are_writable_copies(length: int) -> None:
+    values = np.zeros((length, 2), dtype=np.float32)
+    windows = SlidingWindows(5).extract(values)
+    assert windows.flags.writeable and windows.flags.c_contiguous
+    assert not np.shares_memory(windows, values)

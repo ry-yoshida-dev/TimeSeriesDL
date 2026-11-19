@@ -190,7 +190,7 @@ class AnomalyDetector:
         length: int = self._sample_length
         windows: SlidingWindows = SlidingWindows(length)
         # A series of exactly one window comes back as a read-only view, which torch cannot wrap.
-        scaled: FloatArray = np.require(windows.extract(self._scaler.transform(values)), requirements="W")
+        scaled: FloatArray = windows.extract(self._scaler.transform(values))
         window_scores: Tensor = BatchedInference(self._trainer.device, self.settings.training.batch_size).run(
             step.compute_scores, TensorDataset(torch.from_numpy(scaled))
         )

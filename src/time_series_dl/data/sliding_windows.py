@@ -72,4 +72,4 @@ class SlidingWindows:
         if values.shape[0] < self.length:
             raise ValueError(f"series of length {values.shape[0]} is shorter than one window of {self.length}")
         windows: FloatArray = np.lib.stride_tricks.sliding_window_view(values, self.length, axis=0)
-        return np.ascontiguousarray(windows[:: self.stride].transpose(0, 2, 1))
+        return windows[:: self.stride].transpose(0, 2, 1).copy(order="C")
