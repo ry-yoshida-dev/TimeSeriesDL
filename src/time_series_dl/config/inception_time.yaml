@@ -1,0 +1,13 @@
+model:
+  architecture: inception_time
+  parameters:
+    num_filters: 32
+    bottleneck_size: 32
+    max_kernel_size: 40
+    num_kernel_sizes: 3
+    depth: 6
+    is_residual: true
+    residual_interval: 3
+    head:
+      pooling: mean
+      dropout: 0.0

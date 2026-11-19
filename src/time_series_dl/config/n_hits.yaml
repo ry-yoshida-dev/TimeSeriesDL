@@ -1,0 +1,21 @@
+model:
+  architecture: n_hits
+  parameters:
+    stacks:
+    - pooling_kernel_size: 2
+      downsampling_factor: 4
+      num_blocks: 1
+      num_layers: 2
+      hidden_size: 512
+    - pooling_kernel_size: 2
+      downsampling_factor: 2
+      num_blocks: 1
+      num_layers: 2
+      hidden_size: 512
+    - pooling_kernel_size: 1
+      downsampling_factor: 1
+      num_blocks: 1
+      num_layers: 2
+      hidden_size: 512
+    pooling: max
+    interpolation: linear

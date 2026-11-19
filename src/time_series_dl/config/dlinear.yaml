@@ -1,0 +1,5 @@
+model:
+  architecture: dlinear
+  parameters:
+    kernel_size: 25
+    is_individual: false

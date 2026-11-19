@@ -1,0 +1,9 @@
+model:
+  architecture: times_net
+  parameters:
+    model_size: 64
+    feedforward_size: 64
+    num_layers: 2
+    top_k: 5
+    num_kernels: 6
+    dropout: 0.1

@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=77.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "time-series-dl"
+version = "0.0.1"
+authors = [
+  { name = "Ryuto Yoshida" },
+]
+description = "Deep learning models for time series forecasting, classification, regression, imputation and anomaly detection behind one PyTorch interface."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "classreg @ git+https://github.com/ry-yoshida-dev/ClassReg.git@398b681cbffd29adc6cde0249e5e16b11acfc1f3",
+    "data-scaler @ git+https://github.com/ry-yoshida-dev/DataScaler.git@13edc913fa2ea4da434455b62cf448c9af66a741",
+    "numpy>=2.2",
+    "scikit-learn>=1.8",
+    "scipy>=1.15",
+    "torch>=2.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/ry-yoshida-dev/TimeSeriesDL"
+"Bug Tracker" = "https://github.com/ry-yoshida-dev/TimeSeriesDL/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+time_series_dl = ["py.typed", "config/*.yaml"]
+
+[tool.pyright]
+include = ["src", "tests"]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = false
+reportUnknownMemberType = false
+
+[tool.mypy]
+mypy_path = "src:tests"
+files = ["src", "tests"]
+explicit_package_bases = true
+strict = true
+untyped_calls_exclude = ["torch._tensor", "torch.distributions"]
+
+[[tool.mypy.overrides]]
+module = ["scipy.*", "sklearn.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+filterwarnings = ["error"]
+
+[dependency-groups]
+dev = [
+    "basedpyright",
+    "mypy",
+    "pytest",
+    "pyyaml>=6.0.3",
+    "ruff",
+    "types-pyyaml>=6.0.12.20261111",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.uv]
+exclude-newer = "7 days"

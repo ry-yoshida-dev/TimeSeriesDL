@@ -1,0 +1,8 @@
+model:
+  architecture: ts_mixer
+  parameters:
+    num_blocks: 2
+    hidden_size: 64
+    dropout: 0.1
+    normalization: batch
+    pooling: flatten

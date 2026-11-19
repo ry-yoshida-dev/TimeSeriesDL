@@ -1,0 +1,16 @@
+model:
+  architecture: informer
+  parameters:
+    model_size: 512
+    num_heads: 8
+    num_encoder_layers: 2
+    num_decoder_layers: 1
+    feedforward_size: 2048
+    factor: 5
+    dropout: 0.05
+    activation: gelu
+    is_distilling: true
+    label_length: 48
+    head:
+      pooling: mean
+      dropout: 0.0

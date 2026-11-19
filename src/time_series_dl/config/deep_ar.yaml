@@ -1,0 +1,7 @@
+model:
+  architecture: deep_ar
+  parameters:
+    cell: lstm
+    hidden_size: 40
+    num_layers: 2
+    dropout: 0.1

@@ -1,0 +1,7 @@
+model:
+  architecture: seg_rnn
+  parameters:
+    segment_length: 48
+    hidden_size: 512
+    dropout: 0.5
+    is_channel_embedded: true

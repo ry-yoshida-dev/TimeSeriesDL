@@ -1,0 +1,10 @@
+model:
+  architecture: tide
+  parameters:
+    hidden_size: 256
+    num_encoder_layers: 2
+    num_decoder_layers: 2
+    decoder_output_size: 8
+    temporal_decoder_hidden_size: 128
+    dropout: 0.3
+    is_layer_normalized: true

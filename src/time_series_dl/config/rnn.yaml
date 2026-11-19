@@ -1,0 +1,11 @@
+model:
+  architecture: rnn
+  parameters:
+    cell: lstm
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.1
+    is_bidirectional: false
+    head:
+      pooling: last
+      dropout: 0.0

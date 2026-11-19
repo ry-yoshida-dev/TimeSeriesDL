@@ -1,0 +1,99 @@
+from collections.abc import Mapping
+from dataclasses import dataclass, field
+
+from ..interfaces import ForecastingModel, ReconstructionModel, SummaryModel
+from .architecture import ModelArchitecture, ModelParameters
+from .parameters_reader import ParametersReader
+
+
+@dataclass(frozen=True, kw_only=True)
+class ModelSettings:
+    """
+    Architecture and parameters of a model, in a form a configuration file can describe.
+
+    The fields map one-to-one onto the ``model`` section of the YAML presets in this package, so a preset can be
+    turned into settings by any dataclass builder (enums are written by value). The parameters are checked when the
+    settings are created.
+
+    Attributes
+    ----------
+    architecture : ModelArchitecture
+        Model family.
+    parameters : Mapping[str, object]
+        Fields of the parameters class of ``architecture``; fields left out keep their defaults.
+
+    Raises
+    ------
+    TypeError
+        If a parameter has the wrong type.
+    KeyError
+        If a parameter is not a field of the parameters class.
+    ValueError
+        If a parameter is not a member of its enum, or the parameters class rejects a value.
+    """
+
+    architecture: ModelArchitecture
+    parameters: Mapping[str, object] = field(default_factory=dict[str, object])
+
+    def __post_init__(self) -> None:
+        self.build()
+
+    def build(self) -> ModelParameters:
+        """
+        Build the parameters of ``architecture``.
+
+        Returns
+        -------
+        ModelParameters
+            The parameters, such as ``PatchTSTParameters``.
+        """
+        return ParametersReader.read(self.architecture.parameters_type, self.parameters)
+
+    def build_forecasting_model(self) -> ForecastingModel:
+        """
+        Build the parameters for ``ForecasterSettings``.
+
+        Returns
+        -------
+        ForecastingModel
+            The parameters.
+        """
+        return self.build()
+
+    def build_summary_model(self) -> SummaryModel:
+        """
+        Build the parameters for ``ClassifierSettings`` or ``RegressorSettings``.
+
+        Returns
+        -------
+        SummaryModel
+            The parameters.
+
+        Raises
+        ------
+        ValueError
+            If ``architecture`` does not support classification and regression.
+        """
+        parameters: ModelParameters = self.build()
+        if not isinstance(parameters, SummaryModel):
+            raise ValueError(f"{self.architecture} does not support classification or regression.")
+        return parameters
+
+    def build_reconstruction_model(self) -> ReconstructionModel:
+        """
+        Build the parameters for ``ImputerSettings`` or ``AnomalyDetectorSettings``.
+
+        Returns
+        -------
+        ReconstructionModel
+            The parameters.
+
+        Raises
+        ------
+        ValueError
+            If ``architecture`` does not support imputation and anomaly detection.
+        """
+        parameters: ModelParameters = self.build()
+        if not isinstance(parameters, ReconstructionModel):
+            raise ValueError(f"{self.architecture} does not support imputation or anomaly detection.")
+        return parameters

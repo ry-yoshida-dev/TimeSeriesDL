@@ -1,0 +1,9 @@
+model:
+  architecture: tcn
+  parameters:
+    channel_sizes: [64, 64, 64, 64]
+    kernel_size: 3
+    dropout: 0.1
+    head:
+      pooling: last
+      dropout: 0.0
