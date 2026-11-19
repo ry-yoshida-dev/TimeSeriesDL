@@ -15,7 +15,7 @@ Charbonnier, pinball, MAPE, sMAPE, MSLE) trains the tasks that predict values, a
 | Forecasting | `Forecaster` | series → point, quantile, parametric, multivariate low-rank Gaussian or sample-path forecasts of the next horizon, with conformal intervals | 70 |
 | Classification | `SequenceClassifier` | (N, L, C) sequences → class | 46 |
 | Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 46 |
-| Imputation | `Imputer` | sequences with NaN → filled sequences | 45 |
+| Imputation | `Imputer` | sequences with NaN → filled sequences | 46 |
 | Anomaly detection | `AnomalyDetector` | series → anomaly score of every time step | 70 |
 | Irregular classification | `IrregularSequenceClassifier` | irregularly sampled sequences → class | 4 |
 | Irregular regression | `IrregularSequenceRegressor` | irregularly sampled sequences → one or more values | 4 |

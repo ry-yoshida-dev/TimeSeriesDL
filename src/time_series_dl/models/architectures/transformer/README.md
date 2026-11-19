@@ -26,5 +26,5 @@ Models built from attention or its replacements.
 | [Anomaly Transformer (Xu et al., 2022)](./anomaly_transformer/README.md) | `AnomalyTransformerParameters` | | | | ✓ |
 | [DCdetector (Yang et al., 2023)](./dcdetector/README.md) | `DCdetectorParameters` | | | | ✓ |
 | [TranAD (Tuli et al., 2022)](./tranad/README.md) | `TranADParameters` | | | | ✓ |
-| [CSDI (Tashiro et al., 2021)](./csdi/README.md) | `CSDIParameters` | ✓ (generative) | | | |
+| [CSDI (Tashiro et al., 2021)](./csdi/README.md) | `CSDIParameters` | ✓ (generative) | | ✓ | |
 | [Decomposition Transformer](./decomposition/README.md) | Built by `AutoformerParameters` and `FEDformerParameters` | ✓ | ✓ | ✓ | ✓ |

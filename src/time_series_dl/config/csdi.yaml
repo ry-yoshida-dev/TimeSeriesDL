@@ -14,3 +14,4 @@ model:
       num_steps: 50
       first_variance: 0.0001
       last_variance: 0.5
+    num_imputation_samples: 20

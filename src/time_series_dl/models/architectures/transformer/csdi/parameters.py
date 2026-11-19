@@ -1,10 +1,12 @@
 from dataclasses import dataclass, field
 
 from ....components.diffusion import NoiseSchedule, NoiseScheduleKind
-from ....interfaces import ForecastNetwork, ForecastShape
+from ....interfaces import ForecastNetwork, ForecastShape, SequenceShape
 from ....interfaces.generative_forecast_network import GenerativeForecastNetwork
+from ....interfaces.masked_reconstruction_network import MaskedReconstructionNetwork
 from .conditional_imputer import CSDIConditionalImputer
 from .generative_forecast_network import CSDIForecastNetwork
+from .masked_reconstruction_network import CSDIMaskedReconstructionNetwork
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -12,11 +14,15 @@ class CSDIParameters:
     """
     CSDI (Tashiro et al., 2021): a conditional score-based diffusion model that imputes the unobserved values of a
     (features, time) array from the observed ones, with a Transformer over time and one over features in every
-    residual layer. Forecasting imputes the horizon of every target channel from the past window.
+    residual layer. Forecasting imputes the horizon of every target channel from the past window; imputation trains
+    with random conditional masks and fills each missing value with the median of samples.
 
     The defaults are those of the authors' forecasting configuration: 4 residual layers of 64 channels, 8 attention
     heads with a feed-forward size of 64, 128 sinusoidal diffusion step features, 128 time embedding and 16 feature
-    embedding dimensions, and 50 diffusion steps with quadratically growing variances from 1e-4 to 0.5.
+    embedding dimensions, and 50 diffusion steps with quadratically growing variances from 1e-4 to 0.5 (the same in
+    the authors' imputation configuration). The paper imputes with the median of 100 samples; the default of 20
+    makes imputation five times faster (each sample runs every diffusion step), at the cost of a slightly noisier
+    median.
 
     Attributes
     ----------
@@ -38,12 +44,14 @@ class CSDIParameters:
         Size of the learned embedding of each feature (channel).
     noise_schedule : NoiseSchedule
         Variances of the diffusion process.
+    num_imputation_samples : int
+        Number of samples whose median imputes each missing value outside training.
 
     Raises
     ------
     ValueError
-        If a size is not positive, channels is not divisible by num_heads, dropout is not in [0, 1), or an embedding
-        size that must be even is odd.
+        If a size or num_imputation_samples is not positive, channels is not divisible by num_heads, dropout is not in
+        [0, 1), or an embedding size that must be even is odd.
     """
 
     channels: int = 64
@@ -59,6 +67,7 @@ class CSDIParameters:
             kind=NoiseScheduleKind.QUADRATIC, num_steps=50, first_variance=1e-4, last_variance=0.5
         )
     )
+    num_imputation_samples: int = 20
 
     def __post_init__(self) -> None:
         for name, value in (
@@ -68,6 +77,7 @@ class CSDIParameters:
             ("feedforward_size", self.feedforward_size),
             ("time_embedding_size", self.time_embedding_size),
             ("feature_embedding_size", self.feature_embedding_size),
+            ("num_imputation_samples", self.num_imputation_samples),
         ):
             if value <= 0:
                 raise ValueError(f"{name} must be positive, got {value}")
@@ -95,6 +105,22 @@ class CSDIParameters:
             The imputer.
         """
         return CSDIConditionalImputer(self, num_features)
+
+    def build_masked_reconstruction_network(self, shape: SequenceShape) -> MaskedReconstructionNetwork:
+        """
+        Build an untrained CSDI imputation network.
+
+        Parameters
+        ----------
+        shape : SequenceShape
+            The dimensions of the sequences.
+
+        Returns
+        -------
+        MaskedReconstructionNetwork
+            The network.
+        """
+        return CSDIMaskedReconstructionNetwork(self, shape)
 
     def build_generative_forecast_network(self, shape: ForecastShape) -> GenerativeForecastNetwork:
         """
