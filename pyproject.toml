@@ -8,7 +8,7 @@ version = "0.0.1"
 authors = [
   { name = "Ryuto Yoshida" },
 ]
-description = "Deep learning models for time series forecasting, classification, regression, imputation and anomaly detection behind one PyTorch interface."
+description = "Deep learning models for time series forecasting, classification, regression, imputation, anomaly detection, irregular sequences, generation and representation learning behind one PyTorch interface."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]

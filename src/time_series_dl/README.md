@@ -9,7 +9,7 @@ that names a model's parameters; a model supports a task when it can build the n
 
 | Component | Description |
 | --------- | ----------- |
-| [tasks/](./tasks/README.md) | Forecasting, classification, regression, imputation and anomaly detection. |
+| [tasks/](./tasks/README.md) | Forecasting, classification, regression, imputation, anomaly detection, irregular sequences, generation and representation learning. |
 | [models/](./models/README.md) | Parameters and networks of every model. |
 | [config/](./config/README.md) | YAML presets of every model for `ModelSettings`. |
 | [training/](./training/README.md) | `TrainingSettings` and the shared training loop. |

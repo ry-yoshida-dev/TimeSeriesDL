@@ -9,7 +9,7 @@ and trains with the shared training loop.
 
 | Component | Description |
 | --------- | ----------- |
-| [forecasting/](./forecasting/README.md) | `Forecaster`: point, quantile or Gaussian forecasts of the next horizon. |
+| [forecasting/](./forecasting/README.md) | `Forecaster`: point, quantile, parametric or sample-path forecasts of the next horizon, with conformal intervals. |
 | [classification/](./classification/README.md) | `SequenceClassifier`: one class per sequence. |
 | [regression/](./regression/README.md) | `SequenceRegressor`: one or more values per sequence. |
 | [imputation/](./imputation/README.md) | `Imputer`: fills missing values. |
