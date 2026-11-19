@@ -16,6 +16,7 @@ from time_series_dl.models import (
     NBEATSParameters,
     NBEATSStack,
     PatchTSTParameters,
+    SAITSParameters,
     TCNParameters,
     TemporalPooling,
 )
@@ -88,6 +89,13 @@ def test_task_models_follow_supported_tasks() -> None:
     assert isinstance(mini_rocket.build_summary_model(), MiniRocketParameters)
     with pytest.raises(ValueError, match="forecasting"):
         mini_rocket.build_forecasting_model()
+    saits = ModelSettings(architecture=ModelArchitecture.SAITS)
+    assert isinstance(saits.build_imputation_model(), SAITSParameters)
+    with pytest.raises(ValueError, match="anomaly detection"):
+        saits.build_reconstruction_model()
+    with pytest.raises(ValueError, match="imputation"):
+        mini_rocket.build_imputation_model()
+    assert isinstance(patch_tst.build_imputation_model(), PatchTSTParameters)
 
 
 def test_invalid_parameters_raise() -> None:

@@ -12,13 +12,16 @@ from torch.utils.data import TensorDataset
 
 from ...array_types import BoolArray, FloatArray
 from ...data import ChannelScaler, SequenceArray
-from ...models import ReconstructionNetwork, SequenceShape
+from ...models import ReconstructionModel, SequenceShape
+from ...models.interfaces.masked_reconstruction_network import MaskedReconstructionNetwork
+from ...models.interfaces.protocols.masked_reconstruction import MaskedReconstructionModel
 from ...persistence import Checkpoint, SettingsCodec, TaskKind
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
 from .masked_reconstruction_step import MaskedReconstructionStep
 from .metrics import ImputationMetrics
 from .settings import ImputerSettings
+from .zero_filled_network import ZeroFilledNetwork
 
 _CODEC: Final[SettingsCodec] = SettingsCodec.including(ImputerSettings)
 
@@ -50,14 +53,15 @@ class Imputer:
         self._channels: int = 0
 
     @property
-    def network(self) -> ReconstructionNetwork:
+    def network(self) -> MaskedReconstructionNetwork:
         """
         Get the trained network.
 
         Returns
         -------
-        ReconstructionNetwork
-            The network.
+        MaskedReconstructionNetwork
+            The network; a ``ZeroFilledNetwork`` around the model's network for models that do not read the
+            observed mask.
 
         Raises
         ------
@@ -260,13 +264,14 @@ class Imputer:
         return imputer
 
     def _build_step(self) -> MaskedReconstructionStep:
-        return MaskedReconstructionStep(
-            network=self.settings.model.build_reconstruction_network(
-                SequenceShape(length=self._length, channels=self._channels)
-            ),
-            mask_ratio=self.settings.mask_ratio,
-            loss=self.settings.loss,
+        shape: SequenceShape = SequenceShape(length=self._length, channels=self._channels)
+        model: ReconstructionModel | MaskedReconstructionModel = self.settings.model
+        network: MaskedReconstructionNetwork = (
+            model.build_masked_reconstruction_network(shape)
+            if isinstance(model, MaskedReconstructionModel)
+            else ZeroFilledNetwork(model.build_reconstruction_network(shape))
         )
+        return MaskedReconstructionStep(network=network, mask_ratio=self.settings.mask_ratio, loss=self.settings.loss)
 
     def _reconstruct(self, sequences: SequenceArray) -> FloatArray:
         step: MaskedReconstructionStep = self._require_step()

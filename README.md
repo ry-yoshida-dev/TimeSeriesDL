@@ -2,7 +2,7 @@
 
 ## Overview
 
-TimeSeriesDL (`time_series_dl`) puts 61 deep learning models for time series behind one PyTorch interface per task.
+TimeSeriesDL (`time_series_dl`) puts 64 deep learning models for time series behind one PyTorch interface per task.
 Each task is built from a settings dataclass that takes a model's parameters, so models are swapped by changing one
 argument; the type checker rejects a model that does not support the task. Training (optimizer, schedule, early
 stopping, device) and saving to files that load without pickle are shared by every task, and so are the point
@@ -14,7 +14,7 @@ cross-entropy or focal loss.
 | Forecasting | `Forecaster` | series → point, quantile, Gaussian, Student's t or Laplace forecasts of the next horizon | 58 |
 | Classification | `SequenceClassifier` | (N, L, C) sequences → class | 42 |
 | Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 42 |
-| Imputation | `Imputer` | sequences with NaN → filled sequences | 39 |
+| Imputation | `Imputer` | sequences with NaN → filled sequences | 42 |
 | Anomaly detection | `AnomalyDetector` | series → anomaly score of every time step | 39 |
 
 The models span linear and MLP forecasters (DLinear, RLinear, FITS, SparseTSF, TSMixer, TiDE, TimeMixer,
@@ -23,7 +23,8 @@ minGRU/minLSTM, LSTNet), convolutional networks and classifiers (FCN, ResNet, In
 MICN, ModernTCN, ROCKET, MiniRocket, MultiRocket), Transformers (Transformer, Informer, Autoformer, FEDformer,
 Pyraformer, ETSformer, Non-stationary Transformer, Crossformer, PatchTST, iTransformer, TimeXer, TST, ConvTran,
 Temporal Fusion Transformer), state space models (HiPPO-RNN, LMU, S4, S4D, S5, LRU, Mamba, Mamba-2, S-Mamba, FiLM)
-and graph neural networks over the channels (MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN). Forecasts accept
+graph neural networks over the channels (MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN), and imputation models
+that read the missing-value mask (SAITS, BRITS, GRU-D). Forecasts accept
 known-future and static covariates with every forecasting model. Which model supports which task is listed in
 [src/time_series_dl/models/](src/time_series_dl/models/README.md). Classification and regression metrics are the
 types of [ClassReg](https://github.com/ry-yoshida-dev/ClassReg), and scaling comes from
@@ -123,11 +124,12 @@ classifier = ClassifierSettings(model=model.build_summary_model()).build()
 Impute missing values and detect anomalies:
 
 ```python
-from time_series_dl.models import RNNParameters, TimesNetParameters
+from time_series_dl import MAELoss
+from time_series_dl.models import RNNParameters, SAITSParameters
 from time_series_dl.tasks.anomaly_detection import AnomalyDetectorSettings
 from time_series_dl.tasks.imputation import ImputerSettings
 
-imputer = ImputerSettings(model=TimesNetParameters()).build()
+imputer = ImputerSettings(model=SAITSParameters(), loss=MAELoss(), mask_ratio=0.2).build()
 imputer.fit(windows_with_nan)
 filled = imputer.impute(windows_with_nan)
 

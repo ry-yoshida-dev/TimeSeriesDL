@@ -28,7 +28,9 @@ from .architectures.mlp.time_mixer import TimeMixerParameters
 from .architectures.mlp.time_mixer_plus_plus import TimeMixerPlusPlusParameters
 from .architectures.mlp.ts_mixer import TSMixerNormalization, TSMixerParameters
 from .architectures.mlp.vanilla import MLPParameters
+from .architectures.recurrent.brits import BRITSParameters
 from .architectures.recurrent.deep_ar import DeepARParameters
+from .architectures.recurrent.gru_d import GRUDParameters
 from .architectures.recurrent.lstnet import LSTNetParameters
 from .architectures.recurrent.min_rnn import MinimalRecurrentCell, MinRNNParameters
 from .architectures.recurrent.seg_rnn import SegRNNParameters
@@ -55,6 +57,7 @@ from .architectures.transformer.itransformer import ITransformerParameters
 from .architectures.transformer.non_stationary_transformer import NonStationaryTransformerParameters
 from .architectures.transformer.patch_tst import PatchTSTParameters, TokenNormalization
 from .architectures.transformer.pyraformer import PyraformerParameters
+from .architectures.transformer.saits import SAITSParameters
 from .architectures.transformer.temporal_fusion_transformer import (
     TemporalFusionInterpretation,
     TemporalFusionTransformerParameters,
@@ -75,6 +78,9 @@ from .interfaces import (
     ForecastingModel,
     ForecastNetwork,
     ForecastShape,
+    MaskedReconstruction,
+    MaskedReconstructionModel,
+    MaskedReconstructionNetwork,
     ReconstructionModel,
     ReconstructionNetwork,
     SequenceEncoder,
@@ -87,6 +93,12 @@ from .settings.architecture import ModelArchitecture, ModelParameters
 from .settings.model import ModelSettings
 
 __all__ = [
+    "BRITSParameters",
+    "GRUDParameters",
+    "SAITSParameters",
+    "MaskedReconstruction",
+    "MaskedReconstructionModel",
+    "MaskedReconstructionNetwork",
     "AGCRNParameters",
     "AbsolutePositionEncoding",
     "Activation",

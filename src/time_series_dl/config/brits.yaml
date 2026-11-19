@@ -1,0 +1,5 @@
+model:
+  architecture: brits
+  parameters:
+    hidden_size: 64
+    consistency_weight: 0.1

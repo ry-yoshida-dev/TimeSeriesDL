@@ -30,7 +30,9 @@ from ..architectures.mlp.time_mixer import TimeMixerParameters
 from ..architectures.mlp.time_mixer_plus_plus import TimeMixerPlusPlusParameters
 from ..architectures.mlp.ts_mixer import TSMixerParameters
 from ..architectures.mlp.vanilla import MLPParameters
+from ..architectures.recurrent.brits import BRITSParameters
 from ..architectures.recurrent.deep_ar import DeepARParameters
+from ..architectures.recurrent.gru_d import GRUDParameters
 from ..architectures.recurrent.lstnet import LSTNetParameters
 from ..architectures.recurrent.min_rnn import MinRNNParameters
 from ..architectures.recurrent.seg_rnn import SegRNNParameters
@@ -57,6 +59,7 @@ from ..architectures.transformer.itransformer import ITransformerParameters
 from ..architectures.transformer.non_stationary_transformer import NonStationaryTransformerParameters
 from ..architectures.transformer.patch_tst import PatchTSTParameters
 from ..architectures.transformer.pyraformer import PyraformerParameters
+from ..architectures.transformer.saits import SAITSParameters
 from ..architectures.transformer.temporal_fusion_transformer import TemporalFusionTransformerParameters
 from ..architectures.transformer.time_xer import TimeXerParameters
 from ..architectures.transformer.tst import TSTParameters
@@ -124,6 +127,9 @@ type ModelParameters = (
     | AGCRNParameters
     | StemGNNParameters
     | FourierGNNParameters
+    | SAITSParameters
+    | BRITSParameters
+    | GRUDParameters
 )
 
 
@@ -195,6 +201,9 @@ class ModelArchitecture(StrEnum):
     AGCRN = "agcrn"
     STEM_GNN = "stem_gnn"
     FOURIER_GNN = "fourier_gnn"
+    SAITS = "saits"
+    BRITS = "brits"
+    GRU_D = "gru_d"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -329,3 +338,9 @@ class ModelArchitecture(StrEnum):
                 return StemGNNParameters
             case ModelArchitecture.FOURIER_GNN:
                 return FourierGNNParameters
+            case ModelArchitecture.SAITS:
+                return SAITSParameters
+            case ModelArchitecture.BRITS:
+                return BRITSParameters
+            case ModelArchitecture.GRU_D:
+                return GRUDParameters

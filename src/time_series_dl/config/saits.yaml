@@ -1,0 +1,13 @@
+model:
+  architecture: saits
+  parameters:
+    num_layers: 2
+    model_size: 256
+    num_heads: 4
+    key_size: 64
+    value_size: 64
+    feedforward_size: 128
+    dropout: 0.1
+    attention_dropout: 0.0
+    observed_reconstruction_weight: 1.0
+    masked_imputation_weight: 1.0

@@ -92,6 +92,13 @@ from .pyraformer import (
     PyraformerReconstructionNetwork,
     PyraformerSummaryNetwork,
 )
+from .saits import (
+    SAITSBlock,
+    SAITSDiagonallyMaskedAttention,
+    SAITSEncoderLayer,
+    SAITSMaskedReconstructionNetwork,
+    SAITSParameters,
+)
 from .temporal_fusion_transformer import (
     GateAddNorm,
     GatedResidualNetwork,
@@ -120,6 +127,11 @@ from .tst import (
 from .vanilla import TransformerParameters, TransformerSequenceEncoder
 
 __all__ = [
+    "SAITSBlock",
+    "SAITSDiagonallyMaskedAttention",
+    "SAITSEncoderLayer",
+    "SAITSMaskedReconstructionNetwork",
+    "SAITSParameters",
     "ScalarEmbedding",
     "StaticContexts",
     "StaticCovariateEncoder",

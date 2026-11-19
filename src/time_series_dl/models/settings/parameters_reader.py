@@ -61,6 +61,9 @@ class ParametersReader:
                 return None
             non_none_options: list[object] = [option for option in options if option is not NoneType]
             if len(non_none_options) != 1:
+                # Values that are already built, such as decoded nested settings, are kept when one option fits.
+                if any(isinstance(option, type) and isinstance(value, option) for option in non_none_options):
+                    return value
                 raise TypeError(f"{location}: unions of several types are not supported. got {annotation}")
             return ParametersReader._convert(non_none_options[0], value, location)
         if origin is tuple:

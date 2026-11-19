@@ -1,7 +1,7 @@
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 
-from ..interfaces import ForecastingModel, ReconstructionModel, SummaryModel
+from ..interfaces import ForecastingModel, MaskedReconstructionModel, ReconstructionModel, SummaryModel
 from .architecture import ModelArchitecture, ModelParameters
 from .parameters_reader import ParametersReader
 
@@ -89,7 +89,7 @@ class ModelSettings:
 
     def build_reconstruction_model(self) -> ReconstructionModel:
         """
-        Build the parameters for ``ImputerSettings`` or ``AnomalyDetectorSettings``.
+        Build the parameters of a reconstruction model, for ``AnomalyDetectorSettings`` or ``ImputerSettings``.
 
         Returns
         -------
@@ -105,3 +105,24 @@ class ModelSettings:
         if not isinstance(parameters, ReconstructionModel):
             raise ValueError(f"{self.architecture} does not support imputation or anomaly detection.")
         return parameters
+
+    def build_imputation_model(self) -> ReconstructionModel | MaskedReconstructionModel:
+        """
+        Build the parameters for ``ImputerSettings``, preferring a mask-aware network when the model has one.
+
+        Returns
+        -------
+        ReconstructionModel | MaskedReconstructionModel
+            The parameters.
+
+        Raises
+        ------
+        ValueError
+            If ``architecture`` does not support imputation.
+        """
+        parameters: ModelParameters = self.build()
+        if isinstance(parameters, MaskedReconstructionModel):
+            return parameters
+        if isinstance(parameters, ReconstructionModel):
+            return parameters
+        raise ValueError(f"{self.architecture} does not support imputation.")

@@ -38,6 +38,7 @@ from .layers import (
     TemporalLinear,
     TemporalPooling,
 )
+from .missing_values import LastObservation, TemporalDecay, TimeGap
 from .normalization import (
     InstanceStatistics,
     ReversibleInstanceNormalization,
@@ -69,6 +70,9 @@ from .state_space import (
 )
 
 __all__ = [
+    "LastObservation",
+    "TemporalDecay",
+    "TimeGap",
     "Activation",
     "AdaptiveAdjacency",
     "AttentionMechanism",

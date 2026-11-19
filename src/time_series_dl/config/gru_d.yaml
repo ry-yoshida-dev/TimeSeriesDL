@@ -1,0 +1,4 @@
+model:
+  architecture: gru_d
+  parameters:
+    hidden_size: 64
