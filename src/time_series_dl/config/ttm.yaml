@@ -1,0 +1,19 @@
+model:
+  architecture: ttm
+  parameters:
+    context_length: 512
+    prediction_length: 96
+    patch_length: 64
+    patch_stride: 64
+    model_size: 192
+    num_layers: 2
+    adaptive_patching_levels: 3
+    expansion_factor: 2
+    dropout: 0.4
+    decoder_model_size: 128
+    decoder_num_layers: 2
+    decoder_adaptive_patching_levels: 0
+    head_dropout: 0.4
+    is_gated_attention_used: true
+    layer_norm_epsilon: 1.0e-05
+    scale_epsilon: 1.0e-05

@@ -17,6 +17,13 @@ from ..architectures.convolutional.tcn import TCNParameters
 from ..architectures.convolutional.times_net import TimesNetParameters
 from ..architectures.convolutional.ts2vec import TS2VecParameters
 from ..architectures.convolutional.ts_tcc import TSTCCParameters
+from ..architectures.foundation.chronos import ChronosParameters
+from ..architectures.foundation.chronos_bolt import ChronosBoltParameters
+from ..architectures.foundation.moirai import MoiraiParameters
+from ..architectures.foundation.moment import MOMENTParameters
+from ..architectures.foundation.timer import TimerParameters
+from ..architectures.foundation.times_fm import TimesFMParameters
+from ..architectures.foundation.ttm import TTMParameters
 from ..architectures.graph.agcrn import AGCRNParameters
 from ..architectures.graph.fourier_gnn import FourierGNNParameters
 from ..architectures.graph.graph_wavenet import GraphWaveNetParameters
@@ -156,6 +163,13 @@ type ModelParameters = (
     | LatentODEParameters
     | TimeGradParameters
     | CSDIParameters
+    | ChronosBoltParameters
+    | ChronosParameters
+    | TimesFMParameters
+    | MoiraiParameters
+    | MOMENTParameters
+    | TimerParameters
+    | TTMParameters
 )
 
 
@@ -243,6 +257,13 @@ class ModelArchitecture(StrEnum):
     LATENT_ODE = "latent_ode"
     TIME_GRAD = "time_grad"
     CSDI = "csdi"
+    CHRONOS_BOLT = "chronos_bolt"
+    CHRONOS = "chronos"
+    TIMES_FM = "times_fm"
+    MOIRAI = "moirai"
+    MOMENT = "moment"
+    TIMER = "timer"
+    TTM = "ttm"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -409,3 +430,17 @@ class ModelArchitecture(StrEnum):
                 return TimeGradParameters
             case ModelArchitecture.CSDI:
                 return CSDIParameters
+            case ModelArchitecture.CHRONOS_BOLT:
+                return ChronosBoltParameters
+            case ModelArchitecture.CHRONOS:
+                return ChronosParameters
+            case ModelArchitecture.TIMES_FM:
+                return TimesFMParameters
+            case ModelArchitecture.MOIRAI:
+                return MoiraiParameters
+            case ModelArchitecture.MOMENT:
+                return MOMENTParameters
+            case ModelArchitecture.TIMER:
+                return TimerParameters
+            case ModelArchitecture.TTM:
+                return TTMParameters

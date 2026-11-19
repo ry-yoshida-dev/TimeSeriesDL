@@ -1,0 +1,19 @@
+model:
+  architecture: moment
+  parameters:
+    model_size: 1024
+    key_value_size: 64
+    num_heads: 16
+    feedforward_size: 2816
+    num_layers: 24
+    relative_attention_num_buckets: 32
+    relative_attention_max_distance: 128
+    dropout: 0.1
+    layer_norm_epsilon: 1.0e-06
+    input_length: 512
+    patch_length: 8
+    patch_dropout: 0.1
+    head_dropout: 0.1
+    normalization_epsilon: 1.0e-05
+    is_positional_embedding_used: true
+    is_backbone_frozen: false

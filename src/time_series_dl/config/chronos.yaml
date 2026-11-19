@@ -1,0 +1,21 @@
+model:
+  architecture: chronos
+  parameters:
+    model_size: 512
+    key_value_size: 64
+    num_heads: 8
+    feedforward_size: 2048
+    num_encoder_layers: 6
+    num_decoder_layers: 6
+    relative_attention_num_buckets: 32
+    relative_attention_max_distance: 128
+    dropout: 0.1
+    layer_norm_epsilon: 1.0e-06
+    num_tokens: 4096
+    low_limit: -15.0
+    high_limit: 15.0
+    context_length: 512
+    prediction_length: 64
+    temperature: 1.0
+    top_k: 50
+    top_p: 1.0

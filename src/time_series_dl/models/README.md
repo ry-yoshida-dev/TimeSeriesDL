@@ -24,6 +24,7 @@ Every public class is imported from `time_series_dl.models`.
 | [State space](./architectures/state_space/README.md) | HiPPO-RNN, LMU, S4, S4D, S5, LRU, Mamba, Mamba-2, S-Mamba, FiLM |
 | [Graph](./architectures/graph/README.md) | MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN |
 | [Continuous time](./architectures/continuous_time/README.md) | mTAN, Neural CDE, ODE-RNN, Latent ODE (irregularly sampled sequences) |
+| [Foundation](./architectures/foundation/README.md) | Chronos, Chronos-Bolt, TimesFM 2.0, Moirai 1.1-R, MOMENT, Timer, TTM (published pretrained weights) |
 | [Pretrained](./architectures/pretrained/README.md) | SimMTM, masked reconstruction pretraining, transfer of pretrained encoders |
 
 `ModelSettings` names a model by its `ModelArchitecture` and its parameters by field, so that a configuration file

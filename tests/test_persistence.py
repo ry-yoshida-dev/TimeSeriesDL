@@ -74,6 +74,10 @@ FORECASTING_ARCHITECTURES: list[ModelArchitecture] = [
 ]
 
 
+# Timer reads whole patches of 96 steps.
+INPUT_LENGTHS: dict[ModelArchitecture, int] = {ModelArchitecture.TIMER: 96}
+
+
 @pytest.mark.parametrize("architecture", FORECASTING_ARCHITECTURES, ids=str)
 def test_forecaster_round_trip_of_every_model(
     tmp_path: Path, fast_training: TrainingSettings, sine_series: np.ndarray, architecture: ModelArchitecture
@@ -87,7 +91,7 @@ def test_forecaster_round_trip_of_every_model(
     )
     forecaster = ForecasterSettings(
         model=model,
-        window=ForecastWindow(input_length=48, horizon=8, stride=8),
+        window=ForecastWindow(input_length=INPUT_LENGTHS.get(architecture, 48), horizon=8, stride=8),
         objective=objective,
         training=replace(fast_training, max_epochs=1),
     ).build()

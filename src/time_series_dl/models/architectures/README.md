@@ -18,3 +18,4 @@ the networks it builds.
 | [graph/](./graph/README.md) | Graph neural networks over the channels as nodes, with learned graphs. |
 | [pretrained/](./pretrained/README.md) | Self-supervised pretraining around any encoder, and transfer of pretrained encoders. |
 | [continuous_time/](./continuous_time/README.md) | Models of irregularly sampled sequences: multi-time attention and neural ODEs and CDEs. |
+| [foundation/](./foundation/README.md) | Pretrained foundation models that load published weights. |

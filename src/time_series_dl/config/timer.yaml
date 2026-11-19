@@ -1,0 +1,12 @@
+model:
+  architecture: timer
+  parameters:
+    patch_length: 96
+    output_patch_length: 96
+    model_size: 1024
+    feedforward_size: 2048
+    num_layers: 8
+    num_heads: 8
+    rotary_base: 10000.0
+    attention_dropout: 0.0
+    layer_norm_epsilon: 1.0e-05
