@@ -23,7 +23,8 @@ from ...models.architectures.pretrained import (
 )
 from ...models.components.masked_modeling import GeometricMasking, PatchMasking
 from ...models.interfaces.pretraining_network import PretrainingNetwork
-from ...persistence import Checkpoint, SettingsCodec, TaskKind
+from ...models.interfaces.protocols.pretraining import PretrainingModel
+from ...persistence import Checkpoint, SettingsCodec, TaskKind, restorable_model
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
 from .pretraining_step import PretrainingStep
@@ -287,7 +288,8 @@ class RepresentationLearner:
         pretrained: dict[str, Tensor] = self.encoder.state_dict()
         if channels != self._channels:
             raise ValueError(f"the encoder was pretrained on {self._channels} channels, got {channels}")
-        network: PretrainingNetwork = self.settings.method.build_pretraining_network(
+        # The pretrained encoder replaces any published weights, so they are not downloaded.
+        network: PretrainingNetwork = restorable_model(self.settings.method).build_pretraining_network(
             SequenceShape(length=length, channels=channels)
         )
         expected: dict[str, Tensor] = network.encoder.state_dict()
@@ -363,7 +365,7 @@ class RepresentationLearner:
         learner._length = checkpoint.read_int("length")
         learner._channels = checkpoint.read_int("channels")
         learner._scaler.restore_state(checkpoint.read_scaler("input"), learner._channels)
-        network: PretrainingNetwork = learner._build_network()
+        network: PretrainingNetwork = learner._build_network(is_restoring=True)
         checkpoint.restore_network(network, learner._trainer.device)
         learner._network = network
         learner._history = _CODEC.decode(TrainingHistory, checkpoint.history)
@@ -387,10 +389,9 @@ class RepresentationLearner:
         self._history = history
         return history
 
-    def _build_network(self) -> PretrainingNetwork:
-        return self.settings.method.build_pretraining_network(
-            SequenceShape(length=self._length, channels=self._channels)
-        )
+    def _build_network(self, is_restoring: bool = False) -> PretrainingNetwork:
+        method: PretrainingModel = restorable_model(self.settings.method) if is_restoring else self.settings.method
+        return method.build_pretraining_network(SequenceShape(length=self._length, channels=self._channels))
 
     def _build_dataset(self, sequences: FloatArray) -> TensorDataset:
         return TensorDataset(torch.from_numpy(self._scaler.transform(sequences)))

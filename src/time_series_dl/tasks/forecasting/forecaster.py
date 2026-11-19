@@ -34,9 +34,8 @@ from ...models.interfaces import (
     ForecastShape,
 )
 from ...models.interfaces.protocols.generative_forecasting import GenerativeForecastingModel
-from ...models.interfaces.protocols.published_weights import PublishedWeightsModel
 from ...models.interfaces.protocols.zero_shot_forecasting import ZeroShotForecastingModel
-from ...persistence import Checkpoint, EncodedValue, SettingsCodec, TaskKind
+from ...persistence import Checkpoint, EncodedValue, SettingsCodec, TaskKind, restorable_model
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
 from .backtest import ForecastBacktest
@@ -593,10 +592,7 @@ class Forecaster:
         )
 
     def _build_network(self, shape: ForecastShape, is_restoring: bool) -> ForecastNetwork | CovariateForecastNetwork:
-        model: ForecastingModel = self.settings.model
-        if is_restoring and isinstance(model, PublishedWeightsModel):
-            # The checkpoint's weights replace the published ones, so they are not downloaded.
-            model = model.without_pretrained_weights()
+        model: ForecastingModel = restorable_model(self.settings.model) if is_restoring else self.settings.model
         if self._covariate_scaler is None:
             return model.build_forecast_network(shape)
         if isinstance(model, GenerativeForecastingModel):

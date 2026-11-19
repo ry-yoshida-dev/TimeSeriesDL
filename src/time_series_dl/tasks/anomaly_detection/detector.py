@@ -15,7 +15,7 @@ from ...array_types import BoolArray, FloatArray, IndexArray
 from ...data import ChannelScaler, SeriesCollection, SlidingWindows
 from ...models import ForecastNetwork, ReconstructionNetwork, SequenceShape
 from ...models.interfaces.anomaly_scoring_network import AnomalyScoringNetwork
-from ...persistence import Checkpoint, SettingsCodec, TaskKind
+from ...persistence import Checkpoint, SettingsCodec, TaskKind, restorable_model
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
 from .metrics import AnomalyDetectionMetrics
@@ -317,7 +317,7 @@ class AnomalyDetector:
         detector._channels = checkpoint.read_int("channels")
         detector._threshold = checkpoint.read_float("threshold")
         detector._scaler.restore_state(checkpoint.read_scaler("input"), detector._channels)
-        step: AnomalyScoringStep = detector._build_step()
+        step: AnomalyScoringStep = detector._build_step(is_restoring=True)
         checkpoint.restore_network(step.network, detector._trainer.device)
         detector._step = step
         detector._history = _CODEC.decode(TrainingHistory, checkpoint.history)
@@ -331,9 +331,9 @@ class AnomalyDetector:
     def _sample_length(self) -> int:
         return self._scoring.compute_sample_length(self.settings.window_length)
 
-    def _build_step(self) -> AnomalyScoringStep:
+    def _build_step(self, is_restoring: bool = False) -> AnomalyScoringStep:
         return self._scoring.build_step(
-            self.settings.model,
+            restorable_model(self.settings.model) if is_restoring else self.settings.model,
             SequenceShape(length=self.settings.window_length, channels=self._channels),
             self.settings.loss,
         )

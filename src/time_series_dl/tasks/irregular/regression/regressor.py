@@ -22,8 +22,9 @@ from ....models.architectures.continuous_time import (
 )
 from ....models.interfaces.irregular_summary_network import IrregularSummaryNetwork
 from ....models.interfaces.irregular_tensors import IrregularTensors
+from ....models.interfaces.protocols.irregular_summary import IrregularSummaryModel
 from ....models.interfaces.shapes.irregular_summary import IrregularSummaryShape
-from ....persistence import Checkpoint, SettingsCodec, TaskKind
+from ....persistence import Checkpoint, SettingsCodec, TaskKind, restorable_model
 from ....runtime import BatchedInference, Device
 from ....training import Trainer, TrainingHistory
 from .regression_step import IrregularRegressionStep
@@ -302,14 +303,15 @@ class IrregularSequenceRegressor:
             checkpoint.read_float("time_span"),
         )
         regressor._target_scaler.restore_state(checkpoint.read_scaler("target"), regressor._num_outputs)
-        network: IrregularSummaryNetwork = regressor._build_network()
+        network: IrregularSummaryNetwork = regressor._build_network(is_restoring=True)
         checkpoint.restore_network(network, regressor._trainer.device)
         regressor._network = network
         regressor._history = _CODEC.decode(TrainingHistory, checkpoint.history)
         return regressor
 
-    def _build_network(self) -> IrregularSummaryNetwork:
-        return self.settings.model.build_irregular_summary_network(
+    def _build_network(self, is_restoring: bool = False) -> IrregularSummaryNetwork:
+        model: IrregularSummaryModel = restorable_model(self.settings.model) if is_restoring else self.settings.model
+        return model.build_irregular_summary_network(
             IrregularSummaryShape(input_channels=self._channels, output_size=self._num_outputs)
         )
 

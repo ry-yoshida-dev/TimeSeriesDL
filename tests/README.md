@@ -18,6 +18,8 @@ synthetic series.
 | [irregular_datasets.py](./irregular_datasets.py) | Synthetic irregularly sampled datasets of the irregular task tests. |
 | [generative_network_checks.py](./generative_network_checks.py) | Loss, sampling and gradient checks of generative forecast networks. |
 | [t5_published_names.py](./t5_published_names.py) | T5 state dicts under the published parameter names, for weight-loading tests. |
+| [published_mtan.py](./published_mtan.py) | mTAN parameters that name published weights, for restoring tests of the irregular tasks. |
+| [published_ts2vec.py](./published_ts2vec.py) | TS2Vec parameters that name published weights, for restoring tests of representation learning. |
 | [masked_network_checks.py](./masked_network_checks.py) | Shape, gradient and mask-semantics checks of mask-aware imputation networks. |
 | `test_model_*.py` | Network checks and model-specific behavior of each model. |
 | [test_state_space_components.py](./test_state_space_components.py) | HiPPO memories, kernels, scans and convolutions of the state space models against their recurrences. |
@@ -27,6 +29,7 @@ synthetic series.
 | [test_generative_forecasting.py](./test_generative_forecasting.py) | Forecasting with sample-path models and the sample objective. |
 | [test_conformal.py](./test_conformal.py) | Split and adaptive conformal intervals and their coverage. |
 | [test_diffusion.py](./test_diffusion.py) | Noise schedules, the forward process and the ancestral sampler. |
+| [test_restoring_published_weights.py](./test_restoring_published_weights.py) | Every task reloads a saved model with published weights without downloading them. |
 | [test_forecaster_zero_shot.py](./test_forecaster_zero_shot.py) | Zero-shot forecasting and fine-tuning with published weights, without downloads. |
 | [test_pretrained_weights.py](./test_pretrained_weights.py) | Strict loading of published weights and the optional Hugging Face download. |
 | [test_t5.py](./test_t5.py) | T5 encoder and decoder stacks against explicit computations. |

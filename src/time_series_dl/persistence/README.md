@@ -14,3 +14,4 @@ scalers of the series and of any covariates, the network weights and the trainin
 | [settings_codec.py](./settings_codec.py) | `SettingsCodec`: settings dataclasses to and from plain values, keeping the implementation of each model, loss and objective. |
 | [task_kind.py](./task_kind.py) | `TaskKind`: the task a checkpoint belongs to. |
 | [encoded_value.py](./encoded_value.py) | `EncodedValue`: the plain values a checkpoint may hold. |
+| [restorable_model.py](./restorable_model.py) | `restorable_model`: the parameters that rebuild a saved network without downloading its published weights. |

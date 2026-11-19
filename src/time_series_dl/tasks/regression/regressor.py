@@ -14,7 +14,8 @@ from torch.utils.data import TensorDataset
 from ...array_types import FloatArray
 from ...data import ChannelScaler, SequenceArray
 from ...models import SummaryNetwork, SummaryShape
-from ...persistence import Checkpoint, SettingsCodec, TaskKind
+from ...models.interfaces.protocols.summary import SummaryModel
+from ...persistence import Checkpoint, SettingsCodec, TaskKind, restorable_model
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
 from .regression_step import RegressionStep
@@ -284,14 +285,15 @@ class SequenceRegressor:
         regressor._is_target_vector = checkpoint.read_bool("is_target_vector")
         regressor._scaler.restore_state(checkpoint.read_scaler("input"), regressor._channels)
         regressor._target_scaler.restore_state(checkpoint.read_scaler("target"), regressor._num_outputs)
-        network: SummaryNetwork = regressor._build_network()
+        network: SummaryNetwork = regressor._build_network(is_restoring=True)
         checkpoint.restore_network(network, regressor._trainer.device)
         regressor._network = network
         regressor._history = _CODEC.decode(TrainingHistory, checkpoint.history)
         return regressor
 
-    def _build_network(self) -> SummaryNetwork:
-        return self.settings.model.build_summary_network(
+    def _build_network(self, is_restoring: bool = False) -> SummaryNetwork:
+        model: SummaryModel = restorable_model(self.settings.model) if is_restoring else self.settings.model
+        return model.build_summary_network(
             SummaryShape(input_length=self._length, input_channels=self._channels, output_size=self._num_outputs)
         )
 

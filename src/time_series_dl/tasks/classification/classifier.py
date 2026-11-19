@@ -14,7 +14,8 @@ from torch.utils.data import TensorDataset
 from ...array_types import FloatArray, IndexArray, LabelArray
 from ...data import ChannelScaler, SequenceArray
 from ...models import SummaryNetwork, SummaryShape
-from ...persistence import Checkpoint, EncodedValue, SettingsCodec, TaskKind
+from ...models.interfaces.protocols.summary import SummaryModel
+from ...persistence import Checkpoint, EncodedValue, SettingsCodec, TaskKind, restorable_model
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
 from .classification_step import ClassificationStep
@@ -328,15 +329,16 @@ class SequenceClassifier:
         classifier._length = checkpoint.read_int("length")
         classifier._channels = checkpoint.read_int("channels")
         classifier._scaler.restore_state(checkpoint.read_scaler("input"), classifier._channels)
-        network: SummaryNetwork = classifier._build_network(classes.size)
+        network: SummaryNetwork = classifier._build_network(classes.size, is_restoring=True)
         checkpoint.restore_network(network, classifier._trainer.device)
         classifier._network = network
         classifier._classes = classes
         classifier._history = _CODEC.decode(TrainingHistory, checkpoint.history)
         return classifier
 
-    def _build_network(self, num_classes: int) -> SummaryNetwork:
-        return self.settings.model.build_summary_network(
+    def _build_network(self, num_classes: int, is_restoring: bool = False) -> SummaryNetwork:
+        model: SummaryModel = restorable_model(self.settings.model) if is_restoring else self.settings.model
+        return model.build_summary_network(
             SummaryShape(input_length=self._length, input_channels=self._channels, output_size=num_classes)
         )
 

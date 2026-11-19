@@ -15,7 +15,7 @@ from ...data import ChannelScaler, SequenceArray
 from ...models import ReconstructionModel, SequenceShape
 from ...models.interfaces.masked_reconstruction_network import MaskedReconstructionNetwork
 from ...models.interfaces.protocols.masked_reconstruction import MaskedReconstructionModel
-from ...persistence import Checkpoint, SettingsCodec, TaskKind
+from ...persistence import Checkpoint, SettingsCodec, TaskKind, restorable_model
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
 from .masked_reconstruction_step import MaskedReconstructionStep
@@ -257,15 +257,17 @@ class Imputer:
         imputer._length = checkpoint.read_int("length")
         imputer._channels = checkpoint.read_int("channels")
         imputer._scaler.restore_state(checkpoint.read_scaler("input"), imputer._channels)
-        step: MaskedReconstructionStep = imputer._build_step()
+        step: MaskedReconstructionStep = imputer._build_step(is_restoring=True)
         checkpoint.restore_network(step.network, imputer._trainer.device)
         imputer._step = step
         imputer._history = _CODEC.decode(TrainingHistory, checkpoint.history)
         return imputer
 
-    def _build_step(self) -> MaskedReconstructionStep:
+    def _build_step(self, is_restoring: bool = False) -> MaskedReconstructionStep:
         shape: SequenceShape = SequenceShape(length=self._length, channels=self._channels)
-        model: ReconstructionModel | MaskedReconstructionModel = self.settings.model
+        model: ReconstructionModel | MaskedReconstructionModel = (
+            restorable_model(self.settings.model) if is_restoring else self.settings.model
+        )
         network: MaskedReconstructionNetwork = (
             model.build_masked_reconstruction_network(shape)
             if isinstance(model, MaskedReconstructionModel)

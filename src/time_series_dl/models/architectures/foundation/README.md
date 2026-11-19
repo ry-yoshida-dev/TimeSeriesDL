@@ -10,6 +10,8 @@ it. The models scale each series themselves, so use `NoScalingParameters()` and 
 Built without weights, the same architectures train from scratch. Check each checkpoint's license: the Moirai
 weights are for non-commercial use only.
 
+A saved task reloads its weights from its checkpoint without the Hugging Face Hub.
+
 ## Components
 
 | Component | Parameters | Forecasting | Classification / regression | Imputation / anomaly detection | Weights license |

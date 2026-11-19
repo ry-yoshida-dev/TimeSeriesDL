@@ -15,8 +15,9 @@ from ....data.irregular import IrregularScaler, IrregularSequenceCollection, Pad
 from ....models.architectures.continuous_time import LatentODEParameters, MTANParameters
 from ....models.interfaces.irregular_interpolation_network import IrregularInterpolationNetwork
 from ....models.interfaces.irregular_tensors import IrregularTensors
+from ....models.interfaces.protocols.irregular_interpolation import IrregularInterpolationModel
 from ....models.interfaces.shapes.irregular_sequence import IrregularSequenceShape
-from ....persistence import Checkpoint, SettingsCodec, TaskKind
+from ....persistence import Checkpoint, SettingsCodec, TaskKind, restorable_model
 from ....runtime import BatchedInference, Device
 from ....training import Trainer, TrainingHistory
 from .interpolation_step import IrregularInterpolationStep
@@ -278,16 +279,17 @@ class IrregularInterpolator:
             checkpoint.read_float("time_offset"),
             checkpoint.read_float("time_span"),
         )
-        network: IrregularInterpolationNetwork = interpolator._build_network()
+        network: IrregularInterpolationNetwork = interpolator._build_network(is_restoring=True)
         checkpoint.restore_network(network, interpolator._trainer.device)
         interpolator._network = network
         interpolator._history = _CODEC.decode(TrainingHistory, checkpoint.history)
         return interpolator
 
-    def _build_network(self) -> IrregularInterpolationNetwork:
-        return self.settings.model.build_irregular_interpolation_network(
-            IrregularSequenceShape(channels=self._channels)
+    def _build_network(self, is_restoring: bool = False) -> IrregularInterpolationNetwork:
+        model: IrregularInterpolationModel = (
+            restorable_model(self.settings.model) if is_restoring else self.settings.model
         )
+        return model.build_irregular_interpolation_network(IrregularSequenceShape(channels=self._channels))
 
     def _build_dataset(self, sequences: IrregularSequenceCollection) -> TensorDataset:
         padded: PaddedIrregularSequences = self._scaler.transform(sequences.pad())
