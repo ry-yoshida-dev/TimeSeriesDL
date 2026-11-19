@@ -1,0 +1,6 @@
+model:
+  architecture: usad
+  parameters:
+    latent_size_per_step: 100
+    alpha: 0.5
+    beta: 0.5

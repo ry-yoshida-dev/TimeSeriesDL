@@ -13,6 +13,7 @@ synthetic series.
 | [network_checks.py](./network_checks.py) | Shape and gradient checks of the networks of every model. |
 | [covariate_network_checks.py](./covariate_network_checks.py) | Shape, gradient and covariate-sensitivity checks of covariate forecast networks. |
 | [graph_network_checks.py](./graph_network_checks.py) | Target-channel consistency checks of the graph neural networks. |
+| [anomaly_network_checks.py](./anomaly_network_checks.py) | Score, loss and gradient checks of anomaly scoring networks. |
 | [masked_network_checks.py](./masked_network_checks.py) | Shape, gradient and mask-semantics checks of mask-aware imputation networks. |
 | `test_model_*.py` | Network checks and model-specific behavior of each model. |
 | [test_state_space_components.py](./test_state_space_components.py) | HiPPO memories, kernels, scans and convolutions of the state space models against their recurrences. |

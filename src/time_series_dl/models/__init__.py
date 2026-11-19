@@ -29,6 +29,7 @@ from .architectures.mlp.tide import TiDEParameters
 from .architectures.mlp.time_mixer import TimeMixerParameters
 from .architectures.mlp.time_mixer_plus_plus import TimeMixerPlusPlusParameters
 from .architectures.mlp.ts_mixer import TSMixerNormalization, TSMixerParameters
+from .architectures.mlp.usad import USADParameters
 from .architectures.mlp.vanilla import MLPParameters
 from .architectures.pretrained import MaskedReconstructionParameters, PretrainedEncoderParameters, SimMTMParameters
 from .architectures.recurrent.brits import BRITSParameters
@@ -50,9 +51,11 @@ from .architectures.state_space.s4 import S4Parameters
 from .architectures.state_space.s4d import S4DParameters
 from .architectures.state_space.s5 import S5Parameters
 from .architectures.state_space.s_mamba import SMambaParameters
+from .architectures.transformer.anomaly_transformer import AnomalyTransformerParameters
 from .architectures.transformer.autoformer import AutoformerParameters
 from .architectures.transformer.conv_tran import AbsolutePositionEncoding, ConvTranParameters, RelativePositionEncoding
 from .architectures.transformer.crossformer import CrossformerParameters
+from .architectures.transformer.dcdetector import DCdetectorParameters
 from .architectures.transformer.etsformer import ETSformerParameters
 from .architectures.transformer.fedformer import FEDformerParameters
 from .architectures.transformer.informer import InformerParameters
@@ -66,6 +69,7 @@ from .architectures.transformer.temporal_fusion_transformer import (
     TemporalFusionTransformerParameters,
 )
 from .architectures.transformer.time_xer import TimeXerParameters
+from .architectures.transformer.tranad import TranADParameters
 from .architectures.transformer.tst import TSTParameters
 from .architectures.transformer.vanilla import TransformerParameters
 from .components.attention import FourierModeSelection
@@ -75,6 +79,8 @@ from .components.layers import Activation, TemporalPooling
 from .components.masked_modeling import GeometricMasking, PatchMasking
 from .components.state_space import DiagonalInitialization, Discretization, HiPPOMeasure
 from .interfaces import (
+    AnomalyScoringModel,
+    AnomalyScoringNetwork,
     CovariateForecastingModel,
     CovariateForecastNetwork,
     CovariateForecastShape,
@@ -103,6 +109,9 @@ __all__ = [
     "AGCRNParameters",
     "AbsolutePositionEncoding",
     "Activation",
+    "AnomalyScoringModel",
+    "AnomalyScoringNetwork",
+    "AnomalyTransformerParameters",
     "AutoformerParameters",
     "BRITSParameters",
     "ConvTranParameters",
@@ -112,6 +121,7 @@ __all__ = [
     "CovariateForecastingModel",
     "CovariateTensors",
     "CrossformerParameters",
+    "DCdetectorParameters",
     "DLinearParameters",
     "DeepARParameters",
     "DiagonalInitialization",
@@ -212,7 +222,9 @@ __all__ = [
     "TimeXerParameters",
     "TimesNetParameters",
     "TokenNormalization",
+    "TranADParameters",
     "TransformerParameters",
+    "USADParameters",
     "XLSTMParameters",
     "XLSTMStackParameters",
     "XLSTMTimeParameters",

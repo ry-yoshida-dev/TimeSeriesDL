@@ -1,3 +1,4 @@
+from .adversarial import FrozenModule
 from .attention import (
     AttentionMechanism,
     AutoCorrelationAttentionMechanism,
@@ -95,6 +96,7 @@ __all__ = [
     "FourierAttentionMechanism",
     "FourierCrossAttentionMechanism",
     "FourierModeSelection",
+    "FrozenModule",
     "FullAttentionMechanism",
     "GatedLinearOutput",
     "GeometricMasking",

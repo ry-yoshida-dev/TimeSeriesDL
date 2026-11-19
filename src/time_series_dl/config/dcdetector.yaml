@@ -1,0 +1,9 @@
+model:
+  architecture: dcdetector
+  parameters:
+    patch_sizes: [3, 5]
+    model_size: 256
+    num_heads: 1
+    num_layers: 3
+    dropout: 0.0
+    score_temperature: 50.0

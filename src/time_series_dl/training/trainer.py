@@ -7,6 +7,7 @@ from torch import Tensor, nn
 from torch.optim.lr_scheduler import LRScheduler
 from torch.utils.data import DataLoader, TensorDataset
 
+from .epoch_scheduled_objective import EpochScheduledObjective
 from .history import TrainingHistory
 from .objective import TrainingObjective
 from .settings import TrainingSettings
@@ -59,7 +60,7 @@ class Trainer:
         network : nn.Module
             The network whose parameters the objective's loss depends on; moved to the training device.
         objective : TrainingObjective
-            The loss of one batch.
+            The loss of one batch; an ``EpochScheduledObjective`` is told each epoch before it starts.
         training_data : TensorDataset
             The training samples.
         validation_data : TensorDataset | None
@@ -107,6 +108,8 @@ class Trainer:
         epochs_without_improvement: int = 0
         is_stopped_early: bool = False
         for epoch in range(settings.max_epochs):
+            if isinstance(objective, EpochScheduledObjective):
+                objective.start_epoch(epoch)
             training_loss: float = self._train_epoch(network, objective, loader, optimizer, scheduler)
             training_losses.append(training_loss)
             if not settings.schedule.is_stepped_per_batch:

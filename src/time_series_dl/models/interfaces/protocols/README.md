@@ -15,4 +15,5 @@ task exactly when it has the builder, so the type checker rejects unsupported co
 | [masked_reconstruction.py](./masked_reconstruction.py) | `MaskedReconstructionModel`: builds a `MaskedReconstructionNetwork`, for imputation. |
 | [pretraining.py](./pretraining.py) | `PretrainingModel`: builds a `PretrainingNetwork`, for representation learning. |
 | [encoding.py](./encoding.py) | `EncodingModel`: builds a `SequenceEncoder` that pretraining methods wrap. |
+| [anomaly_scoring.py](./anomaly_scoring.py) | `AnomalyScoringModel`: builds an `AnomalyScoringNetwork`, for anomaly detection. |
 | [summary.py](./summary.py) | `SummaryModel`: builds a `SummaryNetwork`. |

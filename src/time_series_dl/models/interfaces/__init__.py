@@ -1,3 +1,4 @@
+from .anomaly_scoring_network import AnomalyScoringNetwork
 from .covariate_forecast_network import CovariateForecastNetwork
 from .covariate_tensors import CovariateTensors
 from .forecast_network import ForecastNetwork
@@ -5,6 +6,7 @@ from .masked_reconstruction import MaskedReconstruction
 from .masked_reconstruction_network import MaskedReconstructionNetwork
 from .pretraining_network import PretrainingNetwork
 from .protocols import (
+    AnomalyScoringModel,
     CovariateForecastingModel,
     EncodingModel,
     ForecastingModel,
@@ -19,6 +21,8 @@ from .shapes import CovariateForecastShape, ForecastShape, SequenceShape, Summar
 from .summary_network import SummaryNetwork
 
 __all__ = [
+    "AnomalyScoringModel",
+    "AnomalyScoringNetwork",
     "CovariateForecastNetwork",
     "CovariateForecastShape",
     "CovariateForecastingModel",

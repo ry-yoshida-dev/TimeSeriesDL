@@ -2,6 +2,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 
 from ..interfaces import (
+    AnomalyScoringModel,
     ForecastingModel,
     MaskedReconstructionModel,
     PretrainingModel,
@@ -151,3 +152,27 @@ class ModelSettings:
         if not isinstance(parameters, PretrainingModel):
             raise ValueError(f"{self.architecture} does not support self-supervised pretraining.")
         return parameters
+
+    def build_anomaly_detection_model(self) -> ReconstructionModel | ForecastingModel | AnomalyScoringModel:
+        """
+        Build the parameters for ``AnomalyDetectorSettings``, preferring the model's own anomaly score.
+
+        Returns
+        -------
+        ReconstructionModel | ForecastingModel | AnomalyScoringModel
+            The parameters; the detector scores by the model's own score, the reconstruction error or the forecast
+            error, in that order of preference.
+
+        Raises
+        ------
+        ValueError
+            If ``architecture`` supports no anomaly scoring.
+        """
+        parameters: ModelParameters = self.build()
+        if isinstance(parameters, AnomalyScoringModel):
+            return parameters
+        if isinstance(parameters, ReconstructionModel):
+            return parameters
+        if isinstance(parameters, ForecastingModel):
+            return parameters
+        raise ValueError(f"{self.architecture} does not support anomaly detection.")

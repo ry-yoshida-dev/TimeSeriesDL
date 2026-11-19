@@ -23,4 +23,7 @@ Models built from attention or its replacements.
 | [TST (Zerveas et al., 2021)](./tst/README.md) | `TSTParameters` | ✓ | ✓ | ✓ | ✓ |
 | [ConvTran (Foumani et al., 2024)](./conv_tran/README.md) | `ConvTranParameters` | ✓ | ✓ | ✓ | ✓ |
 | [SAITS (Du et al., 2023)](./saits/README.md) | `SAITSParameters` | | | ✓ | |
+| [Anomaly Transformer (Xu et al., 2022)](./anomaly_transformer/README.md) | `AnomalyTransformerParameters` | | | | ✓ |
+| [DCdetector (Yang et al., 2023)](./dcdetector/README.md) | `DCdetectorParameters` | | | | ✓ |
+| [TranAD (Tuli et al., 2022)](./tranad/README.md) | `TranADParameters` | | | | ✓ |
 | [Decomposition Transformer](./decomposition/README.md) | Built by `AutoformerParameters` and `FEDformerParameters` | ✓ | ✓ | ✓ | ✓ |

@@ -1,3 +1,4 @@
+from .anomaly_scoring import AnomalyScoringModel
 from .covariate_forecasting import CovariateForecastingModel
 from .encoding import EncodingModel
 from .forecasting import ForecastingModel
@@ -7,6 +8,7 @@ from .reconstruction import ReconstructionModel
 from .summary import SummaryModel
 
 __all__ = [
+    "AnomalyScoringModel",
     "CovariateForecastingModel",
     "EncodingModel",
     "ForecastingModel",

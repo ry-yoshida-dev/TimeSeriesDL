@@ -2,7 +2,7 @@
 
 ## Overview
 
-TimeSeriesDL (`time_series_dl`) puts 67 deep learning models for time series behind one PyTorch interface per task.
+TimeSeriesDL (`time_series_dl`) puts 71 deep learning models for time series behind one PyTorch interface per task.
 Each task is built from a settings dataclass that takes a model's parameters, so models are swapped by changing one
 argument; the type checker rejects a model that does not support the task. Training (optimizer, schedule, early
 stopping, device) and saving to files that load without pickle are shared by every task, and so are the point
@@ -11,12 +11,12 @@ cross-entropy or focal loss.
 
 | Task | Interface | Input → output | Models |
 | ---- | --------- | -------------- | ------ |
-| Forecasting | `Forecaster` | series → point, quantile, Gaussian, Student's t or Laplace forecasts of the next horizon | 58 |
-| Classification | `SequenceClassifier` | (N, L, C) sequences → class | 42 |
-| Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 42 |
-| Imputation | `Imputer` | sequences with NaN → filled sequences | 42 |
-| Anomaly detection | `AnomalyDetector` | series → anomaly score of every time step | 39 |
-| Representation learning | `RepresentationLearner` | unlabeled sequences → pretrained encoder and representations | 5 |
+| Forecasting | `Forecaster` | series → point, quantile, Gaussian, Student's t or Laplace forecasts of the next horizon | 61 |
+| Classification | `SequenceClassifier` | (N, L, C) sequences → class | 45 |
+| Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 45 |
+| Imputation | `Imputer` | sequences with NaN → filled sequences | 44 |
+| Anomaly detection | `AnomalyDetector` | series → anomaly score of every time step | 65 |
+| Representation learning | `RepresentationLearner` | unlabeled sequences → pretrained encoder and representations | 4 |
 
 The models span linear and MLP forecasters (DLinear, RLinear, FITS, SparseTSF, TSMixer, TiDE, TimeMixer,
 TimeMixer++, FreTS, Koopa, N-BEATS, N-HiTS), recurrent networks (LSTM/GRU, SegRNN, DeepAR, xLSTM, xLSTMTime,
@@ -25,7 +25,8 @@ MICN, ModernTCN, ROCKET, MiniRocket, MultiRocket), Transformers (Transformer, In
 Pyraformer, ETSformer, Non-stationary Transformer, Crossformer, PatchTST, iTransformer, TimeXer, TST, ConvTran,
 Temporal Fusion Transformer), state space models (HiPPO-RNN, LMU, S4, S4D, S5, LRU, Mamba, Mamba-2, S-Mamba, FiLM)
 graph neural networks over the channels (MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN), imputation models that read the
-missing-value mask (SAITS, BRITS, GRU-D), and self-supervised pretraining (TS2Vec, TS-TCC, SimMTM, masked
+missing-value mask (SAITS, BRITS, GRU-D), anomaly detectors with their own objectives (Anomaly Transformer,
+DCdetector, TranAD, USAD), and self-supervised pretraining (TS2Vec, TS-TCC, SimMTM, masked
 reconstruction) whose encoders transfer to the other tasks. Forecasts accept
 known-future and static covariates with every forecasting model. Which model supports which task is listed in
 [src/time_series_dl/models/](src/time_series_dl/models/README.md). Classification and regression metrics are the
@@ -138,6 +139,24 @@ filled = imputer.impute(windows_with_nan)
 detector = AnomalyDetectorSettings(model=RNNParameters(), window_length=64).build()
 detector.fit(normal_series)
 is_anomalous = detector.detect(test_series)
+```
+
+Detect anomalies with a model's own objective, or score any forecasting model by its forecast errors; metrics include
+range-based F1 and, for comparison with papers only, point-adjusted F1:
+
+```python
+from data_scaler import MinMaxScalingParameters
+
+from time_series_dl.models import DLinearParameters, USADParameters
+from time_series_dl.tasks.anomaly_detection import AnomalyDetectorSettings, ForecastErrorScoring
+
+detector = AnomalyDetectorSettings(model=USADParameters(), window_length=12, scaling=MinMaxScalingParameters()).build()
+detector.fit(normal_series)
+metrics = detector.evaluate(test_series, labels)
+print(metrics.f1, metrics.range_f1, metrics.point_adjusted_f1)
+forecast_detector = AnomalyDetectorSettings(
+    model=DLinearParameters(), window_length=96, scoring=ForecastErrorScoring()
+).build()
 ```
 
 Pretrain an encoder on unlabeled sequences, then train a linear probe on its frozen representations:

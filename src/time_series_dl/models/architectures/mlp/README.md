@@ -17,3 +17,4 @@ Models built from multilayer perceptrons, including basis-expansion, mixing, fre
 | [TimeMixer++ (Wang et al., 2025)](./time_mixer_plus_plus/README.md) | `TimeMixerPlusPlusParameters` | ✓ | ✓ | ✓ | ✓ |
 | [FreTS (Yi et al., 2023)](./frets/README.md) | `FreTSParameters` | ✓ | | | |
 | [Koopa (Liu et al., 2023)](./koopa/README.md) | `KoopaParameters` | ✓ | | | |
+| [USAD (Audibert et al., 2020)](./usad/README.md) | `USADParameters` | | | | ✓ |

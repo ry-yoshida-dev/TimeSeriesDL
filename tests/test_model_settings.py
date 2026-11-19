@@ -22,6 +22,7 @@ from time_series_dl.models import (
     TCNParameters,
     TemporalPooling,
     TS2VecParameters,
+    USADParameters,
 )
 from time_series_dl.models.settings import ParametersReader
 
@@ -109,6 +110,11 @@ def test_task_models_follow_supported_tasks() -> None:
     assert isinstance(ModelSettings(architecture=ModelArchitecture.TS2VEC).build_pretraining_model(), TS2VecParameters)
     with pytest.raises(ValueError, match="pretraining"):
         mini_rocket.build_pretraining_model()
+    usad = ModelSettings(architecture=ModelArchitecture.USAD).build_anomaly_detection_model()
+    assert isinstance(usad, USADParameters)
+    assert isinstance(n_beats.build_anomaly_detection_model(), NBEATSParameters)
+    with pytest.raises(ValueError, match="anomaly detection"):
+        mini_rocket.build_anomaly_detection_model()
     assert isinstance(patch_tst.build_imputation_model(), PatchTSTParameters)
 
 

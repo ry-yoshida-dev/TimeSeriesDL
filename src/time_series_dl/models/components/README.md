@@ -18,4 +18,5 @@ from the generic heads.
 | [graph/](./graph/README.md) | Graph learning layers and graph convolutions of the graph neural networks. |
 | [missing_values/](./missing_values/README.md) | Time gaps, temporal decay and last observation carried forward of the recurrent imputation models. |
 | [masked_modeling/](./masked_modeling/README.md) | Random masks and the decoder of masked-modeling pretraining. |
+| [adversarial/](./adversarial/README.md) | Gradient routing for adversarial training through one optimizer. |
 | [covariates/](./covariates/README.md) | Static covariate embedding and the generic covariate adapter of forecast networks. |

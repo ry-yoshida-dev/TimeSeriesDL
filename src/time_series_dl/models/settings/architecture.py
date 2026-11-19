@@ -31,6 +31,7 @@ from ..architectures.mlp.tide import TiDEParameters
 from ..architectures.mlp.time_mixer import TimeMixerParameters
 from ..architectures.mlp.time_mixer_plus_plus import TimeMixerPlusPlusParameters
 from ..architectures.mlp.ts_mixer import TSMixerParameters
+from ..architectures.mlp.usad import USADParameters
 from ..architectures.mlp.vanilla import MLPParameters
 from ..architectures.pretrained.encoder import PretrainedEncoderParameters
 from ..architectures.recurrent.brits import BRITSParameters
@@ -52,9 +53,11 @@ from ..architectures.state_space.s4 import S4Parameters
 from ..architectures.state_space.s4d import S4DParameters
 from ..architectures.state_space.s5 import S5Parameters
 from ..architectures.state_space.s_mamba import SMambaParameters
+from ..architectures.transformer.anomaly_transformer import AnomalyTransformerParameters
 from ..architectures.transformer.autoformer import AutoformerParameters
 from ..architectures.transformer.conv_tran import ConvTranParameters
 from ..architectures.transformer.crossformer import CrossformerParameters
+from ..architectures.transformer.dcdetector import DCdetectorParameters
 from ..architectures.transformer.etsformer import ETSformerParameters
 from ..architectures.transformer.fedformer import FEDformerParameters
 from ..architectures.transformer.informer import InformerParameters
@@ -65,6 +68,7 @@ from ..architectures.transformer.pyraformer import PyraformerParameters
 from ..architectures.transformer.saits import SAITSParameters
 from ..architectures.transformer.temporal_fusion_transformer import TemporalFusionTransformerParameters
 from ..architectures.transformer.time_xer import TimeXerParameters
+from ..architectures.transformer.tranad import TranADParameters
 from ..architectures.transformer.tst import TSTParameters
 from ..architectures.transformer.vanilla import TransformerParameters
 
@@ -136,6 +140,10 @@ type ModelParameters = (
     | TS2VecParameters
     | TSTCCParameters
     | PretrainedEncoderParameters
+    | USADParameters
+    | AnomalyTransformerParameters
+    | DCdetectorParameters
+    | TranADParameters
 )
 
 
@@ -213,6 +221,10 @@ class ModelArchitecture(StrEnum):
     TS2VEC = "ts2vec"
     TS_TCC = "ts_tcc"
     PRETRAINED_ENCODER = "pretrained_encoder"
+    USAD = "usad"
+    ANOMALY_TRANSFORMER = "anomaly_transformer"
+    DCDETECTOR = "dcdetector"
+    TRANAD = "tranad"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -359,3 +371,11 @@ class ModelArchitecture(StrEnum):
                 return TSTCCParameters
             case ModelArchitecture.PRETRAINED_ENCODER:
                 return PretrainedEncoderParameters
+            case ModelArchitecture.USAD:
+                return USADParameters
+            case ModelArchitecture.ANOMALY_TRANSFORMER:
+                return AnomalyTransformerParameters
+            case ModelArchitecture.DCDETECTOR:
+                return DCdetectorParameters
+            case ModelArchitecture.TRANAD:
+                return TranADParameters

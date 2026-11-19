@@ -13,23 +13,30 @@ from torch.utils.data import TensorDataset
 
 from ...array_types import BoolArray, FloatArray, IndexArray
 from ...data import ChannelScaler, SeriesCollection, SlidingWindows
-from ...models import ReconstructionNetwork, SequenceShape
+from ...models import ForecastNetwork, ReconstructionNetwork, SequenceShape
+from ...models.interfaces.anomaly_scoring_network import AnomalyScoringNetwork
 from ...persistence import Checkpoint, SettingsCodec, TaskKind
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
 from .metrics import AnomalyDetectionMetrics
-from .reconstruction_step import ReconstructionStep
+from .scoring_methods import AnomalyScoring, ForecastErrorScoring, NativeScoring, ReconstructionErrorScoring
+from .scoring_step import AnomalyScoringStep
 from .settings import AnomalyDetectorSettings
 
-_CODEC: Final[SettingsCodec] = SettingsCodec.including(AnomalyDetectorSettings)
+_CODEC: Final[SettingsCodec] = SettingsCodec.including(
+    AnomalyDetectorSettings, ForecastErrorScoring, NativeScoring, ReconstructionErrorScoring
+)
 
 
 class AnomalyDetector:
     """
-    Scores each time step of a series by how badly a network trained on normal behavior reconstructs it.
+    Scores each time step of a series by how far it departs from the normal behavior a network was trained on.
 
-    The score of a step is its reconstruction loss averaged over channels and over every window that
-    contains it. Steps whose score exceeds a quantile of the training scores are anomalous.
+    The scoring method of the settings decides what a window's per-step scores are: the reconstruction loss, the
+    forecast loss of the steps after a past window, or the model's own anomaly score. The score of a step is the mean
+    of its scores over every window that scores it; steps that no window scores (the first past window under
+    forecast-error scoring) receive the lowest score of the series. Steps whose score exceeds a quantile of the
+    training scores are anomalous.
 
     Parameters
     ----------
@@ -46,27 +53,28 @@ class AnomalyDetector:
         self.settings: AnomalyDetectorSettings = settings
         self._scaler: ChannelScaler = ChannelScaler(settings.scaling)
         self._trainer: Trainer = Trainer(settings.training)
-        self._step: ReconstructionStep | None = None
+        self._step: AnomalyScoringStep | None = None
         self._history: TrainingHistory | None = None
         self._threshold: float = 0.0
         self._channels: int = 0
 
     @property
-    def network(self) -> ReconstructionNetwork:
+    def network(self) -> ReconstructionNetwork | ForecastNetwork | AnomalyScoringNetwork:
         """
-        Get the trained network.
+        Get the trained network the model built.
 
         Returns
         -------
-        ReconstructionNetwork
-            The network.
+        ReconstructionNetwork | ForecastNetwork | AnomalyScoringNetwork
+            The reconstruction or forecast network whose errors are the scores, or the model's own anomaly scoring
+            network.
 
         Raises
         ------
         NotFittedError
             If fit has not completed yet.
         """
-        return self._require_step().network
+        return self._require_step().model_network
 
     @property
     def history(self) -> TrainingHistory:
@@ -116,9 +124,10 @@ class AnomalyDetector:
         Parameters
         ----------
         series : FloatArray | Sequence[FloatArray]
-            One or more series with shape (length, channels), each at least one window long.
+            One or more series with shape (length, channels), each at least one sample long (``window_length`` steps,
+            plus the horizon under forecast-error scoring).
         validation_series : FloatArray | Sequence[FloatArray] | None
-            Normal series whose reconstruction selects the best epoch and stops training early.
+            Normal series whose loss selects the best epoch and stops training early.
 
         Returns
         -------
@@ -141,8 +150,8 @@ class AnomalyDetector:
         self._scaler.fit(training.concatenate())
         self._channels = training.channels
         self._trainer.seed()
-        step: ReconstructionStep = self._build_step()
-        windows: SlidingWindows = SlidingWindows(self.settings.window_length, self.settings.training_stride)
+        step: AnomalyScoringStep = self._build_step()
+        windows: SlidingWindows = SlidingWindows(self._sample_length, self.settings.training_stride)
         history: TrainingHistory = self._trainer.fit(
             step.network,
             step,
@@ -176,18 +185,27 @@ class AnomalyDetector:
         ValueError
             If the series is invalid, too short, or has another number of channels.
         """
-        step: ReconstructionStep = self._require_step()
+        step: AnomalyScoringStep = self._require_step()
         values: FloatArray = self._validate_series(series)
-        windows: SlidingWindows = SlidingWindows(self.settings.window_length)
-        scaled: FloatArray = windows.extract(self._scaler.transform(values))
-        errors: Tensor = BatchedInference(self._trainer.device, self.settings.training.batch_size).run(
-            step.compute_errors, TensorDataset(torch.from_numpy(scaled))
+        length: int = self._sample_length
+        windows: SlidingWindows = SlidingWindows(length)
+        # A series of exactly one window comes back as a read-only view, which torch cannot wrap.
+        scaled: FloatArray = np.require(windows.extract(self._scaler.transform(values)), requirements="W")
+        window_scores: Tensor = BatchedInference(self._trainer.device, self.settings.training.batch_size).run(
+            step.compute_scores, TensorDataset(torch.from_numpy(scaled))
         )
+        flat_scores: FloatArray = window_scores.double().numpy().ravel()
+        is_scored: BoolArray = ~np.isnan(flat_scores)
         starts: IndexArray = windows.starts(values.shape[0])
-        positions: IndexArray = (starts[:, np.newaxis] + np.arange(self.settings.window_length)).ravel()
-        totals: FloatArray = np.bincount(positions, weights=errors.double().numpy().ravel(), minlength=values.shape[0])
-        counts: FloatArray = np.bincount(positions, minlength=values.shape[0]).astype(np.float64)
-        return totals / counts
+        positions: IndexArray = (starts[:, np.newaxis] + np.arange(length)).ravel()
+        totals: FloatArray = np.bincount(
+            positions, weights=np.where(is_scored, flat_scores, 0.0), minlength=values.shape[0]
+        )
+        counts: FloatArray = np.bincount(positions, weights=is_scored.astype(np.float64), minlength=values.shape[0])
+        is_step_scored: BoolArray = counts > 0.0
+        scores: FloatArray = np.divide(totals, counts, out=np.zeros_like(totals), where=is_step_scored)
+        scores[~is_step_scored] = scores[is_step_scored].min()
+        return scores
 
     def detect(self, series: FloatArray) -> BoolArray:
         """
@@ -257,7 +275,7 @@ class AnomalyDetector:
         NotFittedError
             If fit has not completed yet.
         """
-        step: ReconstructionStep = self._require_step()
+        step: AnomalyScoringStep = self._require_step()
         Checkpoint(
             task=TaskKind.ANOMALY_DETECTION,
             settings=_CODEC.encode(self.settings),
@@ -299,26 +317,33 @@ class AnomalyDetector:
         detector._channels = checkpoint.read_int("channels")
         detector._threshold = checkpoint.read_float("threshold")
         detector._scaler.restore_state(checkpoint.read_scaler("input"), detector._channels)
-        step: ReconstructionStep = detector._build_step()
+        step: AnomalyScoringStep = detector._build_step()
         checkpoint.restore_network(step.network, detector._trainer.device)
         detector._step = step
         detector._history = _CODEC.decode(TrainingHistory, checkpoint.history)
         return detector
 
-    def _build_step(self) -> ReconstructionStep:
-        return ReconstructionStep(
-            network=self.settings.model.build_reconstruction_network(
-                SequenceShape(length=self.settings.window_length, channels=self._channels)
-            ),
-            loss=self.settings.loss,
+    @property
+    def _scoring(self) -> AnomalyScoring:
+        return self.settings.resolved_scoring
+
+    @property
+    def _sample_length(self) -> int:
+        return self._scoring.compute_sample_length(self.settings.window_length)
+
+    def _build_step(self) -> AnomalyScoringStep:
+        return self._scoring.build_step(
+            self.settings.model,
+            SequenceShape(length=self.settings.window_length, channels=self._channels),
+            self.settings.loss,
         )
 
     def _validate_series(self, series: FloatArray) -> FloatArray:
         values: FloatArray = SeriesCollection.from_input(series).series[0]
         if values.shape[1] != self._channels:
             raise ValueError(f"series must have {self._channels} channels, got {values.shape[1]}")
-        if values.shape[0] < self.settings.window_length:
-            raise ValueError(f"series must have at least {self.settings.window_length} steps, got {values.shape[0]}")
+        if values.shape[0] < self._sample_length:
+            raise ValueError(f"series must have at least {self._sample_length} steps, got {values.shape[0]}")
         return values
 
     def _build_dataset(self, collection: SeriesCollection, windows: SlidingWindows) -> TensorDataset:
@@ -329,7 +354,7 @@ class AnomalyDetector:
         scaled: list[FloatArray] = [windows.extract(self._scaler.transform(values)) for values in collection.series]
         return TensorDataset(torch.from_numpy(np.concatenate(scaled, axis=0)))
 
-    def _require_step(self) -> ReconstructionStep:
+    def _require_step(self) -> AnomalyScoringStep:
         if self._step is None:
             raise NotFittedError("AnomalyDetector is not fitted yet. Call fit() first.")
         return self._step
