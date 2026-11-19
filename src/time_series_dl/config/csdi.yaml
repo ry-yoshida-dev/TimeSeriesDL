@@ -1,0 +1,16 @@
+model:
+  architecture: csdi
+  parameters:
+    channels: 64
+    num_layers: 4
+    num_heads: 8
+    feedforward_size: 64
+    dropout: 0.1
+    step_feature_size: 128
+    time_embedding_size: 128
+    feature_embedding_size: 16
+    noise_schedule:
+      kind: quadratic
+      num_steps: 50
+      first_variance: 0.0001
+      last_variance: 0.5

@@ -33,13 +33,25 @@ from ...models.interfaces import (
     ForecastNetwork,
     ForecastShape,
 )
+from ...models.interfaces.protocols.generative_forecasting import GenerativeForecastingModel
+from ...models.interfaces.protocols.published_weights import PublishedWeightsModel
+from ...models.interfaces.protocols.zero_shot_forecasting import ZeroShotForecastingModel
 from ...persistence import Checkpoint, EncodedValue, SettingsCodec, TaskKind
 from ...runtime import BatchedInference, Device
 from ...training import Trainer, TrainingHistory
+from .backtest import ForecastBacktest
 from .forecast_step import ForecastStep
 from .instance_normalization import InstanceNormalization
 from .metrics import ForecastMetrics
-from .objectives import GaussianObjective, LaplaceObjective, PointObjective, QuantileObjective, StudentTObjective
+from .objectives import (
+    GaussianObjective,
+    LaplaceObjective,
+    LowRankGaussianObjective,
+    PointObjective,
+    QuantileObjective,
+    SampleObjective,
+    StudentTObjective,
+)
 from .prediction import ForecastPrediction
 from .settings import ForecasterSettings
 
@@ -50,11 +62,15 @@ _CODEC: Final[SettingsCodec] = SettingsCodec.including(
     ForecasterSettings,
     GaussianObjective,
     LaplaceObjective,
+    LowRankGaussianObjective,
     PointObjective,
     QuantileObjective,
+    SampleObjective,
     StudentTObjective,
     CovariateDimensions,
 )
+
+_DEFAULT_EVALUATION_SAMPLES: Final[int] = 100
 
 
 class Forecaster:
@@ -70,7 +86,11 @@ class Forecaster:
     covariates needs covariates of the same dimensions wherever it forecasts, and one fitted without them accepts
     none; otherwise ``CovariateMismatchError`` is raised. Models that implement ``CovariateForecastingModel`` (TiDE,
     Temporal Fusion Transformer, DeepAR) read covariates as in their papers; every other model reads them through
-    ``CovariateAdapterNetwork``.
+    ``CovariateAdapterNetwork``, except generative models, which read none.
+
+    Every forecast can come with sample paths: generative models (TimeGrad, CSDI) draw them, and their point forecast
+    and quantiles are statistics of the samples; other models draw them from the objective's distribution. Samples are
+    drawn from a generator seeded with ``training.random_seed`` on every call, so forecasts are reproducible.
 
     Parameters
     ----------
@@ -221,7 +241,72 @@ class Forecaster:
         self._history = history
         return history
 
-    def predict(self, past: FloatArray, covariates: WindowCovariates | None = None) -> ForecastPrediction:
+    def prepare_zero_shot(self, series: FloatArray | Sequence[FloatArray]) -> None:
+        """
+        Make a pretrained model forecast without training.
+
+        The scaling is fitted on the series and the network is built with the model's published weights; the
+        history then has no epochs. ``fit`` afterwards fine-tunes from the published weights instead. The pretrained
+        models scale each series themselves (Chronos by its mean absolute value, the others by its mean and standard
+        deviation), so ``NoScalingParameters`` and ``is_instance_normalized=False`` feed them the values they were
+        trained on; other settings change the forecasts of models whose own scaling is not affine invariant.
+        Covariates are not supported, because the adapter that reads them must be trained.
+
+        Parameters
+        ----------
+        series : FloatArray | Sequence[FloatArray]
+            One or more series with shape (length, channels) to fit the scaling on, such as the series to forecast.
+
+        Raises
+        ------
+        TypeError
+            If the model does not forecast zero-shot.
+        ValueError
+            If the model has no published weights, the objective does not fit the model's outputs (a
+            ``SampleObjective`` for generative models such as Chronos and Moirai; otherwise a ``PointObjective`` or a
+            ``QuantileObjective`` of the model's ``zero_shot_quantile_levels``), a series is invalid, or a target
+            channel is out of range.
+        """
+        model: ForecastingModel = self.settings.model
+        if not isinstance(model, ZeroShotForecastingModel):
+            raise TypeError(f"{type(model).__name__} does not forecast zero-shot; call fit() instead.")
+        if not model.is_pretrained:
+            raise ValueError(f"{type(model).__name__} names no published weights; set its weights or call fit().")
+        if isinstance(model, GenerativeForecastingModel):
+            if not isinstance(self.settings.objective, SampleObjective):
+                raise ValueError(
+                    f"{type(model).__name__} forecasts sample paths; zero-shot forecasts need SampleObjective, "
+                    + f"got {type(self.settings.objective).__name__}"
+                )
+        elif not (
+            isinstance(self.settings.objective, PointObjective)
+            or (
+                isinstance(self.settings.objective, QuantileObjective)
+                and self.settings.objective.quantiles == model.zero_shot_quantile_levels
+            )
+        ):
+            raise ValueError(
+                "zero-shot forecasts need PointObjective or QuantileObjective with the levels "
+                + f"{model.zero_shot_quantile_levels}, got {type(self.settings.objective).__name__}"
+            )
+        collection: SeriesCollection = SeriesCollection.from_input(series)
+        targets: tuple[int, ...] = self._resolve_targets(collection.channels)
+        self._step = None
+        self._history = None
+        stacked: FloatArray = collection.concatenate()
+        self._input_scaler.fit(stacked)
+        self._target_scaler.fit(stacked[:, list(targets)])
+        self._input_channels = collection.channels
+        self._covariate_scaler = None
+        self._trainer.seed()
+        step: ForecastStep = self._build_step(collection.channels, targets)
+        _ = step.network.to(self._trainer.device).eval()
+        self._step = step
+        self._history = TrainingHistory(training_losses=(), validation_losses=(), best_epoch=0, is_stopped_early=False)
+
+    def predict(
+        self, past: FloatArray, covariates: WindowCovariates | None = None, num_samples: int = 0
+    ) -> ForecastPrediction:
         """
         Forecast the horizon after each of a batch of past windows.
 
@@ -232,6 +317,10 @@ class Forecaster:
         covariates : WindowCovariates | None
             Covariates of each window, whose known covariates cover the window and its horizon
             (``input_length + horizon`` steps); required exactly when the forecaster was fitted with covariates.
+        num_samples : int
+            Number of sample paths per window to return in ``samples``; 0 for none. A generative model draws exactly
+            these paths and derives the point forecast and the quantiles from them, or draws the objective's
+            ``num_samples`` paths when 0.
 
         Returns
         -------
@@ -243,31 +332,38 @@ class Forecaster:
         NotFittedError
             If fit has not completed yet.
         ValueError
-            If the windows are invalid or have another length or number of channels.
+            If the windows are invalid or have another length or number of channels, or num_samples is negative.
         CovariateMismatchError
             If the covariates are missing, superfluous, of other dimensions or lengths than in training, for another
             number of windows, or hold a category not seen in training.
         """
         step: ForecastStep = self._require_step()
+        if num_samples < 0:
+            raise ValueError(f"num_samples must not be negative, got {num_samples}")
         windows: SequenceArray = SequenceArray(past)
         windows.require_shape(self.settings.window.input_length, self._input_channels)
         inputs: tuple[Tensor, ...] = (
             torch.from_numpy(self._input_scaler.transform(windows.values)),
             *self._convert_covariates(covariates, windows.num_sequences),
         )
+        generator: torch.Generator = self._create_generator()
         outputs: Tensor = BatchedInference(self._trainer.device, self.settings.training.batch_size).run(
-            step.compute_outputs, TensorDataset(*inputs)
+            lambda batch: step.compute_outputs(batch, num_samples, generator), TensorDataset(*inputs)
         )
         unscaled: FloatArray = self._target_scaler.inverse_transform(outputs.permute(0, 1, 3, 2).numpy()).transpose(
             0, 1, 3, 2
         )
+        levels: tuple[float, ...] = self.settings.objective.quantile_levels
         return ForecastPrediction(
             point=unscaled[..., 0],
-            quantile_levels=self.settings.objective.quantile_levels,
-            quantiles=unscaled[..., 1:],
+            quantile_levels=levels,
+            quantiles=unscaled[..., 1 : 1 + len(levels)],
+            samples=unscaled[..., 1 + len(levels) :].transpose(0, 3, 1, 2) if num_samples > 0 else None,
         )
 
-    def forecast(self, series: FloatArray, covariates: SeriesCovariates | None = None) -> ForecastPrediction:
+    def forecast(
+        self, series: FloatArray, covariates: SeriesCovariates | None = None, num_samples: int = 0
+    ) -> ForecastPrediction:
         """
         Forecast the horizon after the end of one series.
 
@@ -278,6 +374,8 @@ class Forecaster:
         covariates : SeriesCovariates | None
             Covariates of the series, whose known covariates are ``horizon`` steps longer than the series, so they
             cover the forecast horizon; required exactly when the forecaster was fitted with covariates.
+        num_samples : int
+            Number of sample paths to return, as in ``predict``.
 
         Returns
         -------
@@ -289,7 +387,7 @@ class Forecaster:
         NotFittedError
             If fit has not completed yet.
         ValueError
-            If the series is invalid or shorter than ``input_length``.
+            If the series is invalid or shorter than ``input_length``, or num_samples is negative.
         CovariateMismatchError
             If the covariates are missing, superfluous or do not match the training covariates, or the known
             covariates do not extend ``horizon`` steps past the series.
@@ -303,15 +401,16 @@ class Forecaster:
         if covariates is not None:
             covariates.require_known_length(values.shape[0] + self.settings.window.horizon)
             window_covariates = covariates.slice_window(values.shape[0] - length, self.settings.window.total_length)
-        return self.predict(values[np.newaxis, -length:], window_covariates)
+        return self.predict(values[np.newaxis, -length:], window_covariates, num_samples)
 
-    def evaluate(
+    def backtest(
         self,
         series: FloatArray | Sequence[FloatArray],
         covariates: SeriesCovariates | Sequence[SeriesCovariates] | None = None,
-    ) -> ForecastMetrics:
+        num_samples: int = 0,
+    ) -> ForecastBacktest:
         """
-        Measure the forecasts of every window of the series against their true continuations.
+        Forecast every window of the series and pair the forecasts with their true continuations.
 
         Parameters
         ----------
@@ -320,18 +419,20 @@ class Forecaster:
         covariates : SeriesCovariates | Sequence[SeriesCovariates] | None
             Covariates of each series, whose known covariates are as long as their series; required exactly when the
             forecaster was fitted with covariates.
+        num_samples : int
+            Number of sample paths per window, as in ``predict``.
 
         Returns
         -------
-        ForecastMetrics
-            The metrics in the original scale.
+        ForecastBacktest
+            The forecasts and the true future targets in the original scale, windows in the order of the series.
 
         Raises
         ------
         NotFittedError
             If fit has not completed yet.
         ValueError
-            If a series is invalid or too short.
+            If a series is invalid or too short, or num_samples is negative.
         CovariateMismatchError
             If the covariates are missing, superfluous, misaligned or do not match the training covariates.
         """
@@ -344,8 +445,45 @@ class Forecaster:
             else CovariateCollection.from_input(covariates).extract_windows(self._sliding_windows(), collection)
         )
         length: int = self.settings.window.input_length
-        prediction: ForecastPrediction = self.predict(windows[:, :length, :], window_covariates)
-        return ForecastMetrics.compute(prediction, windows[:, length:, :][..., list(targets)])
+        prediction: ForecastPrediction = self.predict(windows[:, :length, :], window_covariates, num_samples)
+        return ForecastBacktest(prediction=prediction, targets=windows[:, length:, :][..., list(targets)])
+
+    def evaluate(
+        self,
+        series: FloatArray | Sequence[FloatArray],
+        covariates: SeriesCovariates | Sequence[SeriesCovariates] | None = None,
+        num_samples: int = _DEFAULT_EVALUATION_SAMPLES,
+    ) -> ForecastMetrics:
+        """
+        Measure the forecasts of every window of the series against their true continuations.
+
+        Parameters
+        ----------
+        series : FloatArray | Sequence[FloatArray]
+            One or more series with shape (length, channels), each at least one window with its horizon long.
+        covariates : SeriesCovariates | Sequence[SeriesCovariates] | None
+            Covariates of each series, whose known covariates are as long as their series; required exactly when the
+            forecaster was fitted with covariates.
+        num_samples : int
+            Number of sample paths per window for the sample CRPS; 0 to skip it (a generative model then draws the
+            objective's number of samples for its point forecast and quantiles).
+
+        Returns
+        -------
+        ForecastMetrics
+            The metrics in the original scale.
+
+        Raises
+        ------
+        NotFittedError
+            If fit has not completed yet.
+        ValueError
+            If a series is invalid or too short, or num_samples is negative.
+        CovariateMismatchError
+            If the covariates are missing, superfluous, misaligned or do not match the training covariates.
+        """
+        result: ForecastBacktest = self.backtest(series, covariates, num_samples)
+        return ForecastMetrics.compute(result.prediction, result.targets)
 
     def save(self, path: Path) -> None:
         """
@@ -430,14 +568,14 @@ class Forecaster:
                 },
             )
             forecaster._covariate_scaler = covariate_scaler
-        step: ForecastStep = forecaster._build_step(input_channels, targets)
+        step: ForecastStep = forecaster._build_step(input_channels, targets, is_restoring=True)
         checkpoint.restore_network(step.network, forecaster._trainer.device)
         forecaster._input_channels = input_channels
         forecaster._step = step
         forecaster._history = _CODEC.decode(TrainingHistory, checkpoint.history)
         return forecaster
 
-    def _build_step(self, input_channels: int, targets: tuple[int, ...]) -> ForecastStep:
+    def _build_step(self, input_channels: int, targets: tuple[int, ...], is_restoring: bool = False) -> ForecastStep:
         shape: ForecastShape = ForecastShape(
             input_length=self.settings.window.input_length,
             input_channels=input_channels,
@@ -448,16 +586,21 @@ class Forecaster:
             level_parameters=self.settings.objective.level_parameters,
         )
         return ForecastStep(
-            network=self._build_network(shape),
+            network=self._build_network(shape, is_restoring),
             objective=self.settings.objective,
             target_channels=targets,
             normalization=InstanceNormalization() if self.settings.is_instance_normalized else None,
         )
 
-    def _build_network(self, shape: ForecastShape) -> ForecastNetwork | CovariateForecastNetwork:
+    def _build_network(self, shape: ForecastShape, is_restoring: bool) -> ForecastNetwork | CovariateForecastNetwork:
         model: ForecastingModel = self.settings.model
+        if is_restoring and isinstance(model, PublishedWeightsModel):
+            # The checkpoint's weights replace the published ones, so they are not downloaded.
+            model = model.without_pretrained_weights()
         if self._covariate_scaler is None:
             return model.build_forecast_network(shape)
+        if isinstance(model, GenerativeForecastingModel):
+            raise CovariateMismatchError(f"{type(model).__name__} is generative and reads no covariates; pass none.")
         dimensions: CovariateDimensions = self._covariate_scaler.dimensions
         # Normalized windows also pass the location and log scale of each target channel as static features.
         statistics: int = 2 * shape.output_channels if self.settings.is_instance_normalized else 0
@@ -555,6 +698,12 @@ class Forecaster:
                 f"validation covariates must have the dimensions {training_covariates.dimensions}, "
                 + f"got {validation_covariates.dimensions}"
             )
+
+    def _create_generator(self) -> torch.Generator:
+        generator: torch.Generator = torch.Generator(device=self._trainer.device)
+        seed: int | None = self.settings.training.random_seed
+        _ = generator.seed() if seed is None else generator.manual_seed(seed)
+        return generator
 
     def _require_step(self) -> ForecastStep:
         if self._step is None:

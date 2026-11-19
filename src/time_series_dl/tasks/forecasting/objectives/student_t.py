@@ -95,3 +95,12 @@ class StudentTObjective(ForecastObjective):
         standard_quantiles: FloatArray = np.asarray(stdtrit(degrees_of_freedom, levels), dtype=np.float64)
         standard: Tensor = torch.from_numpy(standard_quantiles).to(parameters)
         return parameters[..., 0:1] + parameters[..., 1:2] * standard
+
+    @override
+    def sample(self, parameters: Tensor, num_samples: int, generator: torch.Generator | None = None) -> Tensor:
+        # Inverse-CDF sampling, so the uniform draws come from the given generator.
+        uniform: FloatArray = self.draw_uniform(parameters, num_samples, generator).double().cpu().numpy()
+        degrees_of_freedom: FloatArray = parameters[..., 2:3].detach().double().cpu().numpy()
+        standard_values: FloatArray = np.asarray(stdtrit(degrees_of_freedom, uniform), dtype=np.float64)
+        standard: Tensor = torch.from_numpy(standard_values).to(parameters)
+        return (parameters[..., 0:1] + parameters[..., 1:2] * standard).permute(0, 3, 1, 2)

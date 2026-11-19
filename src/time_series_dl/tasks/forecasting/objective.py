@@ -3,15 +3,18 @@ from abc import ABC, abstractmethod
 import torch
 from torch import Tensor
 
+_UNIFORM_MARGIN: float = 1e-6
+
 
 class ForecastObjective(ABC):
     """
     What a forecast network predicts for each future value, and the loss it is trained with.
 
     Networks output ``num_parameters`` unconstrained values per forecast value; ``constrain`` maps them to the
-    parameters of the predicted distribution. Parameters listed in ``level_parameters`` are in the scale of the
-    values and those in ``scale_parameters`` are spreads, so ``rescale`` shifts and multiplies the former and only
-    multiplies the latter; the others, such as degrees of freedom, are left unchanged.
+    parameters of the predicted distribution, which ``sample`` draws sample paths from. Parameters listed in
+    ``level_parameters`` are in the scale of the values and those in ``scale_parameters`` are spreads, so ``rescale``
+    shifts and multiplies the former and only multiplies the latter; the others, such as degrees of freedom, are left
+    unchanged.
     """
 
     @property
@@ -140,6 +143,26 @@ class ForecastObjective(ABC):
             The quantiles with shape (batch, horizon, channels, len(quantile_levels)).
         """
 
+    @abstractmethod
+    def sample(self, parameters: Tensor, num_samples: int, generator: torch.Generator | None = None) -> Tensor:
+        """
+        Draw sample paths of the predicted distribution.
+
+        Parameters
+        ----------
+        parameters : Tensor
+            Distribution parameters with shape (batch, horizon, channels, num_parameters).
+        num_samples : int
+            Number of samples per window.
+        generator : torch.Generator | None
+            Source of randomness on the device of the parameters; PyTorch's global generator when None.
+
+        Returns
+        -------
+        Tensor
+            The samples with shape (batch, num_samples, horizon, channels).
+        """
+
     def rescale(self, parameters: Tensor, location: Tensor, scale: Tensor) -> Tensor:
         """
         Map parameters of normalized values back to the scale of the values.
@@ -164,3 +187,62 @@ class ForecastObjective(ABC):
         is_scaled[list(self.scale_parameters)] = 1.0
         factor: Tensor = 1.0 + (scale.unsqueeze(-1) - 1.0) * is_scaled
         return parameters * factor + location.unsqueeze(-1) * is_level
+
+    @staticmethod
+    def draw_uniform(parameters: Tensor, num_samples: int, generator: torch.Generator | None) -> Tensor:
+        """
+        Draw uniform values in the open interval (0, 1), one per sample and forecast value.
+
+        Parameters
+        ----------
+        parameters : Tensor
+            Distribution parameters with shape (batch, horizon, channels, num_parameters).
+        num_samples : int
+            Number of samples per window.
+        generator : torch.Generator | None
+            Source of randomness on the device of the parameters; PyTorch's global generator when None.
+
+        Returns
+        -------
+        Tensor
+            The values with shape (batch, horizon, channels, num_samples), kept away from 0 and 1.
+
+        Raises
+        ------
+        ValueError
+            If num_samples is not positive.
+        """
+        if num_samples <= 0:
+            raise ValueError(f"num_samples must be positive, got {num_samples}")
+        shape: tuple[int, ...] = (*parameters.shape[:-1], num_samples)
+        uniform: Tensor = torch.rand(shape, generator=generator, device=parameters.device, dtype=parameters.dtype)
+        return uniform.clamp(_UNIFORM_MARGIN, 1.0 - _UNIFORM_MARGIN)
+
+    @staticmethod
+    def draw_normal(parameters: Tensor, num_samples: int, generator: torch.Generator | None) -> Tensor:
+        """
+        Draw standard normal values, one per sample and forecast value.
+
+        Parameters
+        ----------
+        parameters : Tensor
+            Distribution parameters with shape (batch, horizon, channels, num_parameters).
+        num_samples : int
+            Number of samples per window.
+        generator : torch.Generator | None
+            Source of randomness on the device of the parameters; PyTorch's global generator when None.
+
+        Returns
+        -------
+        Tensor
+            The values with shape (batch, horizon, channels, num_samples).
+
+        Raises
+        ------
+        ValueError
+            If num_samples is not positive.
+        """
+        if num_samples <= 0:
+            raise ValueError(f"num_samples must be positive, got {num_samples}")
+        shape: tuple[int, ...] = (*parameters.shape[:-1], num_samples)
+        return torch.randn(shape, generator=generator, device=parameters.device, dtype=parameters.dtype)

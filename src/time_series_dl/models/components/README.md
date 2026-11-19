@@ -21,4 +21,5 @@ from the generic heads.
 | [adversarial/](./adversarial/README.md) | Gradient routing for adversarial training through one optimizer. |
 | [differential_equations/](./differential_equations/README.md) | Fixed-step ODE solvers and cubic control paths of continuous-time models. |
 | [irregular_heads/](./irregular_heads/README.md) | Output layers that turn an irregular sequence encoder into a summary network. |
+| [diffusion/](./diffusion/README.md) | Noise schedules, forward process, ancestral sampler and step embedding of denoising diffusion models. |
 | [covariates/](./covariates/README.md) | Static covariate embedding and the generic covariate adapter of forecast networks. |

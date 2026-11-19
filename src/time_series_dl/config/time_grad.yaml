@@ -1,0 +1,18 @@
+model:
+  architecture: time_grad
+  parameters:
+    cell: lstm
+    hidden_size: 40
+    num_layers: 2
+    dropout: 0.1
+    conditioning_size: 100
+    noise_schedule:
+      kind: linear
+      num_steps: 100
+      first_variance: 0.0001
+      last_variance: 0.1
+    residual_layers: 8
+    residual_channels: 8
+    dilation_cycle_length: 2
+    step_feature_size: 32
+    step_projection_size: 64

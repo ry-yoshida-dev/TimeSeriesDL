@@ -86,3 +86,9 @@ class LaplaceObjective(ForecastObjective):
         distribution: Laplace = Laplace(parameters[..., 0:1], parameters[..., 1:2])
         quantiles: Tensor = distribution.icdf(levels)
         return quantiles
+
+    @override
+    def sample(self, parameters: Tensor, num_samples: int, generator: torch.Generator | None = None) -> Tensor:
+        uniform: Tensor = self.draw_uniform(parameters, num_samples, generator)
+        samples: Tensor = Laplace(parameters[..., 0:1], parameters[..., 1:2]).icdf(uniform)
+        return samples.permute(0, 3, 1, 2)

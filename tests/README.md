@@ -16,12 +16,16 @@ synthetic series.
 | [anomaly_network_checks.py](./anomaly_network_checks.py) | Score, loss and gradient checks of anomaly scoring networks. |
 | [irregular_network_checks.py](./irregular_network_checks.py) | Shape, gradient and padding-invariance checks of irregular networks. |
 | [irregular_datasets.py](./irregular_datasets.py) | Synthetic irregularly sampled datasets of the irregular task tests. |
+| [generative_network_checks.py](./generative_network_checks.py) | Loss, sampling and gradient checks of generative forecast networks. |
 | [masked_network_checks.py](./masked_network_checks.py) | Shape, gradient and mask-semantics checks of mask-aware imputation networks. |
 | `test_model_*.py` | Network checks and model-specific behavior of each model. |
 | [test_state_space_components.py](./test_state_space_components.py) | HiPPO memories, kernels, scans and convolutions of the state space models against their recurrences. |
 | [test_reference_models.py](./test_reference_models.py) | Network checks of MLP, RNN, TCN, DLinear and NLinear. |
 | [test_model_settings.py](./test_model_settings.py) | `ModelSettings` and the YAML presets of every model. |
 | [test_forecaster.py](./test_forecaster.py) | Forecasting: objectives, target channels, scaling and validation. |
+| [test_generative_forecasting.py](./test_generative_forecasting.py) | Forecasting with sample-path models and the sample objective. |
+| [test_conformal.py](./test_conformal.py) | Split and adaptive conformal intervals and their coverage. |
+| [test_diffusion.py](./test_diffusion.py) | Noise schedules, the forward process and the ancestral sampler. |
 | [test_forecaster_covariates.py](./test_forecaster_covariates.py) | Forecasting with known-future and static covariates, end to end. |
 | [test_covariate_adapter.py](./test_covariate_adapter.py) | The generic covariate adapter of forecast networks. |
 | [test_graph_components.py](./test_graph_components.py) | Graph learning layers and graph convolutions against explicit references. |

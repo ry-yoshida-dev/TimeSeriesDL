@@ -84,3 +84,8 @@ class GaussianObjective(ForecastObjective):
         distribution: Normal = Normal(parameters[..., 0:1], parameters[..., 1:2])
         quantiles: Tensor = distribution.icdf(levels)
         return quantiles
+
+    @override
+    def sample(self, parameters: Tensor, num_samples: int, generator: torch.Generator | None = None) -> Tensor:
+        normal: Tensor = self.draw_normal(parameters, num_samples, generator)
+        return (parameters[..., 0:1] + parameters[..., 1:2] * normal).permute(0, 3, 1, 2)

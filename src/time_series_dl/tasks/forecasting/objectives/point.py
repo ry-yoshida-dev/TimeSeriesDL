@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import override
 
+import torch
 from torch import Tensor
 
 from ....losses import MSELoss, PointLoss
@@ -60,3 +61,9 @@ class PointObjective(ForecastObjective):
     @override
     def compute_quantiles(self, parameters: Tensor) -> Tensor:
         return parameters[..., :0]
+
+    @override
+    def sample(self, parameters: Tensor, num_samples: int, generator: torch.Generator | None = None) -> Tensor:
+        if num_samples <= 0:
+            raise ValueError(f"num_samples must be positive, got {num_samples}")
+        return parameters[..., 0].unsqueeze(1).expand(-1, num_samples, -1, -1)

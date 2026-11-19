@@ -18,11 +18,14 @@ class ForecastPrediction:
         Levels of the forecast quantiles; empty for point objectives.
     quantiles : FloatArray
         Forecast quantiles with shape (num_windows, horizon, target_channels, len(quantile_levels)).
+    samples : FloatArray | None
+        Sample paths with shape (num_windows, num_samples, horizon, target_channels); None when none were drawn.
     """
 
     point: FloatArray
     quantile_levels: tuple[float, ...]
     quantiles: FloatArray
+    samples: FloatArray | None = None
 
     def get_quantile(self, level: float) -> FloatArray:
         """

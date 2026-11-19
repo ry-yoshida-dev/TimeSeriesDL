@@ -2,7 +2,7 @@
 
 ## Overview
 
-TimeSeriesDL (`time_series_dl`) puts 75 deep learning models for time series behind one PyTorch interface per task.
+TimeSeriesDL (`time_series_dl`) puts 77 deep learning models for time series behind one PyTorch interface per task.
 Each task is built from a settings dataclass that takes a model's parameters, so models are swapped by changing one
 argument; the type checker rejects a model that does not support the task. Training (optimizer, schedule, early
 stopping, device) and saving to files that load without pickle are shared by every task, and so are the point
@@ -11,7 +11,7 @@ cross-entropy or focal loss.
 
 | Task | Interface | Input → output | Models |
 | ---- | --------- | -------------- | ------ |
-| Forecasting | `Forecaster` | series → point, quantile, Gaussian, Student's t or Laplace forecasts of the next horizon | 61 |
+| Forecasting | `Forecaster` | series → point, quantile, parametric, multivariate low-rank Gaussian or sample-path forecasts of the next horizon, with conformal intervals | 63 |
 | Classification | `SequenceClassifier` | (N, L, C) sequences → class | 45 |
 | Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 45 |
 | Imputation | `Imputer` | sequences with NaN → filled sequences | 44 |
@@ -31,8 +31,9 @@ graph neural networks over the channels (MTGNN, Graph WaveNet, AGCRN, StemGNN, F
 missing-value mask (SAITS, BRITS, GRU-D), anomaly detectors with their own objectives (Anomaly Transformer,
 DCdetector, TranAD, USAD), self-supervised pretraining (TS2Vec, TS-TCC, SimMTM, masked
 reconstruction) whose encoders transfer to the other tasks, and continuous-time models of irregularly sampled
-sequences (mTAN, Neural CDE, ODE-RNN, Latent ODE). Forecasts accept
-known-future and static covariates with every forecasting model. Which model supports which task is listed in
+sequences (mTAN, Neural CDE, ODE-RNN, Latent ODE). Generative forecasters
+(TimeGrad, CSDI) draw sample paths, and conformal prediction calibrates the intervals of any forecaster. Forecasts
+accept known-future and static covariates with every forecasting model. Which model supports which task is listed in
 [src/time_series_dl/models/](src/time_series_dl/models/README.md). Classification and regression metrics are the
 types of [ClassReg](https://github.com/ry-yoshida-dev/ClassReg), and scaling comes from
 [DataScaler](https://github.com/ry-yoshida-dev/DataScaler).
@@ -79,6 +80,24 @@ known = np.concatenate([CalendarFeatures().compute(timestamps), promotions], axi
 forecaster = ForecasterSettings(model=TiDEParameters(), window=ForecastWindow(input_length=96, horizon=24)).build()
 forecaster.fit(sales, covariates=SeriesCovariates(known=known[:-24], static_categories=np.array([store_id])))
 prediction = forecaster.forecast(sales, SeriesCovariates(known=known, static_categories=np.array([store_id])))
+```
+
+Draw sample paths with a diffusion model, measure them by CRPS, and calibrate 90% intervals on held-out series with
+conformal prediction:
+
+```python
+from time_series_dl.models import CSDIParameters
+from time_series_dl.tasks.forecasting import ConformalSettings, ForecasterSettings, ForecastWindow, SampleObjective
+
+forecaster = ForecasterSettings(
+    model=CSDIParameters(), window=ForecastWindow(input_length=96, horizon=24), objective=SampleObjective()
+).build()
+forecaster.fit(train_series)
+prediction = forecaster.forecast(recent_series, num_samples=100)  # prediction.samples: (1, 100, 24, channels)
+print(forecaster.evaluate(test_series).crps)
+conformal = ConformalSettings(coverage_levels=(0.9,)).build(forecaster)
+conformal.calibrate(calibration_series)
+interval = conformal.forecast(recent_series)  # interval.get_quantile(0.05), interval.get_quantile(0.95)
 ```
 
 Save the fitted forecaster and load it back, on another device if needed; every task has the same `save` and `load`:

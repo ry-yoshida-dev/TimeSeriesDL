@@ -17,3 +17,4 @@ Models built from recurrent layers.
 | [LSTNet (Lai et al., 2018)](./lstnet/README.md) | `LSTNetParameters` | ✓ | ✓ | | |
 | [BRITS (Cao et al., 2018)](./brits/README.md) | `BRITSParameters` | | | ✓ | |
 | [GRU-D (Che et al., 2018)](./gru_d/README.md) | `GRUDParameters` | | | ✓ | |
+| [TimeGrad (Rasul et al., 2021)](./time_grad/README.md) | `TimeGradParameters` | ✓ (generative) | | | |

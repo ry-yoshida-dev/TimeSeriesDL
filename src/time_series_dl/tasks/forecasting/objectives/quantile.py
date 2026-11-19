@@ -78,3 +78,17 @@ class QuantileObjective(ForecastObjective):
     @override
     def compute_quantiles(self, parameters: Tensor) -> Tensor:
         return parameters
+
+    @override
+    def sample(self, parameters: Tensor, num_samples: int, generator: torch.Generator | None = None) -> Tensor:
+        uniform: Tensor = self.draw_uniform(parameters, num_samples, generator)
+        count: int = len(self.quantiles)
+        if count == 1:
+            return parameters.expand(*parameters.shape[:-1], num_samples).permute(0, 3, 1, 2)
+        levels: Tensor = torch.tensor(self.quantiles, device=parameters.device, dtype=parameters.dtype)
+        upper: Tensor = torch.searchsorted(levels, uniform.contiguous()).clamp(1, count - 1)
+        lower: Tensor = upper - 1
+        weight: Tensor = ((uniform - levels[lower]) / (levels[upper] - levels[lower])).clamp(0.0, 1.0)
+        lower_values: Tensor = parameters.gather(-1, lower)
+        upper_values: Tensor = parameters.gather(-1, upper)
+        return (lower_values + weight * (upper_values - lower_values)).permute(0, 3, 1, 2)

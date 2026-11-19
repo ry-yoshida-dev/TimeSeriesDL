@@ -18,4 +18,7 @@ task exactly when it has the builder, so the type checker rejects unsupported co
 | [anomaly_scoring.py](./anomaly_scoring.py) | `AnomalyScoringModel`: builds an `AnomalyScoringNetwork`, for anomaly detection. |
 | [irregular_summary.py](./irregular_summary.py) | `IrregularSummaryModel`: builds an `IrregularSummaryNetwork`. |
 | [irregular_interpolation.py](./irregular_interpolation.py) | `IrregularInterpolationModel`: builds an `IrregularInterpolationNetwork`. |
+| [generative_forecasting.py](./generative_forecasting.py) | `GenerativeForecastingModel`: builds a `GenerativeForecastNetwork`. |
+| [published_weights.py](./published_weights.py) | `PublishedWeightsModel`: names published pretrained weights and can drop them before a checkpoint is restored. |
+| [zero_shot_forecasting.py](./zero_shot_forecasting.py) | `ZeroShotForecastingModel`: forecasts with its published weights without training. |
 | [summary.py](./summary.py) | `SummaryModel`: builds a `SummaryNetwork`. |

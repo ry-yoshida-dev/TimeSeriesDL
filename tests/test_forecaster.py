@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 import pytest
 from sklearn.exceptions import NotFittedError
@@ -5,12 +7,15 @@ from sklearn.exceptions import NotFittedError
 from time_series_dl import Device, TrainingSettings
 from time_series_dl.models import DLinearParameters, MLPParameters, RNNParameters
 from time_series_dl.tasks.forecasting import (
+    Forecaster,
     ForecasterSettings,
     ForecastWindow,
     GaussianObjective,
     LaplaceObjective,
+    LowRankGaussianObjective,
     PointObjective,
     QuantileObjective,
+    SampleObjective,
     StudentTObjective,
 )
 from time_series_dl.tasks.forecasting.objective import ForecastObjective
@@ -24,6 +29,8 @@ from time_series_dl.tasks.forecasting.objective import ForecastObjective
         GaussianObjective(),
         StudentTObjective(),
         LaplaceObjective(),
+        LowRankGaussianObjective(rank=2),
+        SampleObjective(num_samples=4),
     ],
 )
 @pytest.mark.parametrize("is_instance_normalized", [True, False])
@@ -47,6 +54,10 @@ def test_forecaster_predicts_horizon_of_targets(
     metrics = forecaster.evaluate(sine_series[300:])
     assert metrics.num_windows == (100 - 30) // 3 + 1
     assert (metrics.quantile_loss is None) == (not objective.quantile_levels)
+    assert metrics.crps is not None
+    sampled = forecaster.forecast(sine_series, num_samples=5)
+    assert sampled.samples is not None and sampled.samples.shape == (1, 5, 6, 2)
+    assert np.array_equal(sampled.point, prediction.point)
 
 
 def test_forecasts_are_in_original_scale(sine_series: np.ndarray) -> None:
@@ -114,3 +125,39 @@ def test_forecaster_trains_on_several_series(fast_training: TrainingSettings, si
     ).build()
     _ = forecaster.fit([sine_series[:150], sine_series[150:]])
     assert forecaster.evaluate([sine_series[:50], sine_series[50:90]]).num_windows == (50 - 19) + (40 - 19)
+
+
+@pytest.mark.parametrize("objective", [LowRankGaussianObjective(rank=2), SampleObjective(num_samples=4)])
+def test_new_objectives_round_trip(
+    objective: ForecastObjective, fast_training: TrainingSettings, sine_series: np.ndarray, tmp_path: Path
+) -> None:
+    forecaster = ForecasterSettings(
+        model=MLPParameters(hidden_sizes=(8,)),
+        window=ForecastWindow(input_length=16, horizon=4),
+        objective=objective,
+        training=fast_training,
+    ).build()
+    _ = forecaster.fit(sine_series)
+    path = tmp_path / "forecaster.pt"
+    forecaster.save(path)
+    loaded = Forecaster.load(path)
+    assert loaded.settings == forecaster.settings
+    original = forecaster.forecast(sine_series, num_samples=3)
+    restored = loaded.forecast(sine_series, num_samples=3)
+    assert np.allclose(original.quantiles, restored.quantiles)
+    assert original.samples is not None and restored.samples is not None
+    assert np.allclose(original.samples, restored.samples)
+
+
+def test_point_forecast_samples_are_the_point(fast_training: TrainingSettings, sine_series: np.ndarray) -> None:
+    forecaster = ForecasterSettings(
+        model=MLPParameters(hidden_sizes=(8,)), window=ForecastWindow(16, 4), training=fast_training
+    ).build()
+    _ = forecaster.fit(sine_series)
+    prediction = forecaster.forecast(sine_series, num_samples=3)
+    assert prediction.samples is not None
+    assert np.allclose(prediction.samples, prediction.point[:, np.newaxis])
+    metrics = forecaster.evaluate(sine_series[300:])
+    assert metrics.crps == pytest.approx(metrics.mae)
+    with pytest.raises(ValueError, match="num_samples"):
+        _ = forecaster.forecast(sine_series, num_samples=-1)

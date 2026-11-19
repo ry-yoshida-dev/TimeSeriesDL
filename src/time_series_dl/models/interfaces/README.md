@@ -23,5 +23,6 @@ require of model parameters, and the dimensions passed to the builders.
 | [irregular_sequence_encoder.py](./irregular_sequence_encoder.py) | `IrregularSequenceEncoder`: irregular sequences to fixed-size features. |
 | [irregular_summary_network.py](./irregular_summary_network.py) | `IrregularSummaryNetwork`: irregular sequences to one output vector, with an optional model-specific training loss. |
 | [irregular_interpolation_network.py](./irregular_interpolation_network.py) | `IrregularInterpolationNetwork`: values at query times from observed context. |
+| [generative_forecast_network.py](./generative_forecast_network.py) | `GenerativeForecastNetwork`: draws sample paths of the horizon and is trained with its own loss. |
 | [protocols/](./protocols/README.md) | Builder protocols that tasks require of model parameters. |
 | [shapes/](./shapes/README.md) | Dimensions passed to the builders. |

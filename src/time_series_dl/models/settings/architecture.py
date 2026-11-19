@@ -44,6 +44,7 @@ from ..architectures.recurrent.gru_d import GRUDParameters
 from ..architectures.recurrent.lstnet import LSTNetParameters
 from ..architectures.recurrent.min_rnn import MinRNNParameters
 from ..architectures.recurrent.seg_rnn import SegRNNParameters
+from ..architectures.recurrent.time_grad import TimeGradParameters
 from ..architectures.recurrent.vanilla import RNNParameters
 from ..architectures.recurrent.xlstm import XLSTMParameters
 from ..architectures.recurrent.xlstm_time import XLSTMTimeParameters
@@ -61,6 +62,7 @@ from ..architectures.transformer.anomaly_transformer import AnomalyTransformerPa
 from ..architectures.transformer.autoformer import AutoformerParameters
 from ..architectures.transformer.conv_tran import ConvTranParameters
 from ..architectures.transformer.crossformer import CrossformerParameters
+from ..architectures.transformer.csdi import CSDIParameters
 from ..architectures.transformer.dcdetector import DCdetectorParameters
 from ..architectures.transformer.etsformer import ETSformerParameters
 from ..architectures.transformer.fedformer import FEDformerParameters
@@ -152,6 +154,8 @@ type ModelParameters = (
     | NeuralCDEParameters
     | ODERNNParameters
     | LatentODEParameters
+    | TimeGradParameters
+    | CSDIParameters
 )
 
 
@@ -237,6 +241,8 @@ class ModelArchitecture(StrEnum):
     NEURAL_CDE = "neural_cde"
     ODE_RNN = "ode_rnn"
     LATENT_ODE = "latent_ode"
+    TIME_GRAD = "time_grad"
+    CSDI = "csdi"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -399,3 +405,7 @@ class ModelArchitecture(StrEnum):
                 return ODERNNParameters
             case ModelArchitecture.LATENT_ODE:
                 return LatentODEParameters
+            case ModelArchitecture.TIME_GRAD:
+                return TimeGradParameters
+            case ModelArchitecture.CSDI:
+                return CSDIParameters

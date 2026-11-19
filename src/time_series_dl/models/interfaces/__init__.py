@@ -2,6 +2,7 @@ from .anomaly_scoring_network import AnomalyScoringNetwork
 from .covariate_forecast_network import CovariateForecastNetwork
 from .covariate_tensors import CovariateTensors
 from .forecast_network import ForecastNetwork
+from .generative_forecast_network import GenerativeForecastNetwork
 from .irregular_interpolation_network import IrregularInterpolationNetwork
 from .irregular_sequence_encoder import IrregularSequenceEncoder
 from .irregular_summary_network import IrregularSummaryNetwork
@@ -14,12 +15,15 @@ from .protocols import (
     CovariateForecastingModel,
     EncodingModel,
     ForecastingModel,
+    GenerativeForecastingModel,
     IrregularInterpolationModel,
     IrregularSummaryModel,
     MaskedReconstructionModel,
     PretrainingModel,
+    PublishedWeightsModel,
     ReconstructionModel,
     SummaryModel,
+    ZeroShotForecastingModel,
 )
 from .reconstruction_network import ReconstructionNetwork
 from .sequence_encoder import SequenceEncoder
@@ -44,6 +48,8 @@ __all__ = [
     "ForecastNetwork",
     "ForecastShape",
     "ForecastingModel",
+    "GenerativeForecastNetwork",
+    "GenerativeForecastingModel",
     "IrregularInterpolationModel",
     "IrregularInterpolationNetwork",
     "IrregularSequenceEncoder",
@@ -57,6 +63,7 @@ __all__ = [
     "MaskedReconstructionNetwork",
     "PretrainingModel",
     "PretrainingNetwork",
+    "PublishedWeightsModel",
     "ReconstructionModel",
     "ReconstructionNetwork",
     "SequenceEncoder",
@@ -64,4 +71,5 @@ __all__ = [
     "SummaryModel",
     "SummaryNetwork",
     "SummaryShape",
+    "ZeroShotForecastingModel",
 ]

@@ -7,9 +7,10 @@ from data_scaler import ScalingParameters, StandardScalingParameters
 
 from ...models import ForecastingModel
 from ...models.components.covariates import CovariateAdapterParameters
+from ...models.interfaces.protocols.generative_forecasting import GenerativeForecastingModel
 from ...training import TrainingSettings
 from .objective import ForecastObjective
-from .objectives import PointObjective
+from .objectives import PointObjective, SampleObjective
 from .window import ForecastWindow
 
 if TYPE_CHECKING:
@@ -24,11 +25,13 @@ class ForecasterSettings:
     Attributes
     ----------
     model : ForecastingModel
-        Parameters of the network architecture, such as ``PatchTSTParameters``.
+        Parameters of the network architecture, such as ``PatchTSTParameters``. Generative models (TimeGrad, CSDI)
+        need a ``SampleObjective`` and read no covariates.
     window : ForecastWindow
         Lengths of the past window and of the horizon.
     objective : ForecastObjective
-        Point, quantile or distributional (Gaussian, Student's t, Laplace) forecasts and their loss.
+        Point, quantile, distributional (Gaussian, Student's t, Laplace, low-rank multivariate Gaussian) or sample
+        forecasts and their loss.
     training : TrainingSettings
         Optimizer, epochs, early stopping and device.
     target_channels : tuple[int, ...] | None
@@ -50,7 +53,7 @@ class ForecasterSettings:
     Raises
     ------
     ValueError
-        If target_channels is empty or repeats a channel.
+        If target_channels is empty or repeats a channel, or a generative model has no ``SampleObjective``.
     """
 
     model: ForecastingModel
@@ -69,6 +72,11 @@ class ForecasterSettings:
                 raise ValueError("target_channels must not be empty when set.")
             if len(set(self.target_channels)) != len(self.target_channels):
                 raise ValueError(f"target_channels must not repeat, got {self.target_channels}")
+        if isinstance(self.model, GenerativeForecastingModel) and not isinstance(self.objective, SampleObjective):
+            raise ValueError(
+                f"{type(self.model).__name__} draws sample paths and needs a SampleObjective, "
+                + f"got {type(self.objective).__name__}"
+            )
 
     def build(self) -> Forecaster:
         """

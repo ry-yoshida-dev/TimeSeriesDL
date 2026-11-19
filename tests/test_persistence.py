@@ -12,6 +12,7 @@ from time_series_dl import Device, HuberLoss, TrainingSettings
 from time_series_dl.data import CovariateMismatchError, SeriesCovariates
 from time_series_dl.models import (
     ForecastingModel,
+    GenerativeForecastingModel,
     MLPParameters,
     ModelArchitecture,
     ModelSettings,
@@ -29,9 +30,11 @@ from time_series_dl.tasks.classification import ClassifierSettings, FocalLoss, S
 from time_series_dl.tasks.forecasting import (
     Forecaster,
     ForecasterSettings,
+    ForecastObjective,
     ForecastWindow,
     PointObjective,
     QuantileObjective,
+    SampleObjective,
 )
 from time_series_dl.tasks.imputation import Imputer, ImputerSettings
 from time_series_dl.tasks.regression import RegressorSettings, SequenceRegressor
@@ -75,10 +78,17 @@ FORECASTING_ARCHITECTURES: list[ModelArchitecture] = [
 def test_forecaster_round_trip_of_every_model(
     tmp_path: Path, fast_training: TrainingSettings, sine_series: np.ndarray, architecture: ModelArchitecture
 ) -> None:
+    model: ForecastingModel = ModelSettings(architecture=architecture).build_forecasting_model()
+    # Generative models draw sample paths; their draws are seeded by the training settings, so they repeat.
+    objective: ForecastObjective = (
+        SampleObjective(num_samples=4)
+        if isinstance(model, GenerativeForecastingModel)
+        else PointObjective(loss=HuberLoss(delta=0.5))
+    )
     forecaster = ForecasterSettings(
-        model=ModelSettings(architecture=architecture).build_forecasting_model(),
+        model=model,
         window=ForecastWindow(input_length=48, horizon=8, stride=8),
-        objective=PointObjective(loss=HuberLoss(delta=0.5)),
+        objective=objective,
         training=replace(fast_training, max_epochs=1),
     ).build()
     _ = forecaster.fit(sine_series)

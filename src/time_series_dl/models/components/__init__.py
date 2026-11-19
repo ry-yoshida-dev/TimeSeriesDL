@@ -27,6 +27,14 @@ from .differential_equations import (
     ODESolverKind,
     VectorField,
 )
+from .diffusion import (
+    DiffusionProcess,
+    DiffusionStepEmbedding,
+    NoisedSample,
+    NoisePredictor,
+    NoiseSchedule,
+    NoiseScheduleKind,
+)
 from .graph import (
     AdaptiveAdjacency,
     ChebyshevPolynomials,
@@ -103,6 +111,8 @@ __all__ = [
     "DiagonalInitialization",
     "DiagonalSSMKernel",
     "DiffusionConvolution",
+    "DiffusionProcess",
+    "DiffusionStepEmbedding",
     "DirectedGraphLearner",
     "Discretization",
     "EncodedForecastNetwork",
@@ -138,6 +148,10 @@ __all__ = [
     "MultilayerPerceptron",
     "NaturalCubicInterpolation",
     "NodeAdaptiveGraphConvolution",
+    "NoisePredictor",
+    "NoiseSchedule",
+    "NoiseScheduleKind",
+    "NoisedSample",
     "NormalPlusLowRank",
     "ODESolver",
     "ODESolverKind",
