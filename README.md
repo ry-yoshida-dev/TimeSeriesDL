@@ -2,7 +2,7 @@
 
 ## Overview
 
-TimeSeriesDL (`time_series_dl`) puts 71 deep learning models for time series behind one PyTorch interface per task.
+TimeSeriesDL (`time_series_dl`) puts 75 deep learning models for time series behind one PyTorch interface per task.
 Each task is built from a settings dataclass that takes a model's parameters, so models are swapped by changing one
 argument; the type checker rejects a model that does not support the task. Training (optimizer, schedule, early
 stopping, device) and saving to files that load without pickle are shared by every task, and so are the point
@@ -16,6 +16,9 @@ cross-entropy or focal loss.
 | Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 45 |
 | Imputation | `Imputer` | sequences with NaN → filled sequences | 44 |
 | Anomaly detection | `AnomalyDetector` | series → anomaly score of every time step | 65 |
+| Irregular classification | `IrregularSequenceClassifier` | irregularly sampled sequences → class | 4 |
+| Irregular regression | `IrregularSequenceRegressor` | irregularly sampled sequences → one or more values | 4 |
+| Irregular interpolation | `IrregularInterpolator` | irregularly sampled sequences → values at query times | 2 |
 | Representation learning | `RepresentationLearner` | unlabeled sequences → pretrained encoder and representations | 4 |
 
 The models span linear and MLP forecasters (DLinear, RLinear, FITS, SparseTSF, TSMixer, TiDE, TimeMixer,
@@ -26,8 +29,9 @@ Pyraformer, ETSformer, Non-stationary Transformer, Crossformer, PatchTST, iTrans
 Temporal Fusion Transformer), state space models (HiPPO-RNN, LMU, S4, S4D, S5, LRU, Mamba, Mamba-2, S-Mamba, FiLM)
 graph neural networks over the channels (MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN), imputation models that read the
 missing-value mask (SAITS, BRITS, GRU-D), anomaly detectors with their own objectives (Anomaly Transformer,
-DCdetector, TranAD, USAD), and self-supervised pretraining (TS2Vec, TS-TCC, SimMTM, masked
-reconstruction) whose encoders transfer to the other tasks. Forecasts accept
+DCdetector, TranAD, USAD), self-supervised pretraining (TS2Vec, TS-TCC, SimMTM, masked
+reconstruction) whose encoders transfer to the other tasks, and continuous-time models of irregularly sampled
+sequences (mTAN, Neural CDE, ODE-RNN, Latent ODE). Forecasts accept
 known-future and static covariates with every forecasting model. Which model supports which task is listed in
 [src/time_series_dl/models/](src/time_series_dl/models/README.md). Classification and regression metrics are the
 types of [ClassReg](https://github.com/ry-yoshida-dev/ClassReg), and scaling comes from
@@ -177,4 +181,24 @@ probe = ClassifierSettings(
     model=PretrainedEncoderParameters(checkpoint_path="ts2vec.pt", is_encoder_frozen=True)
 ).build()
 probe.fit(X_train, y_train)
+```
+
+Classify irregularly sampled records, such as ICU stays, and interpolate them at query times:
+
+```python
+import numpy as np
+
+from time_series_dl.data import IrregularSequenceCollection, QueryTimes
+from time_series_dl.models import LatentODEParameters, MTANParameters
+from time_series_dl.tasks.irregular.classification import IrregularClassifierSettings
+from time_series_dl.tasks.irregular.interpolation import IrregularInterpolatorSettings
+
+# times: hours since admission per record; values: (length, channels) per record, NaN where unmeasured.
+records = IrregularSequenceCollection.from_arrays(times, values)
+classifier = IrregularClassifierSettings(model=MTANParameters(), is_class_balanced=True).build()
+classifier.fit(records, mortality)
+
+interpolator = IrregularInterpolatorSettings(model=LatentODEParameters()).build()
+interpolator.fit(records)
+hourly = interpolator.predict(records, QueryTimes.from_arrays([np.arange(48.0)] * records.num_sequences))
 ```

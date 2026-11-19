@@ -19,6 +19,12 @@ class TaskKind(Enum):
         ``AnomalyDetector``.
     REPRESENTATION_LEARNING
         ``RepresentationLearner``.
+    IRREGULAR_CLASSIFICATION
+        ``IrregularSequenceClassifier``.
+    IRREGULAR_REGRESSION
+        ``IrregularSequenceRegressor``.
+    IRREGULAR_INTERPOLATION
+        ``IrregularInterpolator``.
     """
 
     FORECASTING = "forecasting"
@@ -27,3 +33,6 @@ class TaskKind(Enum):
     IMPUTATION = "imputation"
     ANOMALY_DETECTION = "anomaly_detection"
     REPRESENTATION_LEARNING = "representation_learning"
+    IRREGULAR_CLASSIFICATION = "irregular_classification"
+    IRREGULAR_REGRESSION = "irregular_regression"
+    IRREGULAR_INTERPOLATION = "irregular_interpolation"

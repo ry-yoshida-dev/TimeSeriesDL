@@ -15,3 +15,4 @@ and trains with the shared training loop.
 | [imputation/](./imputation/README.md) | `Imputer`: fills missing values. |
 | [anomaly_detection/](./anomaly_detection/README.md) | `AnomalyDetector`: reconstruction-error, forecast-error or model-specific scores of every time step. |
 | [representation_learning/](./representation_learning/README.md) | `RepresentationLearner`: self-supervised pretraining of an encoder and its representations. |
+| [irregular/](./irregular/README.md) | `IrregularSequenceClassifier`, `IrregularSequenceRegressor` and `IrregularInterpolator` for irregularly sampled sequences. |

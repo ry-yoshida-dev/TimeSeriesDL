@@ -16,4 +16,6 @@ task exactly when it has the builder, so the type checker rejects unsupported co
 | [pretraining.py](./pretraining.py) | `PretrainingModel`: builds a `PretrainingNetwork`, for representation learning. |
 | [encoding.py](./encoding.py) | `EncodingModel`: builds a `SequenceEncoder` that pretraining methods wrap. |
 | [anomaly_scoring.py](./anomaly_scoring.py) | `AnomalyScoringModel`: builds an `AnomalyScoringNetwork`, for anomaly detection. |
+| [irregular_summary.py](./irregular_summary.py) | `IrregularSummaryModel`: builds an `IrregularSummaryNetwork`. |
+| [irregular_interpolation.py](./irregular_interpolation.py) | `IrregularInterpolationModel`: builds an `IrregularInterpolationNetwork`. |
 | [summary.py](./summary.py) | `SummaryModel`: builds a `SummaryNetwork`. |

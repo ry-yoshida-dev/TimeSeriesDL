@@ -13,3 +13,4 @@ Validation, windowing and scaling of the arrays that tasks receive.
 | [sliding_windows.py](./sliding_windows.py) | `SlidingWindows`: fixed-length windows of a series at a fixed stride. |
 | [channel_scaler.py](./channel_scaler.py) | `ChannelScaler`: a `data_scaler` strategy applied per channel over all time steps. |
 | [covariates/](./covariates/README.md) | Known and static covariates of forecasts: validation, windowing, scaling and calendar features. |
+| [irregular/](./irregular/README.md) | Irregularly sampled sequences: validation, padding with masks, and scaling of observed values. |

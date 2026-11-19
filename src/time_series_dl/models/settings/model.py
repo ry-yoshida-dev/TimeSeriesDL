@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from ..interfaces import (
     AnomalyScoringModel,
     ForecastingModel,
+    IrregularInterpolationModel,
+    IrregularSummaryModel,
     MaskedReconstructionModel,
     PretrainingModel,
     ReconstructionModel,
@@ -176,3 +178,41 @@ class ModelSettings:
         if isinstance(parameters, ForecastingModel):
             return parameters
         raise ValueError(f"{self.architecture} does not support anomaly detection.")
+
+    def build_irregular_summary_model(self) -> IrregularSummaryModel:
+        """
+        Build the parameters for ``IrregularClassifierSettings`` or ``IrregularRegressorSettings``.
+
+        Returns
+        -------
+        IrregularSummaryModel
+            The parameters.
+
+        Raises
+        ------
+        ValueError
+            If ``architecture`` does not classify or regress irregularly sampled sequences.
+        """
+        parameters: ModelParameters = self.build()
+        if not isinstance(parameters, IrregularSummaryModel):
+            raise ValueError(f"{self.architecture} does not support irregular classification or regression.")
+        return parameters
+
+    def build_irregular_interpolation_model(self) -> IrregularInterpolationModel:
+        """
+        Build the parameters for ``IrregularInterpolatorSettings``.
+
+        Returns
+        -------
+        IrregularInterpolationModel
+            The parameters.
+
+        Raises
+        ------
+        ValueError
+            If ``architecture`` does not interpolate irregularly sampled sequences.
+        """
+        parameters: ModelParameters = self.build()
+        if not isinstance(parameters, IrregularInterpolationModel):
+            raise ValueError(f"{self.architecture} does not support irregular interpolation.")
+        return parameters

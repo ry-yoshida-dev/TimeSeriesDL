@@ -19,5 +19,9 @@ require of model parameters, and the dimensions passed to the builders.
 | [anomaly_scoring_network.py](./anomaly_scoring_network.py) | `AnomalyScoringNetwork`: window to per-step anomaly scores, with the model's own training loss. |
 | [summary_network.py](./summary_network.py) | `SummaryNetwork`: sequence to one output vector. |
 | [sequence_encoder.py](./sequence_encoder.py) | `SequenceEncoder`: sequence to a sequence of feature vectors. |
+| [irregular_tensors.py](./irregular_tensors.py) | `IrregularTensors`: padded times, values, observed masks and lengths of a batch of irregular sequences. |
+| [irregular_sequence_encoder.py](./irregular_sequence_encoder.py) | `IrregularSequenceEncoder`: irregular sequences to fixed-size features. |
+| [irregular_summary_network.py](./irregular_summary_network.py) | `IrregularSummaryNetwork`: irregular sequences to one output vector, with an optional model-specific training loss. |
+| [irregular_interpolation_network.py](./irregular_interpolation_network.py) | `IrregularInterpolationNetwork`: values at query times from observed context. |
 | [protocols/](./protocols/README.md) | Builder protocols that tasks require of model parameters. |
 | [shapes/](./shapes/README.md) | Dimensions passed to the builders. |

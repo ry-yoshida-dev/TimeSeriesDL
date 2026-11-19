@@ -12,3 +12,5 @@ Input and output dimensions that a task passes to a model when it builds a netwo
 | [covariate_forecast.py](./covariate_forecast.py) | `CovariateForecastShape`: a `ForecastShape` with the known, static numeric and static categorical covariate dimensions. |
 | [sequence.py](./sequence.py) | `SequenceShape`: length and channels of a reconstruction network's input and output. |
 | [summary.py](./summary.py) | `SummaryShape`: input window and output size of a summary network. |
+| [irregular_sequence.py](./irregular_sequence.py) | `IrregularSequenceShape`: channels of irregular sequences. |
+| [irregular_summary.py](./irregular_summary.py) | `IrregularSummaryShape`: input channels and output size of an irregular summary network. |

@@ -1,0 +1,27 @@
+model:
+  architecture: latent_ode
+  parameters:
+    latent_size: 20
+    recognition_size: 40
+    recognition_hidden_sizes:
+    - 50
+    - 50
+    - 50
+    - 50
+    dynamics_hidden_sizes:
+    - 50
+    - 50
+    - 50
+    - 50
+    recognition_solver: euler
+    dynamics_solver: dopri5
+    steps_per_interval: 2
+    observation_std: 0.01
+    kl_weight: 1.0
+    output_loss_weight: 100.0
+    head:
+      hidden_sizes:
+      - 300
+      - 300
+      activation: relu
+      dropout: 0.0

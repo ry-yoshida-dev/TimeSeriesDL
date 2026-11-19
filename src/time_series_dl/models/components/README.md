@@ -19,4 +19,6 @@ from the generic heads.
 | [missing_values/](./missing_values/README.md) | Time gaps, temporal decay and last observation carried forward of the recurrent imputation models. |
 | [masked_modeling/](./masked_modeling/README.md) | Random masks and the decoder of masked-modeling pretraining. |
 | [adversarial/](./adversarial/README.md) | Gradient routing for adversarial training through one optimizer. |
+| [differential_equations/](./differential_equations/README.md) | Fixed-step ODE solvers and cubic control paths of continuous-time models. |
+| [irregular_heads/](./irregular_heads/README.md) | Output layers that turn an irregular sequence encoder into a summary network. |
 | [covariates/](./covariates/README.md) | Static covariate embedding and the generic covariate adapter of forecast networks. |

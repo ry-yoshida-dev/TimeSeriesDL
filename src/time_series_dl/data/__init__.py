@@ -9,6 +9,13 @@ from .covariates import (
     SeriesCovariates,
     WindowCovariates,
 )
+from .irregular import (
+    IrregularScaler,
+    IrregularSequence,
+    IrregularSequenceCollection,
+    PaddedIrregularSequences,
+    QueryTimes,
+)
 from .sequence_array import SequenceArray
 from .series_collection import SeriesCollection
 from .sliding_windows import SlidingWindows
@@ -21,6 +28,11 @@ __all__ = [
     "CovariateDimensions",
     "CovariateMismatchError",
     "CovariateScaler",
+    "IrregularScaler",
+    "IrregularSequence",
+    "IrregularSequenceCollection",
+    "PaddedIrregularSequences",
+    "QueryTimes",
     "SequenceArray",
     "SeriesCollection",
     "SeriesCovariates",

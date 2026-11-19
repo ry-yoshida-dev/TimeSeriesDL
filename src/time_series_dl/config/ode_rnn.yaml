@@ -1,0 +1,17 @@
+model:
+  architecture: ode_rnn
+  parameters:
+    hidden_size: 20
+    ode_hidden_sizes:
+    - 50
+    - 50
+    - 50
+    - 50
+    solver: euler
+    steps_per_interval: 2
+    head:
+      hidden_sizes:
+      - 300
+      - 300
+      activation: relu
+      dropout: 0.0

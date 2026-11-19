@@ -6,7 +6,8 @@ Parameters and networks of every model. A parameters class builds the networks o
 forecasting (`build_forecast_network`), classification and regression (`build_summary_network`), imputation and
 anomaly detection (`build_reconstruction_network`), imputation from the values with their missing-value mask
 (`build_masked_reconstruction_network`), anomaly detection with a model's own objective and score
-(`build_anomaly_scoring_network`), and self-supervised pretraining (`build_pretraining_network`). Every public class is imported from `time_series_dl.models`.
+(`build_anomaly_scoring_network`), self-supervised pretraining (`build_pretraining_network`), and the summaries and interpolations of irregularly
+sampled sequences (`build_irregular_summary_network`, `build_irregular_interpolation_network`). Every public class is imported from `time_series_dl.models`.
 
 | Family | Models |
 | ------ | ------ |
@@ -17,6 +18,7 @@ anomaly detection (`build_reconstruction_network`), imputation from the values w
 | [Transformer](./architectures/transformer/README.md) | Transformer, Informer, Autoformer, FEDformer, PatchTST, iTransformer, Temporal Fusion Transformer, Non-stationary Transformer, Pyraformer, ETSformer, Crossformer, TimeXer, TST, ConvTran, SAITS, Anomaly Transformer, DCdetector, TranAD |
 | [State space](./architectures/state_space/README.md) | HiPPO-RNN, LMU, S4, S4D, S5, LRU, Mamba, Mamba-2, S-Mamba, FiLM |
 | [Graph](./architectures/graph/README.md) | MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN |
+| [Continuous time](./architectures/continuous_time/README.md) | mTAN, Neural CDE, ODE-RNN, Latent ODE (irregularly sampled sequences) |
 | [Pretrained](./architectures/pretrained/README.md) | SimMTM, masked reconstruction pretraining, transfer of pretrained encoders |
 
 `ModelSettings` names a model by its `ModelArchitecture` and its parameters by field, so that a configuration file

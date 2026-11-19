@@ -1,0 +1,13 @@
+model:
+  architecture: neural_cde
+  parameters:
+    hidden_size: 49
+    field_hidden_size: 49
+    field_layers: 4
+    interpolation: hermite
+    solver: rk4
+    steps_per_interval: 1
+    head:
+      hidden_sizes: []
+      activation: relu
+      dropout: 0.0

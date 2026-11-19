@@ -1,0 +1,17 @@
+model:
+  architecture: mtan
+  parameters:
+    hidden_size: 256
+    time_embedding_size: 128
+    num_heads: 1
+    num_reference_points: 128
+    latent_size: 16
+    projection_size: 50
+    observation_std: 0.01
+    kl_weight: 1.0
+    head:
+      hidden_sizes:
+      - 300
+      - 300
+      activation: relu
+      dropout: 0.0

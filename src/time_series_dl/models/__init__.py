@@ -1,3 +1,4 @@
+from .architectures.continuous_time import LatentODEParameters, MTANParameters, NeuralCDEParameters, ODERNNParameters
 from .architectures.convolutional.fcn import FCNParameters
 from .architectures.convolutional.inception_time import InceptionTimeParameters
 from .architectures.convolutional.lite import LITEParameters
@@ -74,6 +75,7 @@ from .architectures.transformer.tst import TSTParameters
 from .architectures.transformer.vanilla import TransformerParameters
 from .components.attention import FourierModeSelection
 from .components.covariates import CovariateAdapterParameters
+from .components.differential_equations import CubicInterpolationKind, ODESolverKind
 from .components.heads import EncoderHead
 from .components.layers import Activation, TemporalPooling
 from .components.masked_modeling import GeometricMasking, PatchMasking
@@ -89,6 +91,8 @@ from .interfaces import (
     ForecastingModel,
     ForecastNetwork,
     ForecastShape,
+    IrregularInterpolationModel,
+    IrregularSummaryModel,
     MaskedReconstruction,
     MaskedReconstructionModel,
     MaskedReconstructionNetwork,
@@ -121,6 +125,7 @@ __all__ = [
     "CovariateForecastingModel",
     "CovariateTensors",
     "CrossformerParameters",
+    "CubicInterpolationKind",
     "DCdetectorParameters",
     "DLinearParameters",
     "DeepARParameters",
@@ -147,13 +152,17 @@ __all__ = [
     "ITransformerParameters",
     "InceptionTimeParameters",
     "InformerParameters",
+    "IrregularInterpolationModel",
+    "IrregularSummaryModel",
     "KoopaParameters",
     "LITEParameters",
     "LMUParameters",
     "LRUParameters",
     "LSTNetParameters",
+    "LatentODEParameters",
     "MICNParameters",
     "MLPParameters",
+    "MTANParameters",
     "MTGNNParameters",
     "Mamba2Parameters",
     "MambaParameters",
@@ -178,7 +187,10 @@ __all__ = [
     "NHITSPooling",
     "NHITSStack",
     "NLinearParameters",
+    "NeuralCDEParameters",
     "NonStationaryTransformerParameters",
+    "ODERNNParameters",
+    "ODESolverKind",
     "PatchMasking",
     "PatchTSTParameters",
     "PretrainedEncoderParameters",

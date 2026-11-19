@@ -13,6 +13,7 @@ from time_series_dl.models import (
     ModelArchitecture,
     ModelParameters,
     ModelSettings,
+    MTANParameters,
     NBEATSBlockKind,
     NBEATSParameters,
     NBEATSStack,
@@ -115,6 +116,13 @@ def test_task_models_follow_supported_tasks() -> None:
     assert isinstance(n_beats.build_anomaly_detection_model(), NBEATSParameters)
     with pytest.raises(ValueError, match="anomaly detection"):
         mini_rocket.build_anomaly_detection_model()
+    mtan = ModelSettings(architecture=ModelArchitecture.MTAN)
+    assert isinstance(mtan.build_irregular_summary_model(), MTANParameters)
+    assert isinstance(mtan.build_irregular_interpolation_model(), MTANParameters)
+    with pytest.raises(ValueError, match="irregular interpolation"):
+        ModelSettings(architecture=ModelArchitecture.NEURAL_CDE).build_irregular_interpolation_model()
+    with pytest.raises(ValueError, match="irregular classification"):
+        patch_tst.build_irregular_summary_model()
     assert isinstance(patch_tst.build_imputation_model(), PatchTSTParameters)
 
 

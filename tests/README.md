@@ -14,6 +14,8 @@ synthetic series.
 | [covariate_network_checks.py](./covariate_network_checks.py) | Shape, gradient and covariate-sensitivity checks of covariate forecast networks. |
 | [graph_network_checks.py](./graph_network_checks.py) | Target-channel consistency checks of the graph neural networks. |
 | [anomaly_network_checks.py](./anomaly_network_checks.py) | Score, loss and gradient checks of anomaly scoring networks. |
+| [irregular_network_checks.py](./irregular_network_checks.py) | Shape, gradient and padding-invariance checks of irregular networks. |
+| [irregular_datasets.py](./irregular_datasets.py) | Synthetic irregularly sampled datasets of the irregular task tests. |
 | [masked_network_checks.py](./masked_network_checks.py) | Shape, gradient and mask-semantics checks of mask-aware imputation networks. |
 | `test_model_*.py` | Network checks and model-specific behavior of each model. |
 | [test_state_space_components.py](./test_state_space_components.py) | HiPPO memories, kernels, scans and convolutions of the state space models against their recurrences. |
@@ -33,5 +35,10 @@ synthetic series.
 | [test_training.py](./test_training.py) | Trainer, optimizers, schedules and early stopping. |
 | [test_persistence.py](./test_persistence.py) | Saving and loading every task and model, and rejecting invalid checkpoints. |
 | [test_data.py](./test_data.py) | Windows, series validation and channel scaling. |
+| [test_irregular_data.py](./test_irregular_data.py) | Irregular sequences: validation, padding and scaling. |
+| [test_differential_equations.py](./test_differential_equations.py) | ODE solvers against analytic solutions and cubic paths against exact interpolation. |
+| [test_irregular_classifier.py](./test_irregular_classifier.py) | Classification of irregularly sampled sequences. |
+| [test_irregular_regressor.py](./test_irregular_regressor.py) | Regression of irregularly sampled sequences. |
+| [test_irregular_interpolator.py](./test_irregular_interpolator.py) | Interpolation and forecasting of irregularly sampled sequences at query times. |
 | [test_representation_learning.py](./test_representation_learning.py) | Self-supervised pretraining, representations and transfer of pretrained encoders. |
 | [test_masked_modeling.py](./test_masked_modeling.py) | Random masks and the decoder of masked-modeling pretraining. |

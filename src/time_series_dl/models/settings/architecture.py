@@ -1,5 +1,9 @@
 from enum import StrEnum
 
+from ..architectures.continuous_time.latent_ode import LatentODEParameters
+from ..architectures.continuous_time.mtan import MTANParameters
+from ..architectures.continuous_time.neural_cde import NeuralCDEParameters
+from ..architectures.continuous_time.ode_rnn import ODERNNParameters
 from ..architectures.convolutional.fcn import FCNParameters
 from ..architectures.convolutional.inception_time import InceptionTimeParameters
 from ..architectures.convolutional.lite import LITEParameters
@@ -144,6 +148,10 @@ type ModelParameters = (
     | AnomalyTransformerParameters
     | DCdetectorParameters
     | TranADParameters
+    | MTANParameters
+    | NeuralCDEParameters
+    | ODERNNParameters
+    | LatentODEParameters
 )
 
 
@@ -225,6 +233,10 @@ class ModelArchitecture(StrEnum):
     ANOMALY_TRANSFORMER = "anomaly_transformer"
     DCDETECTOR = "dcdetector"
     TRANAD = "tranad"
+    MTAN = "mtan"
+    NEURAL_CDE = "neural_cde"
+    ODE_RNN = "ode_rnn"
+    LATENT_ODE = "latent_ode"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -379,3 +391,11 @@ class ModelArchitecture(StrEnum):
                 return DCdetectorParameters
             case ModelArchitecture.TRANAD:
                 return TranADParameters
+            case ModelArchitecture.MTAN:
+                return MTANParameters
+            case ModelArchitecture.NEURAL_CDE:
+                return NeuralCDEParameters
+            case ModelArchitecture.ODE_RNN:
+                return ODERNNParameters
+            case ModelArchitecture.LATENT_ODE:
+                return LatentODEParameters
