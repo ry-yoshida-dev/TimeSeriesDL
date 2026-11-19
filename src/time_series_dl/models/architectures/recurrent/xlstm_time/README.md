@@ -8,9 +8,10 @@ batch normalized, and refined by an xLSTM stack that reads the channels as its s
 each channel back to the horizon. Forecasting only.
 
 Differences from the paper: the reversible instance normalization is applied by the forecasting task, not by the
-network; the output layer predicts every distribution parameter; and the paper does not state the number of blocks,
-so the default is a single sLSTM block (the paper's choice for the smaller datasets; an empty
-`slstm_block_indices` gives its mLSTM variant). Non-target channels are read as inputs and only the target channels
+network; and the output layer predicts every distribution parameter. The defaults are the single configuration of
+the official code (muslehal/xLSTMTime, `xlstm.py`), used for every benchmark including ETTh1: three sLSTM blocks of
+size 256 with four heads (the paper's sLSTM variant for the smaller datasets; an empty `slstm_block_indices` gives its
+mLSTM variant). Non-target channels are read as inputs and only the target channels
 are returned.
 
 ## Components

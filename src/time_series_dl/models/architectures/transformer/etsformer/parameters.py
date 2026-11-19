@@ -12,7 +12,8 @@ class ETSformerParameters:
     growth and seasonality, which a decoder of damped growths and extrapolated seasons composes into the forecast.
 
     The decoder has one damping layer per encoder layer, so there is a single number of layers. The feed-forward
-    networks use the sigmoid activation of the paper. Defaults follow the official implementation.
+    networks use the sigmoid activation of the paper. Defaults follow the official multivariate ETTm2 script of
+    salesforce/ETSformer (``scripts/ETTm2.sh``: K = 3, the other values from ``run.py``).
 
     Attributes
     ----------
@@ -39,7 +40,7 @@ class ETSformerParameters:
     num_heads: int = 8
     num_layers: int = 2
     feedforward_size: int = 2048
-    top_k: int = 1
+    top_k: int = 3
     dropout: float = 0.2
 
     def __post_init__(self) -> None:

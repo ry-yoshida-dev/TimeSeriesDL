@@ -11,7 +11,8 @@ class TimeXerParameters:
     TimeXer (Wang et al., NeurIPS 2024): patch tokens and a global token of each endogenous series, which attends to
     one token per exogenous series.
 
-    Forecasting only. Defaults follow the official run script.
+    Forecasting only. Defaults follow the official ETTh1 script with exogenous variables and horizon 96
+    (thuml/TimeXer ``scripts/forecast_exogenous/ETTh1/TimeXer.sh`` with the defaults of ``run.py``).
 
     Attributes
     ----------
@@ -40,7 +41,7 @@ class TimeXerParameters:
     model_size: int = 512
     num_heads: int = 8
     num_layers: int = 2
-    feedforward_size: int = 2048
+    feedforward_size: int = 512
     dropout: float = 0.1
     activation: Activation = Activation.GELU
 

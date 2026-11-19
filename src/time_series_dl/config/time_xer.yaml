@@ -5,6 +5,6 @@ model:
     model_size: 512
     num_heads: 8
     num_layers: 2
-    feedforward_size: 2048
+    feedforward_size: 512
     dropout: 0.1
     activation: gelu

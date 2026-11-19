@@ -21,8 +21,9 @@ Differences from the paper and Time-Series-Library:
 - The training-time jitter, scale and shift augmentation is left out; augmentation belongs to the task.
 - No reconstruction network: Time-Series-Library's imputation extrapolates the window beyond itself instead of
   reconstructing its steps, and the in-sample level reads each observed value.
-- Defaults follow the official run script (K = 1, dropout 0.2); Time-Series-Library's run script uses top_k 5 and
-  dropout 0.1.
+- Defaults follow the official multivariate ETTm2 script (salesforce/ETSformer `scripts/ETTm2.sh`: K = 3, with
+  `run.py`'s model size 512, 8 heads, 2 encoder and decoder layers, feed-forward size 2048 and dropout 0.2); the
+  official code has no ETTh1 script, and Time-Series-Library's ETTh1 script uses top_k 5 and dropout 0.1.
 
 ## Components
 

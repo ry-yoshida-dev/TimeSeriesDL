@@ -24,8 +24,10 @@ Choices where the paper leaves room, and differences from it:
   the values are denormalized.
 - Summary and reconstruction read every scale (flattened tokens, or per-scale maps back to the length), so that each
   parameter is trained, and use no instance normalization.
-- The defaults (3 down-samplings, 2 blocks, top-3 periods) follow the long-term forecasting setting; the sizes are
-  chosen within the range the paper searches.
+- No official code or run script has been released (the paper points to kwuking/TimeMixer, which holds only
+  TimeMixer). Of the defaults, only the 3 down-samplings are stated by the paper for long-term forecasting; the 2
+  blocks and top-3 periods lie in the ranges it reports (1 to 3 blocks, 1 to 5 periods), and the model size, heads
+  and dropout are not stated, so they are unverified choices.
 
 ## Components
 

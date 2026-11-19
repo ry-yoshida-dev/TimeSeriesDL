@@ -4,9 +4,11 @@ model:
     moving_average_size: 25
     model_size: 256
     stack:
-      num_blocks: 1
+      num_blocks: 3
       slstm_block_indices:
       - 0
+      - 1
+      - 2
       mlstm_num_heads: 4
       slstm_num_heads: 4
       mlstm_expansion: 2

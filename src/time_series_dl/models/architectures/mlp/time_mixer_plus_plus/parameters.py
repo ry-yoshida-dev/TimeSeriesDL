@@ -19,8 +19,8 @@ class TimeMixerPlusPlusParameters:
     TimeMixer++ (Wang et al., 2025): multi-scale series turned into time images at the dominant periods, decomposed
     into seasonal and trend images by dual-axis attention, mixed across scales and across periods.
 
-    The number of down-samplings, blocks and periods follow the long-term forecasting setting of the paper; the sizes
-    are chosen in the range the paper searches.
+    No official code exists. The 3 down-samplings are the paper's long-term forecasting setting; the numbers of
+    blocks and periods lie in the ranges the paper reports, and the sizes and dropout are unverified choices.
 
     Attributes
     ----------

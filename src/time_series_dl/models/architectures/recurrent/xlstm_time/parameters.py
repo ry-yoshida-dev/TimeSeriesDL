@@ -11,9 +11,10 @@ class XLSTMTimeParameters:
     xLSTMTime (Alharthi and Mahmood, 2024): series decomposition and linear forecasts refined by an xLSTM stack that
     reads the channels as a sequence.
 
-    The defaults follow the paper and its official code: a moving average of 25 steps, an embedding of 256, and the
-    sLSTM variant the paper uses for the smaller datasets (one sLSTM block with four heads); setting
-    ``stack.slstm_block_indices`` to an empty tuple gives the mLSTM variant used for the larger datasets.
+    The defaults follow the official code (``xlstm.py`` of muslehal/xLSTMTime, one configuration for every
+    benchmark): a moving average of 25 steps, an embedding of 256, and a stack of three sLSTM blocks with four heads,
+    the sLSTM variant the paper uses for the smaller datasets such as ETTh1; setting ``stack.slstm_block_indices`` to
+    an empty tuple gives the mLSTM variant used for the larger datasets.
 
     Attributes
     ----------
@@ -34,7 +35,7 @@ class XLSTMTimeParameters:
     moving_average_size: int = 25
     model_size: int = 256
     stack: XLSTMStackParameters = field(
-        default_factory=lambda: XLSTMStackParameters(num_blocks=1, slstm_block_indices=(0,))
+        default_factory=lambda: XLSTMStackParameters(num_blocks=3, slstm_block_indices=(0, 1, 2))
     )
 
     def __post_init__(self) -> None:

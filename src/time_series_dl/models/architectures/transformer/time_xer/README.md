@@ -17,6 +17,9 @@ Differences from the paper and Time-Series-Library:
   instead of dropping the last steps.
 - No calendar covariates are available, so there are no time-stamp tokens among the exogenous tokens.
 - The head maps to every distribution parameter of the horizon; instance normalization is left to the forecaster.
+- Defaults follow the official ETTh1 script with exogenous variables and horizon 96
+  (`scripts/forecast_exogenous/ETTh1/TimeXer.sh` with `run.py`'s defaults): patch length 16, model size 512, 8
+  heads, 2 layers, feed-forward size 512, dropout 0.1 and GELU.
 
 ## Components
 
