@@ -2,7 +2,7 @@
 
 ## Overview
 
-TimeSeriesDL (`time_series_dl`) puts 84 deep learning models for time series behind one PyTorch interface per task.
+TimeSeriesDL (`time_series_dl`) puts 85 deep learning models for time series behind one PyTorch interface per task.
 Each task is built from a settings dataclass that takes a model's parameters, so models are swapped by changing one
 argument; the type checker rejects a model that does not support the task. Training (optimizer, schedule, early
 stopping, device) and saving to files that load without pickle are shared by every task. Losses come from
@@ -12,7 +12,7 @@ Charbonnier, pinball, MAPE, sMAPE, MSLE) trains the tasks that predict values, a
 
 | Task | Interface | Input → output | Models |
 | ---- | --------- | -------------- | ------ |
-| Forecasting | `Forecaster` | series → point, quantile, parametric, multivariate low-rank Gaussian or sample-path forecasts of the next horizon, with conformal intervals | 70 |
+| Forecasting | `Forecaster` | series → point, quantile, parametric, multivariate low-rank Gaussian or sample-path forecasts of the next horizon, with conformal intervals | 71 |
 | Classification | `SequenceClassifier` | (N, L, C) sequences → class | 46 |
 | Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 46 |
 | Imputation | `Imputer` | sequences with NaN → filled sequences | 46 |
@@ -22,7 +22,7 @@ Charbonnier, pinball, MAPE, sMAPE, MSLE) trains the tasks that predict values, a
 | Irregular interpolation | `IrregularInterpolator` | irregularly sampled sequences → values at query times | 2 |
 | Representation learning | `RepresentationLearner` | unlabeled sequences → pretrained encoder and representations | 4 |
 
-The models span linear and MLP forecasters (DLinear, RLinear, FITS, SparseTSF, TSMixer, TiDE, TimeMixer,
+The models span linear and MLP forecasters (DLinear, RLinear, FITS, SparseTSF, CycleNet, TSMixer, TiDE, TimeMixer,
 TimeMixer++, FreTS, Koopa, N-BEATS, N-HiTS), recurrent networks (LSTM/GRU, SegRNN, DeepAR, xLSTM, xLSTMTime,
 minGRU/minLSTM, LSTNet), convolutional networks and classifiers (FCN, ResNet, InceptionTime, LITE, TCN, TimesNet,
 MICN, ModernTCN, ROCKET, MiniRocket, MultiRocket), Transformers (Transformer, Informer, Autoformer, FEDformer,

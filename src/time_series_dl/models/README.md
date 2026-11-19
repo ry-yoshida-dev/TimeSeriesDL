@@ -16,7 +16,7 @@ Every public class is imported from `time_series_dl.models`.
 
 | Family | Models |
 | ------ | ------ |
-| [Linear](./architectures/linear/README.md) | DLinear, NLinear, RLinear, FITS, SparseTSF |
+| [Linear](./architectures/linear/README.md) | DLinear, NLinear, RLinear, FITS, SparseTSF, CycleNet |
 | [MLP](./architectures/mlp/README.md) | MLP, N-BEATS, N-HiTS, TSMixer, TiDE, TimeMixer, TimeMixer++, FreTS, Koopa, USAD |
 | [Recurrent](./architectures/recurrent/README.md) | LSTM / GRU / Elman RNN, SegRNN, DeepAR, xLSTM, xLSTMTime, minGRU / minLSTM, LSTNet, BRITS, GRU-D, TimeGrad |
 | [Convolutional](./architectures/convolutional/README.md) | FCN, ResNet, InceptionTime, TCN, TimesNet, MICN, ModernTCN, LITE, ROCKET, MiniRocket, MultiRocket, TS2Vec, TS-TCC |

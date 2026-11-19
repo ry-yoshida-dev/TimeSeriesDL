@@ -1,0 +1,7 @@
+model:
+  architecture: cycle_net
+  parameters:
+    cycle_length: 24
+    backbone: mlp
+    hidden_size: 512
+    phase_channel: 0

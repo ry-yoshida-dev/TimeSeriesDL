@@ -34,6 +34,7 @@ from .architectures.graph.fourier_gnn import FourierGNNParameters
 from .architectures.graph.graph_wavenet import GraphWaveNetParameters
 from .architectures.graph.mtgnn import MTGNNParameters
 from .architectures.graph.stem_gnn import StemGNNParameters
+from .architectures.linear.cycle_net import CycleNetBackbone, CycleNetParameters
 from .architectures.linear.dlinear import DLinearParameters
 from .architectures.linear.fits import FITSParameters
 from .architectures.linear.nlinear import NLinearParameters
@@ -156,6 +157,8 @@ __all__ = [
     "CovariateTensors",
     "CrossformerParameters",
     "CubicInterpolationKind",
+    "CycleNetBackbone",
+    "CycleNetParameters",
     "DCdetectorParameters",
     "DLinearParameters",
     "DeepARParameters",

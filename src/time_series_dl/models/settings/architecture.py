@@ -29,6 +29,7 @@ from ..architectures.graph.fourier_gnn import FourierGNNParameters
 from ..architectures.graph.graph_wavenet import GraphWaveNetParameters
 from ..architectures.graph.mtgnn import MTGNNParameters
 from ..architectures.graph.stem_gnn import StemGNNParameters
+from ..architectures.linear.cycle_net import CycleNetParameters
 from ..architectures.linear.dlinear import DLinearParameters
 from ..architectures.linear.fits import FITSParameters
 from ..architectures.linear.nlinear import NLinearParameters
@@ -170,6 +171,7 @@ type ModelParameters = (
     | MOMENTParameters
     | TimerParameters
     | TTMParameters
+    | CycleNetParameters
 )
 
 
@@ -264,6 +266,7 @@ class ModelArchitecture(StrEnum):
     MOMENT = "moment"
     TIMER = "timer"
     TTM = "ttm"
+    CYCLE_NET = "cycle_net"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -444,3 +447,5 @@ class ModelArchitecture(StrEnum):
                 return TimerParameters
             case ModelArchitecture.TTM:
                 return TTMParameters
+            case ModelArchitecture.CYCLE_NET:
+                return CycleNetParameters

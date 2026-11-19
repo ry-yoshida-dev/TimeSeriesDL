@@ -66,11 +66,12 @@ def test_forecaster_round_trip(tmp_path: Path, fast_training: TrainingSettings, 
     assert loaded.evaluate(sine_series).mae == pytest.approx(forecaster.evaluate(sine_series).mae)
 
 
-# A pretrained encoder needs a representation learner's file; its round trip is tested with the learner.
+# A pretrained encoder needs a representation learner's file, and CycleNet needs its phase covariate; their round
+# trips are tested with the representation learner and in test_model_cycle_net.py.
 FORECASTING_ARCHITECTURES: list[ModelArchitecture] = [
     architecture
     for architecture in ModelArchitecture
-    if architecture is not ModelArchitecture.PRETRAINED_ENCODER
+    if architecture not in (ModelArchitecture.PRETRAINED_ENCODER, ModelArchitecture.CYCLE_NET)
     and issubclass(architecture.parameters_type, ForecastingModel)
 ]
 

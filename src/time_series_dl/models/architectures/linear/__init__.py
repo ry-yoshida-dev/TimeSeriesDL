@@ -1,3 +1,4 @@
+from .cycle_net import CycleNetBackbone, CycleNetCovariateForecastNetwork, CycleNetParameters, CycleNetRecurrentCycle
 from .dlinear import (
     DecompositionLinear,
     DLinearForecastNetwork,
@@ -11,6 +12,10 @@ from .rlinear import RLinearForecastNetwork, RLinearParameters, RLinearReconstru
 from .sparse_tsf import SparseTSFForecastNetwork, SparseTSFParameters
 
 __all__ = [
+    "CycleNetBackbone",
+    "CycleNetCovariateForecastNetwork",
+    "CycleNetParameters",
+    "CycleNetRecurrentCycle",
     "DLinearForecastNetwork",
     "DLinearParameters",
     "DLinearReconstructionNetwork",

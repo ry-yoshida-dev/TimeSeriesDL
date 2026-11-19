@@ -113,6 +113,10 @@ from .graph import (
     StemGNNParameters,
 )
 from .linear import (
+    CycleNetBackbone,
+    CycleNetCovariateForecastNetwork,
+    CycleNetParameters,
+    CycleNetRecurrentCycle,
     DecompositionLinear,
     DLinearForecastNetwork,
     DLinearParameters,
@@ -420,6 +424,10 @@ __all__ = [
     "CrossformerSegmentMerging",
     "CrossformerSummaryNetwork",
     "CrossformerTwoStageAttentionLayer",
+    "CycleNetBackbone",
+    "CycleNetCovariateForecastNetwork",
+    "CycleNetParameters",
+    "CycleNetRecurrentCycle",
     "DCdetectorAnomalyScoringNetwork",
     "DCdetectorParameters",
     "DLinearForecastNetwork",
