@@ -32,3 +32,5 @@ synthetic series.
 | [test_training.py](./test_training.py) | Trainer, optimizers, schedules and early stopping. |
 | [test_persistence.py](./test_persistence.py) | Saving and loading every task and model, and rejecting invalid checkpoints. |
 | [test_data.py](./test_data.py) | Windows, series validation and channel scaling. |
+| [test_representation_learning.py](./test_representation_learning.py) | Self-supervised pretraining, representations and transfer of pretrained encoders. |
+| [test_masked_modeling.py](./test_masked_modeling.py) | Random masks and the decoder of masked-modeling pretraining. |

@@ -11,15 +11,19 @@ from time_series_dl.models import (
     EncoderHead,
     MiniRocketParameters,
     ModelArchitecture,
+    ModelParameters,
     ModelSettings,
     NBEATSBlockKind,
     NBEATSParameters,
     NBEATSStack,
     PatchTSTParameters,
+    PretrainedEncoderParameters,
     SAITSParameters,
     TCNParameters,
     TemporalPooling,
+    TS2VecParameters,
 )
+from time_series_dl.models.settings import ParametersReader
 
 PRESET_DIRECTORY: Path = Path(time_series_dl.__file__).parent / "config"
 PRESET_PATHS: list[Path] = sorted(PRESET_DIRECTORY.glob("*.yaml"))
@@ -32,6 +36,13 @@ def load_model_section(path: Path) -> dict[str, object]:
     section: object = cast(dict[object, object], document)["model"]
     assert isinstance(section, dict)
     return {str(key): value for key, value in cast(dict[object, object], section).items()}
+
+
+def default_parameters(architecture: ModelArchitecture) -> ModelParameters:
+    # A pretrained encoder has no default file; its preset names the conventional one.
+    if architecture is ModelArchitecture.PRETRAINED_ENCODER:
+        return PretrainedEncoderParameters(checkpoint_path="representation_learner.pt")
+    return ParametersReader.read(architecture.parameters_type, {})
 
 
 def test_every_architecture_has_a_preset() -> None:
@@ -51,7 +62,7 @@ def test_preset_builds_default_parameters(path: Path) -> None:
         parameters=cast(dict[str, object], parameters),
     )
     assert settings.architecture.value == path.stem
-    assert settings.build() == settings.architecture.parameters_type()
+    assert settings.build() == default_parameters(settings.architecture)
 
 
 def test_nested_values_are_converted() -> None:
@@ -95,6 +106,9 @@ def test_task_models_follow_supported_tasks() -> None:
         saits.build_reconstruction_model()
     with pytest.raises(ValueError, match="imputation"):
         mini_rocket.build_imputation_model()
+    assert isinstance(ModelSettings(architecture=ModelArchitecture.TS2VEC).build_pretraining_model(), TS2VecParameters)
+    with pytest.raises(ValueError, match="pretraining"):
+        mini_rocket.build_pretraining_model()
     assert isinstance(patch_tst.build_imputation_model(), PatchTSTParameters)
 
 

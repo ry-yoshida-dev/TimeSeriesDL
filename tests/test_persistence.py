@@ -62,8 +62,12 @@ def test_forecaster_round_trip(tmp_path: Path, fast_training: TrainingSettings, 
     assert loaded.evaluate(sine_series).mae == pytest.approx(forecaster.evaluate(sine_series).mae)
 
 
+# A pretrained encoder needs a representation learner's file; its round trip is tested with the learner.
 FORECASTING_ARCHITECTURES: list[ModelArchitecture] = [
-    architecture for architecture in ModelArchitecture if isinstance(architecture.parameters_type(), ForecastingModel)
+    architecture
+    for architecture in ModelArchitecture
+    if architecture is not ModelArchitecture.PRETRAINED_ENCODER
+    and issubclass(architecture.parameters_type, ForecastingModel)
 ]
 
 

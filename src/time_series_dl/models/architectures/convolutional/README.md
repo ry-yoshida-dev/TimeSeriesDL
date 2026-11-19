@@ -20,3 +20,5 @@ linear layer.
 | [ROCKET (Dempster et al., 2020)](./rocket/README.md) | `RocketParameters` | | ✓ | | |
 | [MiniRocket (Dempster et al., 2021)](./mini_rocket/README.md) | `MiniRocketParameters` | | ✓ | | |
 | [MultiRocket (Tan et al., 2022)](./multi_rocket/README.md) | `MultiRocketParameters` | | ✓ | | |
+| [TS2Vec (Yue et al., 2022)](./ts2vec/README.md) | `TS2VecParameters` | ✓ | ✓ | ✓ | ✓ |
+| [TS-TCC (Eldele et al., 2021)](./ts_tcc/README.md) | `TSTCCParameters` | ✓ | ✓ | | |

@@ -38,6 +38,7 @@ from .layers import (
     TemporalLinear,
     TemporalPooling,
 )
+from .masked_modeling import GeometricMasking, Masking, PatchMasking, SequenceDecoder
 from .missing_values import LastObservation, TemporalDecay, TimeGap
 from .normalization import (
     InstanceStatistics,
@@ -70,9 +71,6 @@ from .state_space import (
 )
 
 __all__ = [
-    "LastObservation",
-    "TemporalDecay",
-    "TimeGap",
     "Activation",
     "AdaptiveAdjacency",
     "AttentionMechanism",
@@ -99,6 +97,7 @@ __all__ = [
     "FourierModeSelection",
     "FullAttentionMechanism",
     "GatedLinearOutput",
+    "GeometricMasking",
     "HiPPOMeasure",
     "HiPPOMemory",
     "InstanceStatistics",
@@ -106,24 +105,30 @@ __all__ = [
     "KernelTransform",
     "KernelTransformSummaryNetwork",
     "LRUStateSpaceLayer",
+    "LastObservation",
     "LinearRecurrence",
     "Mamba2StateSpaceLayer",
     "MambaStateSpaceLayer",
+    "Masking",
     "MixHopPropagation",
     "MultiHeadAttention",
     "MultilayerPerceptron",
     "NodeAdaptiveGraphConvolution",
     "NormalPlusLowRank",
+    "PatchMasking",
     "ProbSparseAttentionMechanism",
     "ReversibleInstanceNormalization",
     "S5StateSpaceLayer",
     "SSMKernel",
     "SameLengthConvolution",
+    "SequenceDecoder",
     "SeriesDecomposition",
     "SinusoidalPositionalEncoding",
     "StateSpaceLayer",
     "StaticCovariateEmbedding",
+    "TemporalDecay",
     "TemporalLinear",
     "TemporalPooling",
+    "TimeGap",
     "ValueEmbedding",
 ]

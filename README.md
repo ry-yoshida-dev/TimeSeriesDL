@@ -2,7 +2,7 @@
 
 ## Overview
 
-TimeSeriesDL (`time_series_dl`) puts 64 deep learning models for time series behind one PyTorch interface per task.
+TimeSeriesDL (`time_series_dl`) puts 67 deep learning models for time series behind one PyTorch interface per task.
 Each task is built from a settings dataclass that takes a model's parameters, so models are swapped by changing one
 argument; the type checker rejects a model that does not support the task. Training (optimizer, schedule, early
 stopping, device) and saving to files that load without pickle are shared by every task, and so are the point
@@ -16,6 +16,7 @@ cross-entropy or focal loss.
 | Regression | `SequenceRegressor` | (N, L, C) sequences → one or more values | 42 |
 | Imputation | `Imputer` | sequences with NaN → filled sequences | 42 |
 | Anomaly detection | `AnomalyDetector` | series → anomaly score of every time step | 39 |
+| Representation learning | `RepresentationLearner` | unlabeled sequences → pretrained encoder and representations | 5 |
 
 The models span linear and MLP forecasters (DLinear, RLinear, FITS, SparseTSF, TSMixer, TiDE, TimeMixer,
 TimeMixer++, FreTS, Koopa, N-BEATS, N-HiTS), recurrent networks (LSTM/GRU, SegRNN, DeepAR, xLSTM, xLSTMTime,
@@ -23,8 +24,9 @@ minGRU/minLSTM, LSTNet), convolutional networks and classifiers (FCN, ResNet, In
 MICN, ModernTCN, ROCKET, MiniRocket, MultiRocket), Transformers (Transformer, Informer, Autoformer, FEDformer,
 Pyraformer, ETSformer, Non-stationary Transformer, Crossformer, PatchTST, iTransformer, TimeXer, TST, ConvTran,
 Temporal Fusion Transformer), state space models (HiPPO-RNN, LMU, S4, S4D, S5, LRU, Mamba, Mamba-2, S-Mamba, FiLM)
-graph neural networks over the channels (MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN), and imputation models
-that read the missing-value mask (SAITS, BRITS, GRU-D). Forecasts accept
+graph neural networks over the channels (MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN), imputation models that read the
+missing-value mask (SAITS, BRITS, GRU-D), and self-supervised pretraining (TS2Vec, TS-TCC, SimMTM, masked
+reconstruction) whose encoders transfer to the other tasks. Forecasts accept
 known-future and static covariates with every forecasting model. Which model supports which task is listed in
 [src/time_series_dl/models/](src/time_series_dl/models/README.md). Classification and regression metrics are the
 types of [ClassReg](https://github.com/ry-yoshida-dev/ClassReg), and scaling comes from
@@ -136,4 +138,24 @@ filled = imputer.impute(windows_with_nan)
 detector = AnomalyDetectorSettings(model=RNNParameters(), window_length=64).build()
 detector.fit(normal_series)
 is_anomalous = detector.detect(test_series)
+```
+
+Pretrain an encoder on unlabeled sequences, then train a linear probe on its frozen representations:
+
+```python
+from pathlib import Path
+
+from time_series_dl.models import PretrainedEncoderParameters, TS2VecParameters
+from time_series_dl.tasks.classification import ClassifierSettings
+from time_series_dl.tasks.representation_learning import RepresentationLearnerSettings
+
+learner = RepresentationLearnerSettings(method=TS2VecParameters()).build()
+learner.fit(unlabeled)  # (N, L, C) sequences without labels
+representations = learner.encode(X_train)  # (N, 320)
+learner.save(Path("ts2vec.pt"))
+
+probe = ClassifierSettings(
+    model=PretrainedEncoderParameters(checkpoint_path="ts2vec.pt", is_encoder_frozen=True)
+).build()
+probe.fit(X_train, y_train)
 ```

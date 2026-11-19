@@ -14,3 +14,4 @@ and trains with the shared training loop.
 | [regression/](./regression/README.md) | `SequenceRegressor`: one or more values per sequence. |
 | [imputation/](./imputation/README.md) | `Imputer`: fills missing values. |
 | [anomaly_detection/](./anomaly_detection/README.md) | `AnomalyDetector`: reconstruction-error scores of every time step. |
+| [representation_learning/](./representation_learning/README.md) | `RepresentationLearner`: self-supervised pretraining of an encoder and its representations. |

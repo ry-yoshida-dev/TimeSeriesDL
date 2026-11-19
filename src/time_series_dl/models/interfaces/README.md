@@ -15,6 +15,7 @@ require of model parameters, and the dimensions passed to the builders.
 | [reconstruction_network.py](./reconstruction_network.py) | `ReconstructionNetwork`: sequence to a sequence of the same shape. |
 | [masked_reconstruction_network.py](./masked_reconstruction_network.py) | `MaskedReconstructionNetwork`: sequence and observed mask to a reconstruction and the network's own training loss. |
 | [masked_reconstruction.py](./masked_reconstruction.py) | `MaskedReconstruction`: reconstruction and optional training loss of a batch. |
+| [pretraining_network.py](./pretraining_network.py) | `PretrainingNetwork`: self-supervised loss around a sequence encoder, and its instance-level representation. |
 | [summary_network.py](./summary_network.py) | `SummaryNetwork`: sequence to one output vector. |
 | [sequence_encoder.py](./sequence_encoder.py) | `SequenceEncoder`: sequence to a sequence of feature vectors. |
 | [protocols/](./protocols/README.md) | Builder protocols that tasks require of model parameters. |

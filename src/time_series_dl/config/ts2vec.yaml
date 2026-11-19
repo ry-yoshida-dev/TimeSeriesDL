@@ -1,0 +1,14 @@
+model:
+  architecture: ts2vec
+  parameters:
+    hidden_size: 64
+    output_size: 320
+    num_blocks: 10
+    kernel_size: 3
+    dropout: 0.1
+    mask_ratio: 0.5
+    alpha: 0.5
+    temporal_unit: 0
+    head:
+      pooling: max
+      dropout: 0.0

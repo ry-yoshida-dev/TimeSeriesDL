@@ -1,0 +1,23 @@
+model:
+  architecture: ts_tcc
+  parameters:
+    channel_sizes: [32, 64, 128]
+    kernel_size: 8
+    stride: 1
+    dropout: 0.35
+    prediction_steps: 6
+    context_size: 100
+    context_layers: 4
+    context_heads: 4
+    context_feedforward_size: 64
+    context_dropout: 0.1
+    temperature: 0.2
+    temporal_weight: 1.0
+    contextual_weight: 0.7
+    augmentation:
+      scale_ratio: 1.1
+      jitter_ratio: 0.8
+      max_segments: 8
+    head:
+      pooling: flatten
+      dropout: 0.0

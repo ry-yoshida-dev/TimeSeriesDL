@@ -12,10 +12,11 @@ anomaly detection (`build_reconstruction_network`), and imputation from the valu
 | [Linear](./architectures/linear/README.md) | DLinear, NLinear, RLinear, FITS, SparseTSF |
 | [MLP](./architectures/mlp/README.md) | MLP, N-BEATS, N-HiTS, TSMixer, TiDE, TimeMixer, TimeMixer++, FreTS, Koopa |
 | [Recurrent](./architectures/recurrent/README.md) | LSTM / GRU / Elman RNN, SegRNN, DeepAR, xLSTM, xLSTMTime, minGRU / minLSTM, LSTNet, BRITS, GRU-D |
-| [Convolutional](./architectures/convolutional/README.md) | FCN, ResNet, InceptionTime, TCN, TimesNet, MICN, ModernTCN, LITE, ROCKET, MiniRocket, MultiRocket |
+| [Convolutional](./architectures/convolutional/README.md) | FCN, ResNet, InceptionTime, TCN, TimesNet, MICN, ModernTCN, LITE, ROCKET, MiniRocket, MultiRocket, TS2Vec, TS-TCC |
 | [Transformer](./architectures/transformer/README.md) | Transformer, Informer, Autoformer, FEDformer, PatchTST, iTransformer, Temporal Fusion Transformer, Non-stationary Transformer, Pyraformer, ETSformer, Crossformer, TimeXer, TST, ConvTran, SAITS |
 | [State space](./architectures/state_space/README.md) | HiPPO-RNN, LMU, S4, S4D, S5, LRU, Mamba, Mamba-2, S-Mamba, FiLM |
 | [Graph](./architectures/graph/README.md) | MTGNN, Graph WaveNet, AGCRN, StemGNN, FourierGNN |
+| [Pretrained](./architectures/pretrained/README.md) | SimMTM, masked reconstruction pretraining, transfer of pretrained encoders |
 
 `ModelSettings` names a model by its `ModelArchitecture` and its parameters by field, so that a configuration file
 can describe it; the YAML presets of every model are in [config/](../config/README.md).

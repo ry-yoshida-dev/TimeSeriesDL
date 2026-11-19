@@ -11,6 +11,8 @@ from ..architectures.convolutional.resnet import ResNetParameters
 from ..architectures.convolutional.rocket import RocketParameters
 from ..architectures.convolutional.tcn import TCNParameters
 from ..architectures.convolutional.times_net import TimesNetParameters
+from ..architectures.convolutional.ts2vec import TS2VecParameters
+from ..architectures.convolutional.ts_tcc import TSTCCParameters
 from ..architectures.graph.agcrn import AGCRNParameters
 from ..architectures.graph.fourier_gnn import FourierGNNParameters
 from ..architectures.graph.graph_wavenet import GraphWaveNetParameters
@@ -30,6 +32,7 @@ from ..architectures.mlp.time_mixer import TimeMixerParameters
 from ..architectures.mlp.time_mixer_plus_plus import TimeMixerPlusPlusParameters
 from ..architectures.mlp.ts_mixer import TSMixerParameters
 from ..architectures.mlp.vanilla import MLPParameters
+from ..architectures.pretrained.encoder import PretrainedEncoderParameters
 from ..architectures.recurrent.brits import BRITSParameters
 from ..architectures.recurrent.deep_ar import DeepARParameters
 from ..architectures.recurrent.gru_d import GRUDParameters
@@ -130,6 +133,9 @@ type ModelParameters = (
     | SAITSParameters
     | BRITSParameters
     | GRUDParameters
+    | TS2VecParameters
+    | TSTCCParameters
+    | PretrainedEncoderParameters
 )
 
 
@@ -204,6 +210,9 @@ class ModelArchitecture(StrEnum):
     SAITS = "saits"
     BRITS = "brits"
     GRU_D = "gru_d"
+    TS2VEC = "ts2vec"
+    TS_TCC = "ts_tcc"
+    PRETRAINED_ENCODER = "pretrained_encoder"
 
     @property
     def parameters_type(self) -> type[ModelParameters]:
@@ -344,3 +353,9 @@ class ModelArchitecture(StrEnum):
                 return BRITSParameters
             case ModelArchitecture.GRU_D:
                 return GRUDParameters
+            case ModelArchitecture.TS2VEC:
+                return TS2VecParameters
+            case ModelArchitecture.TS_TCC:
+                return TSTCCParameters
+            case ModelArchitecture.PRETRAINED_ENCODER:
+                return PretrainedEncoderParameters

@@ -41,10 +41,27 @@ from .times_net import (
     TimesNetReconstructionNetwork,
     TimesNetSummaryNetwork,
 )
+from .ts2vec import (
+    HierarchicalContrastiveLoss,
+    TS2VecConvolutionBlock,
+    TS2VecParameters,
+    TS2VecPretrainingNetwork,
+    TS2VecSequenceEncoder,
+)
+from .ts_tcc import (
+    ContextualContrastiveLoss,
+    TSTCCAugmentation,
+    TSTCCParameters,
+    TSTCCPretrainingNetwork,
+    TSTCCSequenceEncoder,
+    TSTCCTemporalContrasting,
+)
 
 __all__ = [
+    "ContextualContrastiveLoss",
     "FCNParameters",
     "FCNSequenceEncoder",
+    "HierarchicalContrastiveLoss",
     "InceptionBlock",
     "InceptionTimeModule",
     "InceptionTimeParameters",
@@ -81,6 +98,15 @@ __all__ = [
     "RocketParameters",
     "TCNParameters",
     "TCNSequenceEncoder",
+    "TS2VecConvolutionBlock",
+    "TS2VecParameters",
+    "TS2VecPretrainingNetwork",
+    "TS2VecSequenceEncoder",
+    "TSTCCAugmentation",
+    "TSTCCParameters",
+    "TSTCCPretrainingNetwork",
+    "TSTCCSequenceEncoder",
+    "TSTCCTemporalContrasting",
     "TemporalResidualBlock",
     "TimesBlock",
     "TimesNetEmbedding",

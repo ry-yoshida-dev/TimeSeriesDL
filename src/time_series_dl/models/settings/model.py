@@ -1,7 +1,13 @@
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 
-from ..interfaces import ForecastingModel, MaskedReconstructionModel, ReconstructionModel, SummaryModel
+from ..interfaces import (
+    ForecastingModel,
+    MaskedReconstructionModel,
+    PretrainingModel,
+    ReconstructionModel,
+    SummaryModel,
+)
 from .architecture import ModelArchitecture, ModelParameters
 from .parameters_reader import ParametersReader
 
@@ -126,3 +132,22 @@ class ModelSettings:
         if isinstance(parameters, ReconstructionModel):
             return parameters
         raise ValueError(f"{self.architecture} does not support imputation.")
+
+    def build_pretraining_model(self) -> PretrainingModel:
+        """
+        Build the parameters for ``RepresentationLearnerSettings``.
+
+        Returns
+        -------
+        PretrainingModel
+            The parameters.
+
+        Raises
+        ------
+        ValueError
+            If ``architecture`` has no self-supervised pretraining method.
+        """
+        parameters: ModelParameters = self.build()
+        if not isinstance(parameters, PretrainingModel):
+            raise ValueError(f"{self.architecture} does not support self-supervised pretraining.")
+        return parameters

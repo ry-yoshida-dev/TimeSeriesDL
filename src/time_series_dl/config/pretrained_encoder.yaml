@@ -1,0 +1,7 @@
+model:
+  architecture: pretrained_encoder
+  parameters:
+    # Required: the file written by RepresentationLearner.save, relative to the working directory.
+    checkpoint_path: representation_learner.pt
+    is_encoder_frozen: false
+    head: null

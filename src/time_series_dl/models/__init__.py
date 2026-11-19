@@ -9,6 +9,8 @@ from .architectures.convolutional.resnet import ResNetParameters
 from .architectures.convolutional.rocket import RocketParameters
 from .architectures.convolutional.tcn import TCNParameters
 from .architectures.convolutional.times_net import TimesNetParameters
+from .architectures.convolutional.ts2vec import TS2VecParameters
+from .architectures.convolutional.ts_tcc import TSTCCParameters
 from .architectures.graph.agcrn import AGCRNParameters
 from .architectures.graph.fourier_gnn import FourierGNNParameters
 from .architectures.graph.graph_wavenet import GraphWaveNetParameters
@@ -28,6 +30,7 @@ from .architectures.mlp.time_mixer import TimeMixerParameters
 from .architectures.mlp.time_mixer_plus_plus import TimeMixerPlusPlusParameters
 from .architectures.mlp.ts_mixer import TSMixerNormalization, TSMixerParameters
 from .architectures.mlp.vanilla import MLPParameters
+from .architectures.pretrained import MaskedReconstructionParameters, PretrainedEncoderParameters, SimMTMParameters
 from .architectures.recurrent.brits import BRITSParameters
 from .architectures.recurrent.deep_ar import DeepARParameters
 from .architectures.recurrent.gru_d import GRUDParameters
@@ -69,18 +72,22 @@ from .components.attention import FourierModeSelection
 from .components.covariates import CovariateAdapterParameters
 from .components.heads import EncoderHead
 from .components.layers import Activation, TemporalPooling
+from .components.masked_modeling import GeometricMasking, PatchMasking
 from .components.state_space import DiagonalInitialization, Discretization, HiPPOMeasure
 from .interfaces import (
     CovariateForecastingModel,
     CovariateForecastNetwork,
     CovariateForecastShape,
     CovariateTensors,
+    EncodingModel,
     ForecastingModel,
     ForecastNetwork,
     ForecastShape,
     MaskedReconstruction,
     MaskedReconstructionModel,
     MaskedReconstructionNetwork,
+    PretrainingModel,
+    PretrainingNetwork,
     ReconstructionModel,
     ReconstructionNetwork,
     SequenceEncoder,
@@ -93,16 +100,11 @@ from .settings.architecture import ModelArchitecture, ModelParameters
 from .settings.model import ModelSettings
 
 __all__ = [
-    "BRITSParameters",
-    "GRUDParameters",
-    "SAITSParameters",
-    "MaskedReconstruction",
-    "MaskedReconstructionModel",
-    "MaskedReconstructionNetwork",
     "AGCRNParameters",
     "AbsolutePositionEncoding",
     "Activation",
     "AutoformerParameters",
+    "BRITSParameters",
     "ConvTranParameters",
     "CovariateAdapterParameters",
     "CovariateForecastNetwork",
@@ -116,6 +118,7 @@ __all__ = [
     "Discretization",
     "ETSformerParameters",
     "EncoderHead",
+    "EncodingModel",
     "FCNParameters",
     "FEDformerParameters",
     "FITSParameters",
@@ -126,6 +129,8 @@ __all__ = [
     "FourierGNNParameters",
     "FourierModeSelection",
     "FreTSParameters",
+    "GRUDParameters",
+    "GeometricMasking",
     "GraphWaveNetParameters",
     "HiPPOMeasure",
     "HiPPORNNParameters",
@@ -142,6 +147,10 @@ __all__ = [
     "MTGNNParameters",
     "Mamba2Parameters",
     "MambaParameters",
+    "MaskedReconstruction",
+    "MaskedReconstructionModel",
+    "MaskedReconstructionNetwork",
+    "MaskedReconstructionParameters",
     "MinRNNParameters",
     "MiniRocketParameters",
     "MinimalRecurrentCell",
@@ -160,7 +169,11 @@ __all__ = [
     "NHITSStack",
     "NLinearParameters",
     "NonStationaryTransformerParameters",
+    "PatchMasking",
     "PatchTSTParameters",
+    "PretrainedEncoderParameters",
+    "PretrainingModel",
+    "PretrainingNetwork",
     "PyraformerParameters",
     "RLinearParameters",
     "RNNParameters",
@@ -173,18 +186,22 @@ __all__ = [
     "S4DParameters",
     "S4Parameters",
     "S5Parameters",
+    "SAITSParameters",
     "SMambaParameters",
     "SegRNNParameters",
     "SequenceEncoder",
     "SequenceShape",
+    "SimMTMParameters",
     "SparseTSFParameters",
     "StemGNNParameters",
     "SummaryModel",
     "SummaryNetwork",
     "SummaryShape",
     "TCNParameters",
+    "TS2VecParameters",
     "TSMixerNormalization",
     "TSMixerParameters",
+    "TSTCCParameters",
     "TSTParameters",
     "TemporalFusionInterpretation",
     "TemporalFusionTransformerParameters",

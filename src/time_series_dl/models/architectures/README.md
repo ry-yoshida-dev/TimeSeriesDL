@@ -16,3 +16,4 @@ the networks it builds.
 | [transformer/](./transformer/README.md) | Attention-based models. |
 | [state_space/](./state_space/README.md) | State space models, from HiPPO memories to Mamba. |
 | [graph/](./graph/README.md) | Graph neural networks over the channels as nodes, with learned graphs. |
+| [pretrained/](./pretrained/README.md) | Self-supervised pretraining around any encoder, and transfer of pretrained encoders. |

@@ -17,6 +17,8 @@ class TaskKind(Enum):
         ``Imputer``.
     ANOMALY_DETECTION
         ``AnomalyDetector``.
+    REPRESENTATION_LEARNING
+        ``RepresentationLearner``.
     """
 
     FORECASTING = "forecasting"
@@ -24,3 +26,4 @@ class TaskKind(Enum):
     REGRESSION = "regression"
     IMPUTATION = "imputation"
     ANOMALY_DETECTION = "anomaly_detection"
+    REPRESENTATION_LEARNING = "representation_learning"
